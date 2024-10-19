@@ -8,8 +8,9 @@ interface CantidadSelectProps {
 function CantidadSelect({ setValue }: CantidadSelectProps) {
   return (
     <Select className="w-full py-1.5 bg-white focus:bg-gray-200"
-      name="status"
+      name="QuantitySelect"
       aria-label="Project status"
+      defaultValue={1}
       onChange={(e) => {
         setValue(Number(e.target.value))
       }}

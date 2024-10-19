@@ -23,7 +23,7 @@ function CarouselCustom({ images }: CarouselProps) {
           alt="cldProductImage"
         />
       </div>
-      <div className="bg-red-200 w-full overflow-x-scroll">
+      <div className="w-full overflow-x-auto">
         {images.map((image, idx) => (
           <button
             type="button"

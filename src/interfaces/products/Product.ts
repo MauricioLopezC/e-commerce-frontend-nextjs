@@ -21,3 +21,9 @@ export interface ProductSku {
   updatedAt: Date;
   images?: Image[];
 }
+
+export interface CreateProductSKuDto {
+  size: string;
+  color: string;
+  quantity: number;
+}

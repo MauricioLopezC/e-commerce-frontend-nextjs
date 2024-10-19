@@ -2,7 +2,8 @@
 import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { login } from "@/lib/actions"
+import { getProfileClient, logIn } from "@/queries/auth.api"
+import Cookies from 'js-cookie'
 
 function LoginPage() {
   const [errorMessage, setErrorMessage] = useState('')
@@ -10,20 +11,23 @@ function LoginPage() {
 
   return (
     <section className="mb-16 min-h-[70vh]">
-      <div id="" className="container mx-auto bg-gray-50 max-w-lg shadow rounded-lg mt-8 pb-8">
+      <div id="" className="container mx-auto bg-gray-50 max-w-lg shadow rounded-lg mt-8 pb-8 px-8">
         <div className="flex flex-col items-center">
           <h1 className="font-bold text-xl mt-4">APRIL STORE</h1>
           <h2 className="font-bold text-lg">Ingrese a su cuenta</h2>
         </div>
         <form className="space-y-4 mt-4"
           action={async (data) => {
-            // const res = await login(data)
-            // console.log(res)
-            // if (res.error) {
-            //   setErrorMessage(res.error)
-            // } else {
-            //   router.push('/')
-            // }
+            const email = data.get('email')?.toString() ?? ''
+            const password = data.get('password')?.toString() ?? ''
+            const res = await logIn(email, password)
+            if (res.access_token) {
+              //set a cookie with usefull user information like
+              // cartId
+              router.push('/')
+            } else {
+              setErrorMessage(res.message)
+            }
           }}
         >
           <div>
@@ -56,7 +60,7 @@ function LoginPage() {
           <p className="text-center">No tiene una cuenta? <Link href="/auth/register" className="font-medium text-sky-600 hover:text-blue-400">Sign up</Link></p>
         </form>
       </div>
-    </section>
+    </section >
   )
 }
 

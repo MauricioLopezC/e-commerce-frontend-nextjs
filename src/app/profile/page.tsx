@@ -1,16 +1,27 @@
-
-async function getProfile() {
-  const res = await fetch('http://localhost:3000/products', {
-    method: 'GET',
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-  return res.json()
-}
+import { getProfile } from "@/queries/auth.api"
+import { redirect } from "next/navigation"
+import { cookies } from "next/headers"
+import { logOut } from "@/lib/actions/auth-actions"
+import LogOutButton from "./LogOutButton"
+import { revalidatePath } from "next/cache"
 
 async function UserProfile() {
-  const profile = await getProfile()
+  const getCookie = (name: string) => {
+    return cookies().get(name)?.value ?? ''
+  }
+  revalidatePath('/profile')
+
+  const cookie = getCookie("access-token")
+  const res = await getProfile(cookie)
+  console.log("RES: ", res)
+  console.log("ALOJAAA")
+  if (!res.ok) {
+    redirect("/auth/login")
+  }
+  const user = await res.json()
+
+
+
   return (
     <section id="userPage" className="min-h-[70vh] max-w-lg container mx-auto mt-16">
       <div id="userCard" className="shadow rounded-md border">
@@ -25,7 +36,7 @@ async function UserProfile() {
                 Email
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {profile.email}
+                {user.email}
               </dd>
             </div>
             <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -33,23 +44,13 @@ async function UserProfile() {
                 Role
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {profile.role}
+                {user.role}
               </dd>
             </div>
           </dl>
         </div>
       </div>
-
-      <div className="flex justify-center items-center mt-6">
-        <form
-          action={async () => {
-            "use server"
-            console.log("XD")
-          }}
-        >
-          <button type="submit" className="px-6 py-2 bg-black text-white rounded-md">CERRAR SESION</button>
-        </form>
-      </div>
+      <LogOutButton />
     </section>
   )
 }

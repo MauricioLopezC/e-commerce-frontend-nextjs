@@ -1,9 +1,10 @@
 "use client"
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, UserIcon, XMarkIcon, HeartIcon, ShoppingBagIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import SearchDialog from './dialogs/SearchDialog'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
+import { checkSession, isAdminAction } from '@/lib/actions/navbar-actions'
 
 
 const navigation = [
@@ -19,11 +20,13 @@ function classNames(...classes: string[]) {
 
 function NavBar() {
   const [searchOpen, setSearchOpen] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   return (
-    <Disclosure as="nav" className="sticky top-0 z-10 bg-white">
+    <Disclosure as="nav" className="sticky top-0 z-10 bg-white border-b" >
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-2 border-b sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl px-2  sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}
@@ -75,11 +78,53 @@ function NavBar() {
                 </button>
                 <SearchDialog isOpen={searchOpen} setIsOpen={setSearchOpen} />
 
-                <Link href={'/user'}>
-                  <div className="rounded-full hover:ring-1 hover:ring-black ">
+                <Menu>
+                  <MenuButton onClick={async () => {
+                    //server action here
+                    const session = await checkSession()
+                    console.log(session)
+                    setIsAuthenticated(session)
+                    const admin = await isAdminAction()
+                    console.log(admin)
+                    setIsAdmin(admin)
+                  }}>
                     <UserIcon className="h-6 w-6 rounded-full" />
-                  </div>
-                </Link>
+                  </MenuButton>
+                  <MenuItems
+                    transition
+                    anchor="bottom"
+                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                  >
+                    <MenuItem>
+                      <Link className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" href="/auth/register">
+                        Registrarse
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" href="/auth/login">
+                        Iniciar Sesion
+                      </Link>
+                    </MenuItem>
+                    {isAuthenticated && (
+                      <>
+                        <MenuItem>
+                          <Link className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" href="/profile">
+                            Perfil de Usuario
+                          </Link>
+                        </MenuItem>
+                        {isAdmin &&
+                          <MenuItem>
+                            <Link className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" href="/dashboard">
+                              DashBoard
+                            </Link>
+                          </MenuItem>
+                        }
+                      </>
+                    )}
+
+                  </MenuItems>
+                </Menu>
+
               </div>
             </div>
           </div>
@@ -107,6 +152,44 @@ function NavBar() {
         </>
       )}
     </Disclosure>
+  )
+}
+
+// interface userOptionsProps {
+//   isLoggedIn: boolean;
+//   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+// }
+
+
+function UserOptions() {
+  return (
+    <Menu>
+      <MenuButton>
+        <UserIcon className="h-6 w-6 rounded-full" />
+      </MenuButton>
+      <MenuItems
+        transition
+        anchor="bottom"
+        className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+      >
+        <MenuItem>
+          <Link className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" href="/profile">
+            Perfil de Usuario
+          </Link>
+        </MenuItem>
+        <MenuItem>
+          <Link className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" href="/auth/register">
+            Registrarse
+          </Link>
+        </MenuItem>
+        <MenuItem>
+          <Link className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" href="/auth/login">
+            Iniciar Sesion
+          </Link>
+        </MenuItem>
+
+      </MenuItems>
+    </Menu>
   )
 }
 

@@ -1,7 +1,7 @@
 import { AdjustmentsHorizontalIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import ProductCard from "@/components/ProductCard"
-import { getProducts } from "@/queries/products"
+import { getProducts } from "@/queries/products.api"
 
 export const metadata = {
   title: 'Products page'
