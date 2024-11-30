@@ -2,22 +2,29 @@
 import { CalendarDaysIcon, CreditCardIcon, KeyIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { CartItemInterface } from "@/queries/cart.api";
+import { addOrder } from "@/lib/actions/order.actions";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { Loader2 } from "lucide-react";
 
-function CheckOutForm({ cartItems }: { cartItems: CartItemInterface[] }) {
+function CheckOutForm() {
   const radios = ["Tarjeta Visa/Mastercard", "Apple pay", "Paypal"]
   const router = useRouter()
-  return (
-    <form action={async (data) => {
-      //TODO: Server action for payment
+  const [isLoading, setIsLoading] = useState(false)
 
-      // console.log(cartItems)
-      // const res = await handdleCheckout(data, cartItems)
-      //
-      // if (res.success) {
-      //   router.push('/checkout/confirm')
-      //
-      // }
-    }}>
+  return (
+    <form
+      id="checkout-form"
+      action={async (formData: FormData) => {
+        console.log("ACTION")
+        const { data, error } = await addOrder(formData)
+        console.log("DATA", data)
+        console.log("ERROR", error)
+        setIsLoading(false)
+        if (data) {
+          router.push('/checkout/confirm')
+        }
+      }}>
       <div id="DatosGroup" className="max-w-xl">
         <div>
           <div className="mt-6">
@@ -33,12 +40,12 @@ function CheckOutForm({ cartItems }: { cartItems: CartItemInterface[] }) {
             <div className="grid grid-cols-1 sm:grid-cols-6 gap-3">
               <input name="firstNameInput" type="text" placeholder="Nombre" className="border border-black sm:col-span-3 py-1 pl-3" />
               <input name="lastNameInput" type="text" placeholder="Apellido" className="border border-black sm:col-span-3 py-1 pl-3" />
-              <input name="countryInput" defaultValue={'Argentina'} type="text" placeholder="País" className="border border-black sm:col-span-3 py-1 pl-3" />
+              <input name="countryInput" defaultValue={'Argentina'} type="text" placeholder="País" className="border border-black sm:col-span-3 py-1 pl-3" required />
               <div className="grid grid-cols-subgrid sm:col-span-3">
-                <input name="cityInput" defaultValue={'salta'} type="text" placeholder="Ciudad" className="border border-black col-start-3 col-span-2 sm:col-span-2 py-1 pl-3" />
-                <input name="cpInput" defaultValue={4400} type="text" placeholder="C.P." className="border border-black col-start-5 sm:col-span-1 py-1 pl-3" />
+                <input name="cityInput" defaultValue={'salta'} type="text" placeholder="Ciudad" className="border border-black col-start-3 col-span-2 sm:col-span-2 py-1 pl-3" required />
+                <input name="cpInput" defaultValue={4400} type="text" placeholder="C.P." className="border border-black col-start-5 sm:col-span-1 py-1 pl-3" required />
               </div>
-              <input name="addressInput" type="text" placeholder="Direccion" className="border border-black sm:col-span-6 py-1 pl-3" />
+              <input name="addressInput" type="text" placeholder="Direccion" className="border border-black sm:col-span-6 py-1 pl-3" required />
             </div>
           </div>
 
@@ -50,7 +57,7 @@ function CheckOutForm({ cartItems }: { cartItems: CartItemInterface[] }) {
                 {
                   radios.map((item, idx) => (
                     <li key={idx} className="flex items-center gap-x-2">
-                      <input value={item} type="radio" name="paymentMethod" id={idx.toString()} className="form-radio border-gray-400 focus:ring-gray-600 duration-150" />
+                      <input value={item} type="radio" name="paymentMethod" id={idx.toString()} className="form-radio border-gray-400 focus:ring-gray-600 duration-150" required />
                       <label htmlFor={idx.toString()} className="text-sm  font-medium">
                         {item}
                       </label>
@@ -94,11 +101,23 @@ function CheckOutForm({ cartItems }: { cartItems: CartItemInterface[] }) {
                 </div>
               </div>
             </div>
-            <button type="submit"
-              className='w-full px-4 py-2 bg-black text-white mt-2'
-            >
-              PAGAR
-            </button>
+            {!isLoading &&
+              <Button
+                type="submit"
+                form="checkout-form"
+                className='w-full'
+                onClick={() => { console.log("HOLAAAA") }}
+              >
+                PAGAR
+              </Button>
+            }
+            {isLoading &&
+              <Button disabled className="w-full">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Cargando
+              </Button>
+            }
+
           </div>
         </div>
       </div>

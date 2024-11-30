@@ -4,6 +4,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { Button } from '../ui/button'
 
 interface SearchProps {
   isOpen: boolean,
@@ -17,7 +18,7 @@ function SearchDialog({ isOpen, setIsOpen }: SearchProps) {
     <>
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-          <DialogPanel className="w-1/2 space-y-4 border bg-white p-12">
+          <DialogPanel className="w-1/3 space-y-4 border bg-white p-6 rounded-md">
             <DialogTitle className="font-bold text-center">Buscar Productos</DialogTitle>
             <form>
               <div className='relative'>
@@ -34,22 +35,20 @@ function SearchDialog({ isOpen, setIsOpen }: SearchProps) {
                   }}
                 />
               </div>
-              <div className="flex gap-4 mt-4">
-                <button
-                  className='bg-black text-white px-4 py-2'
+              <div className="flex gap-2 mt-4">
+                <Button
                   onClick={() => {
-                    console.log('CLICANKDO WN')
                     setIsOpen(false)
-                    router.push(`/search?name=${searchWord}`)
+                    router.push(`/search?productName=${searchWord}`)
                   }}>
                   Buscar
-                </button>
-                <button
-                  className='px-4 py-2 bg-gray-200'
+                </Button>
+                <Button
+                  variant='outline'
                   onClick={() => setIsOpen(false)}
                 >
                   Cancelar
-                </button>
+                </Button>
               </div>
             </form>
           </DialogPanel>

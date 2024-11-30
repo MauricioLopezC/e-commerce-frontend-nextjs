@@ -3,10 +3,13 @@ import { StarIcon } from "@heroicons/react/24/solid"
 import ProductForm from "@/components/product-page/ProductForm"
 import ProductDisclosure from "@/components/product-page/Disclosure"
 import { getProduct, getProductSkus } from "@/queries/products.api"
-
+import { peso } from "@/lib/constants"
 
 async function ProductPage({ params }: { params: { productId: string } }) {
-  const productId = Number(params.productId)
+  //NOTE: params.productId could be NaN, nullish coalescing operator only works
+  //with undefinded and null and || operator with falsy and truthy 
+
+  let productId = Number(params.productId) || 1
   const product = await getProduct(productId)
   const productSkus = await getProductSkus(productId)
 
@@ -19,7 +22,7 @@ async function ProductPage({ params }: { params: { productId: string } }) {
       <div id="group2" className="px-2 mt-2 max-w-md w-full">
         <div className="flex justify-between">
           <p className="font-bold text-lg">{product.name.toUpperCase()}</p>
-          <p className="font-bold text-lg">${product.price} ARS</p>
+          <p className="font-bold text-lg">{peso.format(product.price)}</p>
         </div>
 
         <div className="flex">
@@ -29,10 +32,10 @@ async function ProductPage({ params }: { params: { productId: string } }) {
           <StarIcon className="w-6 h-6" />
           <StarIcon className="w-6 h-6" />
         </div>
-        <ProductForm productId={productId} productSkus={productSkus} userId={1} />
+        <ProductForm productId={productId} productSkus={productSkus} />
 
         <div className="mt-6 w-full">
-          <ProductDisclosure title="DESCRIPTION" content={product.description} />
+          <ProductDisclosure title="Descripción" content={product.description} />
         </div>
       </div>
     </section>

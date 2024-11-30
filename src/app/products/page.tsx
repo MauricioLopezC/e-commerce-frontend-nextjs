@@ -1,36 +1,49 @@
-import { AdjustmentsHorizontalIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
+import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline"
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import ProductCard from "@/components/ProductCard"
-import { getProducts } from "@/queries/products.api"
+import { getAllProducts } from "@/lib/actions/product.actions"
+import { PaginationWithLinks } from "@/components/ui/paginations-with-links"
 
 export const metadata = {
   title: 'Products page'
 }
 
+interface ProductsPageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-async function ProductsPage() {
-  const products = await getProducts()
-  console.log(products)
+async function ProductsPage({ searchParams }: ProductsPageProps) {
+  const filters = await searchParams
+  const pageSize = Number(filters.limit ?? 10)
+  const currentPage = Number(filters.page ?? 1)
+  const { productsData, error } = await getAllProducts(filters)
+  if (!productsData) return null
   return (
-    <section className="mt-6">
+    <section className="mt-6 ">
       <h1 className="font-bold text-xl flex justify-center items-center">PRODUCTOS</h1>
 
 
       {/* products section */}
       <div className="w-fit mx-auto mt-10 mb-5">
-        <div className="flex justify-between">
-          <FiltersMenu />
-          <div className="flex items-center">
-            Ordenar por
-            <ChevronDownIcon className="h-4 w-4 mx-2" />
-          </div>
-        </div>
+        {/* <div className="flex justify-between"> */}
+        {/*   <FiltersMenu /> */}
+        {/*   <div className="flex items-center"> */}
+        {/*     Ordenar por */}
+        {/*     <ChevronDownIcon className="h-4 w-4 mx-2" /> */}
+        {/*   </div> */}
+        {/* </div> */}
 
         <div className=" grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-8 gap-x-8">
-          {products.map((product: any) => (
-            <ProductCard id={product.id} title={product.name} price={product.price} imgSrc={product.images[1]?.imgSrc} key={product.id} />
+          {productsData.products.map((product) => (
+            <ProductCard id={product.id} title={product.name} price={product.price} imgSrc={product.images[0]?.imgSrc} key={product.id} />
           ))}
-
+        </div>
+        <div className="mt-4">
+          <PaginationWithLinks
+            page={currentPage}
+            pageSize={pageSize}
+            totalCount={productsData.aggregate._count}
+          />
         </div>
       </div>
     </section>

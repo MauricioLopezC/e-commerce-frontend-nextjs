@@ -11,7 +11,7 @@ function ProductDetailsV2() {
       <CardHeader>
         <CardTitle>Detalles del Producto</CardTitle>
         <CardDescription>
-          Editar datos del produco
+          Editar datos del producto
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -35,11 +35,12 @@ function ProductDetailsV2() {
               type="number"
               className="w-full"
               min={0}
+              step=".01"
               required
             />
           </div>
           <div className="grid gap-3">
-            <Label htmlFor="cathegory">Categoria</Label>
+            <Label htmlFor="cathegory">Categoría</Label>
             <Input
               name='category'
               id="cathegory"
@@ -63,7 +64,7 @@ function ProductDetailsV2() {
             </Select>
           </div>
           <div className="grid gap-3">
-            <Label htmlFor="description">Descripcion</Label>
+            <Label htmlFor="description">Descripción</Label>
             <Textarea
               name='description'
               id="description"

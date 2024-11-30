@@ -6,10 +6,14 @@ interface User {
   exp: number
 }
 
-export function getPayload(token: string): User {
-  const arrayToken = token.split('.')
-  const tokenPayload = JSON.parse(atob(arrayToken[1]));
-  return tokenPayload
+export function getPayload(token: string): User | null {
+  try {
+    const arrayToken = token.split('.')
+    const tokenPayload = JSON.parse(atob(arrayToken[1]));
+    return tokenPayload
+  } catch (error) {
+    return null
+  }
 }
 
 export function isTokenExpired(token: string) {

@@ -26,7 +26,7 @@ async function CheckOutPage() {
         VERIFICAR
       </h1>
       <section className="container mx-auto mb-6 lg:flex lg:justify-center lg:space-x-24 min-h-[70vh]">
-        <CheckOutForm cartItems={cart} />
+        <CheckOutForm />
         <div className=" divide-y">
           <CartList cartItems={cart} />
           <div className="flex mt-6 pt-2  justify-between">

@@ -1,3 +1,4 @@
+import { Product, ProductSku } from "@/interfaces/products/product";
 import { BACKEND_URL } from "./constants"
 
 /**
@@ -28,24 +29,10 @@ export interface CartItemInterface {
   quantity: number;
   createdAt: Date;
   updatedAt: Date;
-  product: Product
+  product: Product;
+  productSku: ProductSku;
 }
 
-export interface Product {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  category: string;
-  sex: string;
-  images: Image[];
-}
-export interface Image {
-  id: number;
-  imgSrc: string;
-  productId: number;
-  productSkuId: number;
-}
 
 export interface ErrorResponse {
   statusCode: number,
@@ -77,7 +64,8 @@ export async function getCartId(userId: number, token: string): Promise<number |
     }
   })
   const cart = await res.json()
-  return cart[0]?.id
+  console.log('CART', cart)
+  return cart?.id
 }
 
 

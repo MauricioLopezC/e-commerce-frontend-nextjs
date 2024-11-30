@@ -19,7 +19,7 @@ export function NotLoggedInAlertDialog({ isOpen, setIsOpen }: AlertDialogProps) 
         <AlertDialogHeader>
           <AlertDialogTitle>No permitido</AlertDialogTitle>
           <AlertDialogDescription>
-            Debes iniciar sesion o registrarte para agreagar productos al carrito
+            Debes iniciar sesión o registrarte para agregar productos al carrito
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

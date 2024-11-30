@@ -2,15 +2,16 @@
 import { PlusIcon, MinusIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { updateQuantity, deleteCartItem } from "@/queries/cart.api"
+import { updateQuantity, deleteCartItem, CartItemInterface } from "@/queries/cart.api"
 import { cartItemsProps } from "@/interfaces/cart-item/cart-item"
 import { CldImage } from "next-cloudinary"
 import { useToast } from "@/hooks/use-toast"
+import { peso } from "@/lib/constants"
 
 
-function CartItem({ productName, imgSrc, productPrice, productQuantity, cartItemId, cartId }: cartItemsProps) {
+function CartItem({ cartItem }: { cartItem: CartItemInterface }) {
   //TODO: add color and size selected, simply include product sku in backend
-  const [cantidad, setCantidad] = useState(productQuantity)
+  const [cantidad, setCantidad] = useState(cartItem.quantity)
   const { toast } = useToast()
   const router = useRouter()
 
@@ -18,7 +19,7 @@ function CartItem({ productName, imgSrc, productPrice, productQuantity, cartItem
     <div className='flex border-t-2 border-b-2 max-w-fit '>
       <div className='w-48'>
         {/* <img src={imgSrc} alt="" className='object-cover h-48 w-48' /> */}
-        <CldImage src={imgSrc}
+        <CldImage src={cartItem.product.images[0].imgSrc}
           width="400"
           height="500"
           crop={{
@@ -29,10 +30,10 @@ function CartItem({ productName, imgSrc, productPrice, productQuantity, cartItem
         />
       </div>
       <div className='w-48 flex flex-col justify-around items-center'>
-        <h1 className="font-bold text-md text-center">{productName.toUpperCase()}</h1>
+        <h1 className="font-bold text-md text-center">{cartItem.product.name.toUpperCase()}</h1>
         <div className="flex divide-x">
-          <h2 className="text-md text-left text-gray-600 px-3">color</h2>
-          <h2 className="text-md text-right text-gray-600 px-3">talle</h2>
+          <h2 className="text-md text-left text-gray-600 px-3">{cartItem.productSku.color}</h2>
+          <h2 className="text-md text-right text-gray-600 px-3">{cartItem.productSku.size}</h2>
         </div>
 
         <div className="p-2 border border-black flex justify-between">
@@ -42,7 +43,7 @@ function CartItem({ productName, imgSrc, productPrice, productQuantity, cartItem
               if (cantidad > 0) {
                 const nextCantidad = cantidad - 1
                 setCantidad(nextCantidad)
-                const res = await updateQuantity(nextCantidad, cartItemId, cartId)
+                const res = await updateQuantity(nextCantidad, cartItem.id, cartItem.cartId)
                 if (res.ok) {
                   router.refresh()
                   toast({
@@ -60,7 +61,7 @@ function CartItem({ productName, imgSrc, productPrice, productQuantity, cartItem
               if (cantidad < 10) {
                 const nextCantidad = cantidad + 1
                 setCantidad(nextCantidad)
-                const res = await updateQuantity(nextCantidad, cartItemId, cartId)
+                const res = await updateQuantity(nextCantidad, cartItem.id, cartItem.cartId)
                 if (res.ok) {
                   router.refresh()
                   toast({
@@ -81,11 +82,11 @@ function CartItem({ productName, imgSrc, productPrice, productQuantity, cartItem
           </button>
         </div>
 
-        <h2 className="font-normal text-gray-600 mb-3">{productPrice} ARS</h2>
+        <h2 className="font-normal text-gray-600 mb-3">{peso.format(cartItem.product.price)}</h2>
       </div>
       <div>
         <button onClick={async () => {
-          const res = await deleteCartItem(cartItemId, cartId)
+          const res = await deleteCartItem(cartItem.id, cartItem.cartId)
           if (res.ok) {
             console.log("cartItem deleted successfully")
           } else console.log("error deleting product")

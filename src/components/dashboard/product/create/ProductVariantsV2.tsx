@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
-import { ProductSku } from '@/interfaces/products/Product'
+import { ProductSku } from '@/interfaces/products/product'
 import { useState } from 'react'
 
 interface skuInput {
@@ -38,7 +38,7 @@ function ProductVariantsV2() {
               <TableHead>Stock</TableHead>
               <TableHead>Color</TableHead>
               <TableHead>Talle</TableHead>
-              <TableHead>Imagenes</TableHead>
+              <TableHead>Imágenes</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -80,7 +80,7 @@ function ProductVariantsV2() {
                 </TableCell>
                 <TableCell>
                   <Label htmlFor={`images-${idx + 1}`} className="sr-only">
-                    Imagenes
+                    Imágenes
                   </Label>
                   <Input
                     id="size-1"

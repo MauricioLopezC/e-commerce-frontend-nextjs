@@ -1,20 +1,23 @@
 import { CartItemInterface } from "@/queries/cart.api"
 import CartItem from "./cart-item";
+import { ShoppingCart } from "lucide-react";
 
 async function CartList({ cartItems }: { cartItems: CartItemInterface[] }) {
   return (
     <div>
       <h1 className='font-bold text-lg flex justify-center lg:justify-start'>PRODUCTOS</h1>
       <div className='flex flex-col gap-4 items-center'>
+        {cartItems.length === 0 &&
+          <div className="flex items-center mt-6 space-x-2">
+            <ShoppingCart className="w-6 h-6" />
+            <p>Carrito Vació</p>
+
+          </div>
+        }
         {cartItems.map((cartItem, idx: number) => (
           <CartItem
             key={idx}
-            productName={cartItem.product.name}
-            imgSrc={cartItem.product.images[0].imgSrc}
-            productPrice={cartItem.product.price}
-            productQuantity={cartItem.quantity}
-            cartItemId={cartItem.id}
-            cartId={cartItem.cartId}
+            cartItem={cartItem}
           />
         ))}
       </div>

@@ -1,5 +1,5 @@
 import { Image } from "@/interfaces/products/image"
-import { Product, ProductSku } from "@/interfaces/products/Product"
+import { Product, ProductSku } from "@/interfaces/products/product"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -52,7 +52,7 @@ function CreatedProductDialog({ product, productSkus, images }: DialogProps) {
           </div>
 
           <div>
-            <h2>Imagenes</h2>
+            <h2>Imágenes</h2>
             <ul>
               {images.map((img: string) => (
                 <li>{img}</li>

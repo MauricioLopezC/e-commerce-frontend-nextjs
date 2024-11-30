@@ -1,3 +1,4 @@
+import { peso } from "@/lib/constants";
 import { CartItemInterface } from "@/queries/cart.api";
 
 function TotalList({ cartItems }: { cartItems: CartItemInterface[] }) {
@@ -5,12 +6,13 @@ function TotalList({ cartItems }: { cartItems: CartItemInterface[] }) {
     previous + current.product.price * current.quantity
   ), 0)
 
+
   return (
     <div className='flex flex-col divide-y-2 justify-around'>
       <div className='py-6'>
         <div className='flex justify-between'>
           <p className='font-bold'>Subtotal</p>
-          <p>{total} USD</p>
+          <p>{peso.format(total)}</p>
         </div>
         <div className='flex justify-between'>
           <p className='font-bold'>Delivery</p>
@@ -19,7 +21,7 @@ function TotalList({ cartItems }: { cartItems: CartItemInterface[] }) {
       </div>
       <div className='flex justify-between py-6'>
         <p className='font-bold'>Precio total</p>
-        <p>{total} USD</p>
+        <p>{peso.format(total)}</p>
       </div>
     </div>
   )

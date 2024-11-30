@@ -1,3 +1,4 @@
+import { Order } from "../orders";
 import { Image } from "./image";
 
 export interface Product {
@@ -7,7 +8,11 @@ export interface Product {
   description: string;
   category: string;
   sex: string;
+  unitsOnOrder: number;
+  totalCollected: number;
   images: Image[];
+  createdAt: Date;
+  updatedAt: Date;
   productSkus?: ProductSku[]
 }
 

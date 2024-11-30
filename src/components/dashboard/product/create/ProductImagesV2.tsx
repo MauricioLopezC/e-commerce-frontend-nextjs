@@ -1,7 +1,7 @@
 'use client'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Image } from "@/interfaces/products/image"
-import { Product } from "@/interfaces/products/Product"
+import { Product } from "@/interfaces/products/product"
 import { Upload } from "lucide-react"
 import { CldImage } from "next-cloudinary"
 
@@ -31,9 +31,9 @@ function ProductImages({ product }: { product: Product }) {
       className="overflow-hidden" x-chunk="dashboard-07-chunk-4"
     >
       <CardHeader>
-        <CardTitle>Imagenes del producto</CardTitle>
+        <CardTitle>Imágenes del producto</CardTitle>
         <CardDescription>
-          Click en las imagenes para ver informacion adicional
+          Click en las imágenes para ver información adicional
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -86,7 +86,7 @@ function SmallImageDialog({ image, skus }: { image: Image, skus: number[] }) {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="skus">Sku de la variacion</Label>
+            <Label htmlFor="skus">Sku de la variación</Label>
             <Select>
               <SelectTrigger id="skus" aria-label="Select status" className="col-span-3">
                 <SelectValue placeholder={image.productSkuId} defaultValue={image.productSkuId} />
@@ -126,7 +126,7 @@ function UploadButtonDialog({ skus }: { skus: number[] }) {
         <div className="grid gap-4 py-4">
 
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="skus">Sku de la variacion</Label>
+            <Label htmlFor="skus">Sku de la variación</Label>
             <Select>
               <SelectTrigger id="skus" aria-label="Select status" className="col-span-3">
                 <SelectValue placeholder="Seleccionar el sku del producto" />
@@ -192,7 +192,7 @@ function MainImageDialog({ image, skus }: { image: Image, skus: number[] }) {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="skus">Sku de la variacion</Label>
+            <Label htmlFor="skus">Sku de la variación</Label>
             <Select>
               <SelectTrigger id="skus" aria-label="Select status" className="col-span-3">
                 <SelectValue placeholder={image.productSkuId} defaultValue={image.productSkuId} />

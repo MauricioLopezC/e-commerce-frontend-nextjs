@@ -1,5 +1,5 @@
 'use client'
-import { logOut } from "@/lib/actions/auth-actions";
+import { logOut } from "@/lib/actions/auth.actions";
 
 function LogOutButton() {
   return (

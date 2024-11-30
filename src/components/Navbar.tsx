@@ -1,16 +1,13 @@
 "use client"
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, MagnifyingGlassIcon, UserIcon, XMarkIcon, HeartIcon, ShoppingBagIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, MagnifyingGlassIcon, UserIcon, XMarkIcon, HeartIcon, ShoppingBagIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import SearchDialog from './dialogs/SearchDialog'
-import { Dispatch, SetStateAction, useState } from 'react'
-import { checkSession, isAdminAction } from '@/lib/actions/navbar-actions'
-
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { checkSession, isAdminAction } from '@/lib/actions/navbar.actions'
 
 const navigation = [
   { name: "Nuevo", href: "/products", current: false },
-  { name: "Mujer", href: "/women", current: false },
-  { name: "Hombre", href: "/men", current: false },
   { name: "About", href: "/about", current: false },
 ];
 
@@ -22,8 +19,9 @@ function NavBar() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+
   return (
-    <Disclosure as="nav" className="sticky top-0 z-10 bg-white border-b" >
+    <Disclosure as="nav" className="sticky top-0 z-50 bg-white border-b" >
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2  sm:px-6 lg:px-8">
@@ -67,7 +65,9 @@ function NavBar() {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <HeartIcon className="h-6 w-6 mx-2" />
+                <Link href={'/favorites'}>
+                  <HeartIcon className="h-6 w-6 mx-2" />
+                </Link>
                 <Link href={'/cart'}>
                   <ShoppingBagIcon className="h-6 w-6 mx-2" />
                 </Link>
@@ -93,18 +93,22 @@ function NavBar() {
                   <MenuItems
                     transition
                     anchor="bottom"
-                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                    className="absolute right-0 z-10 mt-4 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                   >
-                    <MenuItem>
-                      <Link className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" href="/auth/register">
-                        Registrarse
-                      </Link>
-                    </MenuItem>
-                    <MenuItem>
-                      <Link className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" href="/auth/login">
-                        Iniciar Sesion
-                      </Link>
-                    </MenuItem>
+                    {!isAuthenticated &&
+                      <>
+                        <MenuItem>
+                          <Link className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" href="/auth/register">
+                            Registrarse
+                          </Link>
+                        </MenuItem>
+                        <MenuItem>
+                          <Link className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" href="/auth/login">
+                            Iniciar Sesión
+                          </Link>
+                        </MenuItem>
+                      </>
+                    }
                     {isAuthenticated && (
                       <>
                         <MenuItem>
@@ -115,7 +119,7 @@ function NavBar() {
                         {isAdmin &&
                           <MenuItem>
                             <Link className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" href="/dashboard">
-                              DashBoard
+                              Dashboard
                             </Link>
                           </MenuItem>
                         }
@@ -184,7 +188,7 @@ function UserOptions() {
         </MenuItem>
         <MenuItem>
           <Link className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" href="/auth/login">
-            Iniciar Sesion
+            Iniciar Sesión
           </Link>
         </MenuItem>
 

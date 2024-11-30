@@ -29,7 +29,6 @@ export function NoStockAlertDialog({ isOpen, setIsOpen }: AlertDialogProps) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogAction>OK</AlertDialogAction>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
