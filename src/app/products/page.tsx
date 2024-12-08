@@ -17,6 +17,7 @@ async function ProductsPage({ searchParams }: ProductsPageProps) {
   const pageSize = Number(filters.limit ?? 10)
   const currentPage = Number(filters.page ?? 1)
   const { productsData, error } = await getAllProducts(filters)
+
   if (!productsData) return null
   return (
     <section className="mt-6 ">

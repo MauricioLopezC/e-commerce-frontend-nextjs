@@ -19,7 +19,7 @@ interface UsersResponse {
   error?: ErrorResponse;
 }
 
-//NOTE: better aproach to handle api responses
+//NOTE: better approach to handle api responses
 export async function getUsers(limit: number = 10, page: number = 1): Promise<UsersResponse> {
   const token = cookies().get('access-token')?.value
 

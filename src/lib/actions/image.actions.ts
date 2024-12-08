@@ -4,7 +4,6 @@ import { BACKEND_URL } from "@/queries/constants"
 import { revalidatePath } from "next/cache"
 
 export async function uploadImage(formData: FormData, productId: number) {
-  //TODO: validate file size with ZOD
   console.log(formData)
   const image = formData.get('image') ?? ''
   const productSkuId = formData.get('productSkuId') ?? ''

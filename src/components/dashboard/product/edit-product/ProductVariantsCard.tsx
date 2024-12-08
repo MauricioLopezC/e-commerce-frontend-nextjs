@@ -30,7 +30,7 @@ function ProductVariantsCard({ productSkus }: { productSkus: ProductSku[] }) {
               <TableRow>
                 <TableHead className="w-[100px]">SKU</TableHead>
                 <TableHead>Stock</TableHead>
-                <TableHead>Precio</TableHead>
+                <TableHead>Color</TableHead>
                 <TableHead className="">Talle</TableHead>
                 <TableHead className="">Opciones</TableHead>
               </TableRow>

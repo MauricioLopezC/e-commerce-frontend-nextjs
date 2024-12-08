@@ -59,7 +59,7 @@ function ProductDetails({ product }: { product: Product }) {
               />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="price">Price</Label>
+              <Label htmlFor="price">Precio</Label>
               <Input
                 id="price"
                 name='price'

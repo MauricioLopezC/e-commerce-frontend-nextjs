@@ -1,23 +1,25 @@
-import NotLoggedPage from '@/components/common/notlogged-page'
 import ProductsTable from '@/components/dashboard/product/ProductTable'
 import { Button } from '@/components/ui/button'
-import { isTokenExpired } from '@/lib/jwt-decode'
 import { PlusCircle } from 'lucide-react'
-import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { getAllProducts } from '@/lib/actions/product.actions'
+import { PaginationWithLinks } from '@/components/ui/paginations-with-links'
 
-async function ProductDashboard() {
-  const cookieStore = cookies()
-  const token = cookieStore.get('access-token')
-  if (!token) return (<NotLoggedPage />)
-  if (isTokenExpired(token?.value ?? '')) return (<NotLoggedPage />) //expired session
+interface ProductsPageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-  const { productsData, error: productsError } = await getAllProducts({})
+async function ProductDashboard({ searchParams }: ProductsPageProps) {
+
+  const filters = await searchParams
+  const pageSize = Number(filters.limit ?? 10)
+  const currentPage = Number(filters.page ?? 1)
+
+  const { productsData, error: productsError } = await getAllProducts(filters)
   if (!productsData) return null
 
   return (
-    <main className=' mt-4 grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-4'>
+    <main className=' mt-4 grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-4 mb-4'>
       <div className='flex items-center'>
         <div className='flex items-center gap-2'>
           <Link href="/dashboard/products/create">
@@ -31,6 +33,13 @@ async function ProductDashboard() {
         </div>
       </div>
       <ProductsTable products={productsData.products} />
+      <div className="">
+        <PaginationWithLinks
+          page={currentPage}
+          pageSize={pageSize}
+          totalCount={productsData.aggregate._count}
+        />
+      </div>
     </main>
   )
 }
