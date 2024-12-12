@@ -2,11 +2,22 @@
 import { cookies } from "next/headers"
 import { BACKEND_URL } from "@/queries/constants"
 import { revalidatePath } from "next/cache"
+import { ProductSku } from "@/interfaces/products/product";
+//TODO: add getProductSku and getAllProductSkus functions with tags for later revalidateTag
+//because new productSkus are not updated in products/[productId] users page
 
-export async function createProductSku(formData: FormData, productId: number) {
-  //todo validate formDATA with ZOD
-  console.log(formData)
+interface ProductSkuDto {
+  quantity: number;
+  size: string;
+  color: string;
+}
 
+interface ProductSkuResponse {
+  productSku?: ProductSku;
+  error?: any
+}
+
+export async function createProductSku(createProductSkuDto: ProductSkuDto, productId: number) {
   const token = cookies().get('access-token')?.value
   const res = await fetch(`${BACKEND_URL}/products/${productId}/product-skus`, {
     method: 'POST',
@@ -15,21 +26,27 @@ export async function createProductSku(formData: FormData, productId: number) {
       "Content-Type": "application/json",
       Cookie: `access-token=${token}`
     },
-    body: JSON.stringify({
-      size: formData.get('size'),
-      color: formData.get('color'),
-      quantity: Number(formData.get('stock'))
-    })
+    body: JSON.stringify(createProductSkuDto)
   })
-  if (!res.ok) return { error: true, message: "ERROR" }
   revalidatePath(`/dashboard/products/edit/${productId}`)
-  return res.json()
+  if (res.ok) {
+    const data = await res.json()
+    return {
+      createdProductSku: data
+    }
+  }
+
+  const error = await res.json()
+  return {
+    error
+  }
 }
 
-export async function editProductSku(formdata: FormData, productId: number, productSkuId: number) {
-  //TODO: validate formDATA with ZOD
-  console.log("FDATA", formdata)
-
+export async function editProductSku(
+  productSkuDto: ProductSkuDto,
+  productId: number,
+  productSkuId: number
+): Promise<ProductSkuResponse> {
   const token = cookies().get('access-token')?.value
   const res = await fetch(`${BACKEND_URL}/products/${productId}/product-skus/${productSkuId}`, {
     method: 'PATCH',
@@ -38,16 +55,17 @@ export async function editProductSku(formdata: FormData, productId: number, prod
       "Content-Type": "application/json",
       Cookie: `access-token=${token}`
     },
-    body: JSON.stringify({
-      size: formdata.get('size'),
-      color: formdata.get('color'),
-      quantity: Number(formdata.get('stock'))
-    })
+    body: JSON.stringify(productSkuDto)
   })
-  //TODO: handle error properly
-  if (!res.ok) return { error: true, message: "ERROR" }
+
   revalidatePath(`/dashboard/products/edit/${productId}`)
-  return res.json()
+
+  if (res.ok) {
+    const data = await res.json()
+    return { productSku: data }
+  }
+  const error = await res.json()
+  return { error }
 }
 
 
@@ -63,7 +81,6 @@ export async function deleteProductSku(productId: number, productSkuId: number) 
     }
   })
 
-  //TODO: handle error properly
   if (!res.ok) return { error: true, message: "ERROR" }
   revalidatePath(`/dashboard/products/edit/${productId}`)
   return res.json()

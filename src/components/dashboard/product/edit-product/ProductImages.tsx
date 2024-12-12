@@ -26,8 +26,6 @@ import { useState } from "react"
 function ProductImages({ product, productSkus }: { product: Product, productSkus: ProductSku[] }) {
   const images = product.images
   const skus = productSkus.map(sku => sku.id)
-  //console.log("SKUs", skus)
-  //console.log("IMg>>", images)
 
   return (
     <Card
@@ -42,7 +40,6 @@ function ProductImages({ product, productSkus }: { product: Product, productSkus
       <CardContent>
         <div className="grid gap-2">
           <MainImageDialog image={images[0]} skus={skus} />
-
           <div className="grid grid-cols-3 gap-2">
             {
               images.slice(1).map((image, idx) => (

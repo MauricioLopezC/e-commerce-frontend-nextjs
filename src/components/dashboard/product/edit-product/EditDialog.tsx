@@ -1,96 +1,160 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { CircleCheckBig, Pencil } from 'lucide-react'
+import { CircleCheckBig } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { ProductSku } from '@/interfaces/products/product'
 import { editProductSku } from '@/lib/actions/product-skus.actions'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useEffect } from 'react'
+import { z } from '@/lib/zod/es-zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { useToast } from '@/hooks/use-toast'
+import { DialogDescription } from '@radix-ui/react-dialog'
 
-function EditDialog({ productSku }: { productSku: ProductSku }) {
+interface EditDialogProps {
+  productSku: ProductSku;
+  dialogOpen: boolean;
+  setDialogOpen: Dispatch<SetStateAction<boolean>>;
+}
 
-  const [isCreated, setIsCreated] = useState(false)
+const formSchema = z.object({
+  productSkuId: z.coerce.number(),
+  quantity: z.coerce.number().int().min(0),
+  size: z.string().min(1).max(10),
+  color: z.string().min(2).max(50),
+})
+
+
+function EditDialog({ productSku, dialogOpen, setDialogOpen }: EditDialogProps) {
+  const { toast } = useToast()
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      productSkuId: productSku.id,
+      quantity: productSku.quantity,
+      size: productSku.size,
+      color: productSku.color
+    }
+  })
+
+  useEffect(() => {
+    form.reset({
+      productSkuId: productSku.id,
+      quantity: productSku.quantity,
+      size: productSku.size,
+      color: productSku.color
+    })
+  }, [productSku])
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values)
+    const productId = productSku.productId
+    const productSkuId = productSku.id
+    const { productSku: updatedProductSku } = await editProductSku(values, productId, productSkuId)
+    if (updatedProductSku) {
+      toast({
+        description: (
+          <div>
+            <h2 className="font-semibold text-md">
+              <span><CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" /></span>
+              Variante actualizada
+            </h2>
+          </div>
+        ),
+      })
+    } else {
+      toast({
+        variant: "destructive",
+        title: "¡Vaya! Algo salió mal.",
+        description: "Hubo un problema al crear el producto, intento nuevamente mas tarde",
+      })
+    }
+  }
+
   return (
-    <Dialog onOpenChange={() => { setIsCreated(false) }}>
-      <DialogTrigger asChild>
-        <Button variant='secondary'><Pencil className='w-4 h-4' /></Button>
-      </DialogTrigger>
+    <Dialog onOpenChange={setDialogOpen} open={dialogOpen} >
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Editar Variación</DialogTitle>
-          {isCreated &&
-            <div className='flex space-x-1 items-center'>
-              <CircleCheckBig className='w-5 h-5 text-green-500' />
-              <p>Variación editada correctamente</p>
-            </div>
-          }
+          <DialogDescription>
+            Actualiza los datos de la variación
+          </DialogDescription>
         </DialogHeader>
-        <form id='edit-form' action={async (formData: FormData) => {
-          const productId = productSku.productId
-          const productSkuId = productSku.id
-          const res = await editProductSku(formData, productId, productSkuId)
-          console.log(res)
-          if (!res.error) {
-            setIsCreated(true)
-          }
-        }}>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="productSku" className="text-right">
-                SKU
-              </Label>
-              <Input
-                id="productSku"
-                name='productSkuId'
-                defaultValue={productSku.id}
-                className="col-span-3"
-                disabled
+        <Form {...form}>
+          <form id='edit-form' onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="grid gap-4 py-4">
+              <FormField
+                control={form.control}
+                name="productSkuId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>ID</FormLabel>
+                    <FormControl>
+                      <Input className='col-span-3' disabled {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="stock" className="text-right">
-                Stock
-              </Label>
-              <Input
-                name='stock'
-                id="stock"
-                defaultValue={productSku.quantity}
-                className="col-span-3"
+              <FormField
+                control={form.control}
+                name="quantity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Stock</FormLabel>
+                    <FormControl>
+                      <Input className='col-span-3' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="color" className="text-right">
-                Color
-              </Label>
-              <Input
+              <FormField
+                control={form.control}
                 name='color'
-                id="color"
-                defaultValue={productSku.color}
-                className="col-span-3"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Color</FormLabel>
+                    <FormControl>
+                      <Input className='col-span-3'  {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="size" className="text-right">
-                Talle
-              </Label>
-              <Input
+              <FormField
+                control={form.control}
                 name='size'
-                id="size"
-                defaultValue={productSku.size}
-                className="col-span-3"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Talle</FormLabel>
+                    <FormControl>
+                      <Input className='col-span-3'  {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
-          </div>
-        </form>
+          </form>
+        </Form>
+
         <DialogFooter>
           <Button type="submit" form='edit-form'>Guardar</Button>
         </DialogFooter>

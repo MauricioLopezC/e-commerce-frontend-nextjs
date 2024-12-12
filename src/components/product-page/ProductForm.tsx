@@ -20,6 +20,7 @@ interface ProductOptionsProps {
 }
 
 function ProductForm({ productId, productSkus }: ProductOptionsProps) {
+  //TODO: FIX productForm!!!
   const [quantity, setQuanity] = useState(1)
   const [size, setSize] = useState(productSkus[0].size)
   const [color, setColor] = useState(productSkus[0].color)
@@ -190,6 +191,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
                 <Field key={idx} className="flex items-center gap-2">
                   <Radio
                     value={productSku.color}
+                    disabled
                     className="group flex size-5 items-center justify-center rounded-full border bg-white data-[checked]:bg-blue-400"
                   >
                     <span className="invisible size-2 rounded-full bg-white group-data-[checked]:visible" />

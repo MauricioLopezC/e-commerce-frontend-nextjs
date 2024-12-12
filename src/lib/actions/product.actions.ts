@@ -59,35 +59,38 @@ export async function getAllProducts(options: GetProductsOptions): Promise<Produ
   }
 }
 
-interface FormSchema {
+export async function getProduct(productId: number): Promise<ProductResponse> {
+  const res = await fetch(`${BACKEND_URL}/products/${productId}`, {
+    method: 'GET',
+    next: {
+      tags: ['product']
+    }
+  })
+  if (res.ok) {
+    const product = await res.json()
+    return {
+      product
+    }
+  }
+
+  const error = await res.json()
+  return {
+    error
+  }
+
+}
+
+
+interface CreateOrUpdateProductDto {
   category: string;
   name: string;
   sex: string;
   price: number;
   description: string;
-  variations: {
-    size: string;
-    color: string;
-    stock: number;
-    image: File;
-  }[];
 }
 
-interface CreateProductDto {
-  category: string;
-  name: string;
-  sex: string;
-  price: number;
-  description: string;
-}
 
-interface CreateProductSkuDto {
-  size: string;
-  color: string;
-  quantity: number;
-}
-
-export async function createProduct(createProductDto: CreateProductDto) {
+export async function createProduct(createProductDto: CreateOrUpdateProductDto) {
   const token = cookies().get('access-token')?.value
 
   const res = await fetch(`${BACKEND_URL}/products`, {
@@ -113,29 +116,6 @@ export async function createProduct(createProductDto: CreateProductDto) {
   }
 }
 
-export async function createProductSku(createProductSkuDto: CreateProductSkuDto, productId: number) {
-  const token = cookies().get('access-token')?.value
-  const res = await fetch(`${BACKEND_URL}/products/${productId}/product-skus`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: `access-token=${token}`
-    },
-    body: JSON.stringify(createProductSkuDto)
-  })
-  if (res.ok) {
-    const data = await res.json()
-    return {
-      createdProductSku: data
-    }
-  }
-
-  const error = await res.json()
-  return {
-    error
-  }
-}
 
 export async function uploadImage(formData: FormData) {
   //TODO: validate that formData has productId productSkuId and file properties
@@ -160,106 +140,29 @@ export async function uploadImage(formData: FormData) {
   }
 }
 
-export async function createProductAndVariations(values: FormSchema) {
-  const { variations, ...rest } = values
-  const token = cookies().get('access-token')?.value
-
-  const res = await fetch(`${BACKEND_URL}/products`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: `access-token=${token}`
-    },
-    body: JSON.stringify(rest),
-  })
-  revalidateTag('products')
-
-  if (!res.ok) return {
-    statusCode: 500,
-    message: "Server error"
-  }
-
-  const product = await res.json()
-
-  for (const variation of variations) {
-    const variationRes = await fetch(`${BACKEND_URL}/products/${product.id}/product-skus`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: `access-token=${token}`
-      },
-      body: JSON.stringify({
-        size: variation.size,
-        color: variation.color,
-        quantity: variation.stock
-      })
-    })
-    if (!variationRes.ok) return {
-      statusCode: 500,
-      message: "Server error"
-    }
-    const createdVariation = await res.json()
-
-    const imageData = new FormData()
-    imageData.append('file', variation.image)
-    imageData.append('productId', product.id.toString())
-    imageData.append('productSkuId', createdVariation.id.toString())
-
-    const imageResponse = await fetch(`${BACKEND_URL}/images`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        Cookie: `access-token=${token}`
-      },
-      body: imageData,
-    })
-    if (!imageResponse.ok) return {
-      statusCode: 500,
-      message: "Server error"
-    }
-  }
-  return {
-    statusCode: 201,
-    message: "product created successfully",
-    product
-  }
-}
-
-
 interface ProductResponse {
   product?: Product;
   error?: any;
 }
 
-export async function updateProduct(id: number, formdata: FormData): Promise<ProductResponse> {
+
+export async function updateProduct(
+  productId: number,
+  data: CreateOrUpdateProductDto
+): Promise<ProductResponse> {
   const token = cookies().get('access-token')?.value ?? ''
-
-  const name = formdata.get('name')
-  const price = Number(formdata.get('price'))
-  const description = formdata.get('description')
-  const category = formdata.get('category')
-  const sex = formdata.get('sex')
-
-  const res = await fetch(`${BACKEND_URL}/products/${id}`, {
+  const res = await fetch(`${BACKEND_URL}/products/${productId}`, {
     method: 'PATCH',
     credentials: 'include',
     headers: {
       "Content-Type": "application/json",
       Cookie: `access-token=${token}`
     },
-    body: JSON.stringify({
-      name,
-      price,
-      description,
-      category,
-      sex
-    })
+    body: JSON.stringify(data)
   })
 
   if (res.ok) {
-    revalidateTag('products')
+    revalidateTag('product')
     const data = await res.json()
     return {
       product: data

@@ -74,7 +74,6 @@ function ProductDetailsV2({ form }: {
             />
           </div>
           <div className="grid gap-3">
-
             <FormField
               control={form.control}
               name="sex"

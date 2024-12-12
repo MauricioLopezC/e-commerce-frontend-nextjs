@@ -2,16 +2,18 @@ import CarouselCustom from "@/components/product-page/Carousel"
 import { StarIcon } from "@heroicons/react/24/solid"
 import ProductForm from "@/components/product-page/ProductForm"
 import ProductDisclosure from "@/components/product-page/Disclosure"
-import { getProduct, getProductSkus } from "@/queries/products.api"
+import { getProductSkus } from "@/queries/products.api"
 import { peso } from "@/lib/constants"
+import { getProduct } from "@/lib/actions/product.actions"
 
 async function ProductPage({ params }: { params: { productId: string } }) {
   //NOTE: params.productId could be NaN, nullish coalescing operator only works
   //with undefinded and null and || operator with falsy and truthy 
 
   let productId = Number(params.productId) || 1
-  const product = await getProduct(productId)
+  const { product, error } = await getProduct(productId)
   const productSkus = await getProductSkus(productId)
+  if (!product) return null
 
   return (
     <section className="mb-20 lg:flex lg:justify-center lg:mt-6 lg:gap-16 mx-auto container">

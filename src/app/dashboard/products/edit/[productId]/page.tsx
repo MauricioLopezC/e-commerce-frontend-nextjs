@@ -23,9 +23,6 @@ async function EditProductPage({
   const product = await getProduct(productId);
   const productSkus = await getProductSkus(productId);
 
-  //TODO: add form and form button on both ProductDetails and ProductVariants Cards for
-  //submit
-
   return (
     <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 mb-16 mt-4">
       <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
@@ -40,7 +37,10 @@ async function EditProductPage({
             {product.name.toUpperCase()}
           </h1>
           <div className="hidden items-center gap-2 md:ml-auto md:flex">
-            <Link href="/dashboard/products" className={buttonVariants({ variant: 'outline', size: 'sm' })}>Cancelar</Link>
+            <Link href="/dashboard/products"
+              className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+              Cancelar
+            </Link>
           </div>
         </div>
 
@@ -54,7 +54,9 @@ async function EditProductPage({
             <ProductImages product={product} productSkus={productSkus} />
           </div>
           <div className="flex items-center justify-center gap-2 md:hidden">
-            <Link href="/dashboard/products" className={buttonVariants({ variant: 'outline', size: 'sm' })}>Cancelar</Link>
+            <Link href="/dashboard/products"
+              className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+              Cancelar</Link>
             <Button size="sm">Guardar</Button>
           </div>
         </div>

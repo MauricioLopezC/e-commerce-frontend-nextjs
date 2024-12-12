@@ -1,7 +1,8 @@
 'use client'
 import ProductDetailsV2 from '@/components/dashboard/product/create/ProductDetailsV2'
 import { Button } from '@/components/ui/button'
-import { createProduct, createProductAndVariations, createProductSku, uploadImage } from '@/lib/actions/product.actions'
+import { createProduct, uploadImage } from '@/lib/actions/product.actions'
+import { createProductSku } from '@/lib/actions/product-skus.actions'
 import { useState } from 'react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { CircleCheckBig, Loader2, TrashIcon } from 'lucide-react'
@@ -15,6 +16,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
+import Link from 'next/link'
+import { useToast } from '@/hooks/use-toast'
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -43,6 +46,7 @@ function CreateProductPage() {
   const router = useRouter()
   const [productId, setProductId] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -65,7 +69,15 @@ function CreateProductPage() {
     setIsLoading(true)
     const { variations, ...rest } = values
     const { createdProduct, error: productError } = await createProduct(rest)
-    if (!createdProduct) return null
+    if (!createdProduct) {
+      toast({
+        variant: "destructive",
+        title: "¡Vaya! Algo salió mal.",
+        description: "Hubo un problema al crear el producto, intento nuevamente mas tarde",
+        // action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
+      return null
+    }
     const productId = createdProduct.id
     console.log(createdProduct)
 
@@ -77,7 +89,15 @@ function CreateProductPage() {
       }, productId)
       console.log(createdProductSku, productSkuError)
 
-      if (!createdProductSku) return null
+      if (!createdProductSku) {
+        toast({
+          variant: "destructive",
+          title: "¡Vaya! Algo salió mal.",
+          description: "Hubo un problema al crear el producto, intento nuevamente mas tarde",
+          // action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+        return null
+      }
 
       const imageData = new FormData()
       imageData.append('file', variation.image)
@@ -85,7 +105,14 @@ function CreateProductPage() {
       imageData.append('productSkuId', createdProductSku.id.toString())
       const { createdImage, error: imageError } = await uploadImage(imageData)
       console.log(createdImage, imageError)
-      if (!createdImage) return null
+      if (!createdImage) {
+        toast({
+          variant: "destructive",
+          title: "¡Vaya! Algo salió mal.",
+          description: "Hubo un problema al crear el producto, intento nuevamente mas tarde",
+          // action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+      }
     }
     setProductId(productId)
     setIsCreated(true)
@@ -96,8 +123,8 @@ function CreateProductPage() {
     <main className='grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 mb-16 mt-4'>
       <div className='mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-2'>
         <div className="hidden items-center gap-2 md:ml-auto md:flex">
-          <Button variant="outline" size="sm">
-            Cancelar
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/dashboard/products">Cancelar</Link>
           </Button>
           {isLoading ?
             <Button disabled>
@@ -127,7 +154,6 @@ function CreateProductPage() {
                         {fields.map((field, idx) => (
                           <TableRow key={field.id}>
                             <TableCell>
-
                               <FormField
                                 control={form.control}
                                 name={`variations.${idx}.stock`}

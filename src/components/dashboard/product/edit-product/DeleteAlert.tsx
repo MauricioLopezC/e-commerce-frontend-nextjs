@@ -7,18 +7,23 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
 import { deleteProductSku } from "@/lib/actions/product-skus.actions"
-import { Trash2 } from "lucide-react"
+import { Dispatch, SetStateAction } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { TrashIcon } from "lucide-react";
 
-function DeleteAlert({ productId, productSkuId }: { productId: number, productSkuId: number }) {
+interface DeleteAlertProps {
+  productId: number;
+  productSkuId: number;
+  dialogOpen: boolean;
+  setDialogOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+function DeleteAlert({ productId, productSkuId, dialogOpen, setDialogOpen }: DeleteAlertProps) {
+  const { toast } = useToast()
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant='destructive'><Trash2 className='w-4 h-4' /></Button>
-      </AlertDialogTrigger>
+    <AlertDialog defaultOpen={false} open={dialogOpen} onOpenChange={setDialogOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>¿Está seguro de eliminar?</AlertDialogTitle>
@@ -31,6 +36,16 @@ function DeleteAlert({ productId, productSkuId }: { productId: number, productSk
           <AlertDialogAction onClick={async () => {
             const res = await deleteProductSku(productId, productSkuId)
             console.log(res)
+            toast({
+              description: (
+                <div>
+                  <h2 className="font-semibold text-md">
+                    <span><TrashIcon className="h-4 w-4 mr-2 text-red-500 inline" /></span>
+                    Variante elimindada
+                  </h2>
+                </div>
+              ),
+            })
           }}>Eliminar</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
