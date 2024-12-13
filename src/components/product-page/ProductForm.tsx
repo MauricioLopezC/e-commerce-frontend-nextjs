@@ -2,11 +2,13 @@
 import { HeartIcon, TrashIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSku } from "@/interfaces/products/product";
-import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
+// import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
+
+import { RadioGroup, RadioGroupItem } from "@/components/origin-ui/radio-group";
 import { NoStockAlertDialog } from "./NoStockAlert";
 import { NotLoggedInAlertDialog } from "./NotLoggedInAltert";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { addCartItem } from "@/lib/actions/cart.actions";
 import { addFavorite, deleteFavorite, getFavorites } from "@/lib/actions/favorites.actions";
 import { checkSession } from "@/lib/actions/navbar.actions";
@@ -20,17 +22,17 @@ interface ProductOptionsProps {
 }
 
 function ProductForm({ productId, productSkus }: ProductOptionsProps) {
-  //TODO: FIX productForm!!!
   const [quantity, setQuanity] = useState(1)
   const [size, setSize] = useState(productSkus[0].size)
-  const [color, setColor] = useState(productSkus[0].color)
+  const [color, setColor] = useState<string | undefined>(undefined)
   const [isOpenNS, setIsOpenNS] = useState(false)
   const [isOpenNL, setIsOpenNL] = useState(false)
   const { toast } = useToast()
   const [isFavorite, setIsFavorite] = useState(false)
   const [favorite, setFavorite] = useState<Favorite | null>()
+  const order = ["xs", "s", "m", "l", "xl", "xxl", "xxxl"];
 
-  const [selectedPSku, setSelectedPSku] = useState(productSkus[0])
+  const [selectedPSku, setSelectedPSku] = useState<ProductSku | null>(productSkus[0])
   useEffect(() => {
     let sPsku = productSkus.find((productSku) => {
       return productSku.size === size && productSku.color === color
@@ -38,7 +40,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
     if (sPsku) {
       setSelectedPSku(sPsku)
     } else {
-      alert("ERROR FATAL??? XD")
+      setSelectedPSku(null)
     }
   }, [size, color])
 
@@ -99,11 +101,12 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
   }
 
   async function onAddToCartClick() {
+    if (selectedPSku === null) return null
+    console.log(color, size, selectedPSku)
     if (selectedPSku && quantity > selectedPSku.quantity) {
       setIsOpenNS(true)
       return
     }
-    //const res = await addToCart(productId, selectedPSku.id, quantity)
     const { cartItem, error } = await addCartItem(productId, selectedPSku.id, quantity)
     console.log(cartItem, error)
     if (error && error.statusCode === 401) {
@@ -157,60 +160,80 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
         </Button>
       </div>
 
-      <div id="details" className="flex flex-col divide-y">
-        <div className="py-2">
-          <h1 className="font-semibold text-lg py-2 px-2">Talle:</h1>
-          <RadioGroup value={size} onChange={setSize}>
+      <div id="details" className="flex flex-col  mt-4 space-y-4">
+        <fieldset className="space-y-4">
+          <legend className="text-sm font-medium leading-none text-foreground">Talle</legend>
+          <RadioGroup className="grid grid-cols-3 gap-2" value={size} onValueChange={setSize}>
+            {/*HACK: find a way to avoid sorting two times the array, checking if array is only numeric or contains strings*/}
             {productSkus
               .filter((productSku, idx, self) =>
                 idx === self.findIndex(pSku => pSku.size === productSku.size)
               )
-              .map((productSku, idx) => (
-                <Field key={idx} className="flex items-center gap-2">
-                  <Radio
+              .sort((a, b) => {
+                return Number(a.size) - Number(b.size)
+              })
+              .sort((a, b) => {
+                return order.indexOf(a.size.toLowerCase()) - order.indexOf(b.size.toLowerCase())
+              })
+              .map((productSku) => (
+                <label
+                  key={productSku.id}
+                  className="relative flex cursor-pointer flex-col items-center gap-3 rounded-lg border border-input px-2 py-3 text-center shadow-sm shadow-black/5 outline-offset-2 transition-colors has-[[data-disabled]]:cursor-not-allowed has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-accent has-[[data-disabled]]:opacity-50 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70"
+                >
+                  <RadioGroupItem
+                    id={productSku.id.toString()}
                     value={productSku.size}
-                    className="group flex size-5 items-center justify-center rounded-full border bg-white data-[checked]:bg-blue-400"
-                  >
-                    <span className="invisible size-2 rounded-full bg-white group-data-[checked]:visible" />
-                  </Radio>
-                  <Label>{productSku.size}</Label>
-                </Field>
-
+                    className="sr-only after:absolute after:inset-0"
+                  />
+                  <p className="text-sm font-medium leading-none text-foreground">{productSku.size.toUpperCase()}</p>
+                </label>
               ))}
           </RadioGroup>
-        </div>
-
-        <div className="py-2">
-          <h1 className="font-semibold text-lg py-2 px-2">Color:</h1>
-          <RadioGroup value={color} onChange={setColor}>
+        </fieldset>
+        <fieldset className="space-y-4">
+          <legend className="text-sm font-medium leading-none text-foreground">Color</legend>
+          <RadioGroup className="grid grid-cols-3 gap-2" value={color} onValueChange={setColor}>
             {productSkus
               .filter((productSku, idx, self) =>
                 idx === self.findIndex(pSku => pSku.color === productSku.color)
               )
-              .map((productSku, idx) => (
-                <Field key={idx} className="flex items-center gap-2">
-                  <Radio
-                    value={productSku.color}
-                    disabled
-                    className="group flex size-5 items-center justify-center rounded-full border bg-white data-[checked]:bg-blue-400"
+              .map((filteredPsku) => {
+                let isEnabled = productSkus.some((originalPsku) => originalPsku.size === size && originalPsku.color === filteredPsku.color)
+                return (
+                  <label
+                    key={filteredPsku.id}
+                    className="relative flex cursor-pointer flex-col items-center gap-3 rounded-lg border border-input px-2 py-3 text-center shadow-sm shadow-black/5 outline-offset-2 transition-colors has-[[data-disabled]]:cursor-not-allowed has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-accent has-[[data-disabled]]:opacity-50 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70"
                   >
-                    <span className="invisible size-2 rounded-full bg-white group-data-[checked]:visible" />
-                  </Radio>
-                  <Label>{productSku.color}</Label>
-                </Field>
-
-              ))}
+                    <RadioGroupItem
+                      id={filteredPsku.id.toString()}
+                      value={filteredPsku.color}
+                      className="sr-only after:absolute after:inset-0"
+                      disabled={!isEnabled}
+                    />
+                    <p className="text-sm font-medium leading-none text-foreground">{filteredPsku.color}</p>
+                  </label>
+                )
+              })}
           </RadioGroup>
-        </div>
+        </fieldset>
       </div>
-      <h1 className="font-semibold text-lg py-2 px-2">STOCK: {selectedPSku?.quantity}</h1>
-
-      <Button
-        className='max-w-md w-full px-4 py-2 bg-black text-white mt-2'
-        onClick={onAddToCartClick}
-      >
-        Agregar al carrito
-      </Button>
+      <h1 className="text-sm font-medium leading-none text-foreground mt-4">Stock: {selectedPSku?.quantity}</h1>
+      {selectedPSku &&
+        <Button
+          className='max-w-md w-full px-4 py-2 bg-black text-white mt-2'
+          onClick={onAddToCartClick}
+        >
+          Agregar al carrito
+        </Button>
+      }
+      {!selectedPSku &&
+        <Button
+          className='max-w-md w-full px-4 py-2 bg-black text-white mt-2'
+          disabled
+        >
+          No disponible
+        </Button>
+      }
       <p className="text-xs text-gray-600 my-3">Envío gratuito en pedidos superiores a $100.000,00</p>
       <NoStockAlertDialog isOpen={isOpenNS} setIsOpen={setIsOpenNS} />
       <NotLoggedInAlertDialog isOpen={isOpenNL} setIsOpen={setIsOpenNL} />

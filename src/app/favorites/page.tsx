@@ -9,9 +9,7 @@ export const metadata = {
 }
 
 async function FavoritesPage() {
-  //TODO: login control
-
-  const { favorites, error } = await getFavorites()
+  const { favorites } = await getFavorites()
   if (!favorites) return null
 
   return (

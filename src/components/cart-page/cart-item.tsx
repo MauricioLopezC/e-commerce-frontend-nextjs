@@ -3,14 +3,13 @@ import { PlusIcon, MinusIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { updateQuantity, deleteCartItem, CartItemInterface } from "@/queries/cart.api"
-import { cartItemsProps } from "@/interfaces/cart-item/cart-item"
 import { CldImage } from "next-cloudinary"
 import { useToast } from "@/hooks/use-toast"
 import { peso } from "@/lib/constants"
 
 
 function CartItem({ cartItem }: { cartItem: CartItemInterface }) {
-  //TODO: add color and size selected, simply include product sku in backend
+  //TODO: migrate updateQuantity to server actions in cart.actions
   const [cantidad, setCantidad] = useState(cartItem.quantity)
   const { toast } = useToast()
   const router = useRouter()
@@ -18,7 +17,6 @@ function CartItem({ cartItem }: { cartItem: CartItemInterface }) {
   return (
     <div className='flex border-t-2 border-b-2 max-w-fit '>
       <div className='w-48'>
-        {/* <img src={imgSrc} alt="" className='object-cover h-48 w-48' /> */}
         <CldImage src={cartItem.product.images[0].imgSrc}
           width="400"
           height="500"
@@ -40,7 +38,7 @@ function CartItem({ cartItem }: { cartItem: CartItemInterface }) {
           <button
             className="px-2 py-1"
             onClick={async () => {
-              if (cantidad > 0) {
+              if (cantidad > 1) {
                 const nextCantidad = cantidad - 1
                 setCantidad(nextCantidad)
                 const res = await updateQuantity(nextCantidad, cartItem.id, cartItem.cartId)

@@ -22,7 +22,6 @@ function ProductsTable({ products }: { products: Product[] }) {
   const router = useRouter()
   const [deleteAlertOpen, setDeleteAlertOpen] = useState(false)
   const [deleteProductId, setDeleteProductId] = useState<number | null>(null)
-  //TODO: change image samples/animals/cat for some placeholder image
   return (
     <Card>
       <CardHeader>

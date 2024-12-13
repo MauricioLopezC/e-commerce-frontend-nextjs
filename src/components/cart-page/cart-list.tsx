@@ -10,8 +10,7 @@ async function CartList({ cartItems }: { cartItems: CartItemInterface[] }) {
         {cartItems.length === 0 &&
           <div className="flex items-center mt-6 space-x-2">
             <ShoppingCart className="w-6 h-6" />
-            <p>Carrito Vació</p>
-
+            <p>Carrito Vacio</p>
           </div>
         }
         {cartItems.map((cartItem, idx: number) => (
