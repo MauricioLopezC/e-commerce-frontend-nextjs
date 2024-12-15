@@ -1,4 +1,4 @@
-import CarouselCustom from "@/components/product-page/Carousel"
+//import CarouselCustom from "@/components/product-page/Carousel"
 import { StarIcon } from "@heroicons/react/24/solid"
 import ProductForm from "@/components/product-page/ProductForm"
 import ProductDisclosure from "@/components/product-page/Disclosure"
@@ -14,6 +14,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import Carousel from "@/components/product-page/CarouselCustomV2"
 
 async function ProductPage({ params }: { params: { productId: string } }) {
   //NOTE: params.productId could be NaN, nullish coalescing operator only works
@@ -44,7 +45,7 @@ async function ProductPage({ params }: { params: { productId: string } }) {
             </BreadcrumbList>
           </Breadcrumb>
           <section className="lg:flex lg:mt-2 lg:gap-6">
-            <CarouselCustom images={product.images} />
+            <Carousel images={product.images} />
             <div className="mt-2 max-w-md w-full">
               <div className="flex justify-between">
                 <p className="font-bold text-lg">{product.name.toUpperCase()}</p>
