@@ -3,11 +3,13 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, MagnifyingGlassIcon, UserIcon, XMarkIcon, HeartIcon, ShoppingBagIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import SearchDialog from './dialogs/SearchDialog'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { checkSession, isAdminAction } from '@/lib/actions/navbar.actions'
 
 const navigation = [
-  { name: "Nuevo", href: "/products", current: false },
+  { name: "Todo", href: "/products?limit=9", current: false },
+  { name: "Hombre", href: "/products?sex=hombre&limit=9", current: false },
+  { name: "Mujer", href: "/products?sex=mujer&limit=9", current: false },
   { name: "About", href: "/about", current: false },
 ];
 

@@ -9,6 +9,7 @@ export const metadata = {
 }
 
 async function FavoritesPage() {
+  //TODO: pagination
   const { favorites } = await getFavorites()
   if (!favorites) return null
 

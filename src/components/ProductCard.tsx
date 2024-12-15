@@ -13,7 +13,7 @@ function ProductCard({ id, title, price, imgSrc }: ProductCardProdps) {
   return (
     <div>
       <Link href={`/products/${id}`}>
-        <div className="w-72 bg-white border border-gray-200 rounded-lg shadow">
+        <div className="w-72 bg-white">
           <CldImage src={imgSrc}
             width="400"
             height="500"
@@ -21,11 +21,11 @@ function ProductCard({ id, title, price, imgSrc }: ProductCardProdps) {
               type: 'auto',
               source: true
             }}
-            alt="hola"
+            alt="productImage"
             priority
           />
-          <div className="p-5">
-            <h5 className="mb-2 text-2xl font-bold tracking-tight">{title}</h5>
+          <div className="py-1">
+            <h5 className="mb-0 text-md font-bold tracking-tight">{title.toUpperCase()}</h5>
             <p className="mb-3 font-normal text-gray-400">
               {peso.format(price)}
             </p>

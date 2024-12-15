@@ -1,5 +1,4 @@
 import { ArrowPathIcon, GlobeAmericasIcon, ReceiptPercentIcon, TruckIcon } from '@heroicons/react/24/outline'
-import React from 'react'
 
 function FeaturesList() {
   return (

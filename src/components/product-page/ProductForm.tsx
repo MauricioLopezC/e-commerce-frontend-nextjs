@@ -48,7 +48,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
     const checkFavorite = async () => {
       const session = await checkSession()
       if (session) {
-        const { favorites, error } = await getFavorites()
+        const { favorites } = await getFavorites()
         const favoriteFound = favorites?.find((favorite) => {
           return favorite.productId === productId;
         })
@@ -80,6 +80,9 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
             </div>
           ),
         })
+      } else {
+        setIsFavorite(false)
+        setIsOpenNL(true)
       }
     }
     if (!isFavoriteValue && favorite) {

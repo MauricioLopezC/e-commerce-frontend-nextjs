@@ -15,6 +15,7 @@ interface CantidadSelectProps {
 }
 
 function CantidadSelectV2({ setValue }: CantidadSelectProps) {
+  //TODO: add option for select more than 4 units!
   return (
     <Select
       defaultValue="1"

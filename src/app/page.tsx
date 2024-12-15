@@ -1,7 +1,5 @@
 import FeaturesList from "@/components/home/Features";
-import CoverImage from "@/components/home/CoverImage";
 import Link from "next/link";
-import { getProducts } from "@/queries/products.api";
 import ProductCard from "@/components/ProductCard";
 import { Product } from "@/interfaces/products/product";
 import CoverImageV2 from "@/components/home/CoverImageV2";
@@ -37,7 +35,7 @@ async function Home() {
       <section className="mt-14">
         <div className="flex justify-between px-8 py-2">
           <h2 className="font-bold">Nuevos</h2>
-          <p className="text-gray-600">MAS</p>
+          <Link href={'/products'} className="text-gray-600">MAS</Link>
         </div>
 
         <div className="flex gap-6 overflow-x-auto mb-16 mx-6">

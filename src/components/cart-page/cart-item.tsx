@@ -31,7 +31,7 @@ function CartItem({ cartItem }: { cartItem: CartItemInterface }) {
         <h1 className="font-bold text-md text-center">{cartItem.product.name.toUpperCase()}</h1>
         <div className="flex divide-x">
           <h2 className="text-md text-left text-gray-600 px-3">{cartItem.productSku.color}</h2>
-          <h2 className="text-md text-right text-gray-600 px-3">{cartItem.productSku.size}</h2>
+          <h2 className="text-md text-right text-gray-600 px-3">{cartItem.productSku.size.toUpperCase()}</h2>
         </div>
 
         <div className="p-2 border border-black flex justify-between">
@@ -90,7 +90,7 @@ function CartItem({ cartItem }: { cartItem: CartItemInterface }) {
           } else console.log("error deleting product")
           router.refresh()
         }}>
-          <XMarkIcon className="h-5 w-5 mt-2 mr-2 hover:text-red-600" />
+          <XMarkIcon className="h-5 w-5 mt-2 mr-2 opacity-50 hover:opacity-100" />
         </button>
       </div>
     </div>

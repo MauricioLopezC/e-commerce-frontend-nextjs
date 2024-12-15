@@ -3,6 +3,15 @@ import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/r
 import ProductCard from "@/components/ProductCard"
 import { getAllProducts } from "@/lib/actions/product.actions"
 import { PaginationWithLinks } from "@/components/ui/paginations-with-links"
+import FeaturesList from "@/components/home/Features"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 export const metadata = {
   title: 'Products page'
@@ -16,14 +25,29 @@ async function ProductsPage({ searchParams }: ProductsPageProps) {
   const filters = await searchParams
   const pageSize = Number(filters.limit ?? 10)
   const currentPage = Number(filters.page ?? 1)
+  console.log(filters)
   const { productsData, error } = await getAllProducts(filters)
+  console.log(productsData)
 
   if (!productsData) return null
   return (
     <section className="mt-6 ">
+      <Breadcrumb className="ml-8 lg:ml-16">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/products?limit=9">Productos</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{filters.sex?.toString().charAt(0).toUpperCase().concat(filters.sex?.toString().slice(1)) ?? 'Todo'}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <h1 className="font-bold text-xl flex justify-center items-center">PRODUCTOS</h1>
-
-
       {/* products section */}
       <div className="w-fit mx-auto mt-10 mb-5">
         {/* <div className="flex justify-between"> */}
@@ -46,6 +70,9 @@ async function ProductsPage({ searchParams }: ProductsPageProps) {
             totalCount={productsData.aggregate._count}
           />
         </div>
+      </div>
+      <div className="my-16">
+        <FeaturesList />
       </div>
     </section>
   )
