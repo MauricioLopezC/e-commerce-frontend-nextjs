@@ -161,11 +161,12 @@ export async function updateProduct(
     body: JSON.stringify(data)
   })
 
+  revalidateTag('product')
+  revalidateTag('products')
   if (res.ok) {
-    revalidateTag('product')
-    const data = await res.json()
+    const product = await res.json()
     return {
-      product: data
+      product
     }
   }
 

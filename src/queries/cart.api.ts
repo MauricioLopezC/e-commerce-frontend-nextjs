@@ -1,5 +1,6 @@
 import { Product, ProductSku } from "@/interfaces/products/product";
 import { BACKEND_URL } from "./constants"
+//TODO: move this opeations to cart.actions.ts
 
 /**
  *

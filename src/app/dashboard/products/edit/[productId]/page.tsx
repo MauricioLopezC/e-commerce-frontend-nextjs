@@ -2,26 +2,23 @@ import ProductDetails from "@/components/dashboard/product/edit-product/ProductD
 import ProductImages from "@/components/dashboard/product/edit-product/ProductImages";
 import ProductVariantsCard from "@/components/dashboard/product/edit-product/ProductVariantsCard";
 import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  getProduct,
-  getProductSkus,
-} from "@/queries/products.api";
+import { getAllProductsSkus } from "@/lib/actions/product-skus.actions";
+import { getProduct } from "@/lib/actions/product.actions";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
 async function EditProductPage({
   params,
-  searchParams,
 }: {
   params: { productId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const productId = Number(params.productId);
 
   if (!productId) return null;
 
-  const product = await getProduct(productId);
-  const productSkus = await getProductSkus(productId);
+  const { product } = await getProduct(productId)
+  const { productSkus } = await getAllProductsSkus(productId)
+  if (!product || !productSkus) return null
 
   return (
     <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 mb-16 mt-4">

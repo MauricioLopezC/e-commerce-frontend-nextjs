@@ -1,6 +1,5 @@
 import { StarIcon } from "@heroicons/react/24/solid"
 import ProductForm from "@/components/product-page/ProductForm"
-import { getProductSkus } from "@/queries/products.api"
 import { peso } from "@/lib/constants"
 import { getAllProducts, getProduct } from "@/lib/actions/product.actions"
 import FeaturesList from "@/components/home/Features"
@@ -17,6 +16,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import ProductCard from "@/components/ProductCard"
 import { Product } from "@/interfaces/products/product"
 import ProductPageBreadCrumbs from "@/components/product-page/ProductPageBreadCrumbs"
+import { getAllProductsSkus } from "@/lib/actions/product-skus.actions"
 
 async function ProductPage({ params }: { params: { productId: string } }) {
   //NOTE: params.productId could be NaN, nullish coalescing operator only works
@@ -24,8 +24,9 @@ async function ProductPage({ params }: { params: { productId: string } }) {
 
   let productId = Number(params.productId) || 1
   const { product } = await getProduct(productId)
-  const productSkus = await getProductSkus(productId)
-  if (!product) return null
+  const { productSkus } = await getAllProductsSkus(productId)
+  if (!product || !productSkus) return null
+
   const { productsData } = await getAllProducts({
     limit: 5
   })

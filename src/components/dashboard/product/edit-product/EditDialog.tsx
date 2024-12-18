@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { ProductSku } from '@/interfaces/products/product'
-import { editProductSku } from '@/lib/actions/product-skus.actions'
+import { updateProductSku } from '@/lib/actions/product-skus.actions'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { z } from '@/lib/zod/es-zod'
 import { useForm } from 'react-hook-form'
@@ -66,7 +66,7 @@ function EditDialog({ productSku, dialogOpen, setDialogOpen }: EditDialogProps) 
     console.log(values)
     const productId = productSku.productId
     const productSkuId = productSku.id
-    const { productSku: updatedProductSku } = await editProductSku(values, productId, productSkuId)
+    const { productSku: updatedProductSku } = await updateProductSku(values, productId, productSkuId)
     if (updatedProductSku) {
       toast({
         description: (

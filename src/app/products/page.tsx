@@ -25,9 +25,8 @@ async function ProductsPage({ searchParams }: ProductsPageProps) {
   const filters = await searchParams
   const pageSize = Number(filters.limit ?? 10)
   const currentPage = Number(filters.page ?? 1)
-  console.log(filters)
-  const { productsData, error } = await getAllProducts(filters)
-  console.log(productsData)
+
+  const { productsData } = await getAllProducts(filters)
 
   if (!productsData) return null
   return (

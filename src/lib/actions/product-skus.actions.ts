@@ -3,10 +3,8 @@ import { cookies } from "next/headers"
 import { BACKEND_URL } from "@/queries/constants"
 import { revalidatePath } from "next/cache"
 import { ProductSku } from "@/interfaces/products/product";
-//TODO: add getProductSku and getAllProductSkus functions with tags for later revalidateTag
-//because new productSkus are not updated in products/[productId] users page
 
-interface ProductSkuDto {
+interface CreateProductSkuDto {
   quantity: number;
   size: string;
   color: string;
@@ -17,7 +15,12 @@ interface ProductSkuResponse {
   error?: any
 }
 
-export async function createProductSku(createProductSkuDto: ProductSkuDto, productId: number) {
+interface AllProductSkusResponse {
+  productSkus?: ProductSku[];
+  error?: any
+}
+
+export async function createProductSku(createProductSkuDto: CreateProductSkuDto, productId: number) {
   const token = cookies().get('access-token')?.value
   const res = await fetch(`${BACKEND_URL}/products/${productId}/product-skus`, {
     method: 'POST',
@@ -42,8 +45,29 @@ export async function createProductSku(createProductSkuDto: ProductSkuDto, produ
   }
 }
 
-export async function editProductSku(
-  productSkuDto: ProductSkuDto,
+export async function getAllProductsSkus(productId: number): Promise<AllProductSkusResponse> {
+  const token = cookies().get('access-token')?.value
+  const res = await fetch(`${BACKEND_URL}/products/${productId}/product-skus`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      Cookie: `access-token=${token}`
+    },
+    next: {
+      tags: ['productSkus']
+    }
+  })
+  if (res.ok) {
+    const productSkus = await res.json()
+    return { productSkus }
+  }
+
+  const error = await res.json()
+  return { error }
+}
+
+export async function updateProductSku(
+  productSkuDto: CreateProductSkuDto,
   productId: number,
   productSkuId: number
 ): Promise<ProductSkuResponse> {
@@ -61,8 +85,8 @@ export async function editProductSku(
   revalidatePath(`/dashboard/products/edit/${productId}`)
 
   if (res.ok) {
-    const data = await res.json()
-    return { productSku: data }
+    const productSku = await res.json()
+    return { productSku }
   }
   const error = await res.json()
   return { error }
