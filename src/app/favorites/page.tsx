@@ -3,22 +3,29 @@ import { getFavorites } from "@/lib/actions/favorites.actions"
 import { AdjustmentsHorizontalIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import { HeartOff } from "lucide-react"
+import { PaginationWithLinks } from "@/components/ui/paginations-with-links"
 
 export const metadata = {
   title: 'Favorites page'
 }
 
-async function FavoritesPage() {
-  //TODO: pagination
-  const { favorites } = await getFavorites()
-  if (!favorites) return null
+async function FavoritesPage(
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+) {
+
+  const filters = await searchParams
+  const pageSize = Number(filters.limit ?? 9)
+  const currentPage = Number(filters.page ?? 1)
+
+  const { favoritesData } = await getFavorites({ page: currentPage, limit: pageSize })
+  if (!favoritesData) return null
 
   return (
     <section className="mt-6 ">
-      <h1 className="font-bold text-xl flex justify-center items-center">PRODUCTOS FAVORITOS</h1>
+      <h1 className="font-bold text-xl flex justify-center items-center">FAVORITOS</h1>
 
       {/* products section */}
-      {favorites.length === 0 &&
+      {favoritesData.favorites.length === 0 &&
         <div className="w-fit mx-auto mt-10 mb-5 h-screen">
           <div className="flex flex-col space-y-3 items-center">
             <HeartOff className="w-10 h-10" />
@@ -27,7 +34,7 @@ async function FavoritesPage() {
         </div>
 
       }
-      {favorites.length !== 0 &&
+      {favoritesData.favorites.length !== 0 &&
         <div className="w-fit mx-auto mt-10 mb-5">
           <div className="flex justify-between">
             <FiltersMenu />
@@ -38,10 +45,19 @@ async function FavoritesPage() {
           </div>
 
           <div className=" grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-8 gap-x-8">
-            {favorites.map((favorite) => (
-              <ProductCard id={favorite.product.id} title={favorite.product.name} price={favorite.product.price} imgSrc={favorite.product.images[1]?.imgSrc} key={favorite.id} />
+            {favoritesData.favorites.map((favorite) => (
+              <ProductCard id={favorite.product.id} title={favorite.product.name} price={favorite.product.price} imgSrc={favorite.product.images[0]?.imgSrc} key={favorite.id} />
             ))}
           </div>
+
+          <div className="mt-4">
+            <PaginationWithLinks
+              page={currentPage}
+              pageSize={pageSize}
+              totalCount={favoritesData.aggregate._count}
+            />
+          </div>
+
         </div>
       }
     </section>

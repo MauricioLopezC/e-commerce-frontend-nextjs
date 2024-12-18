@@ -11,24 +11,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { MoreHorizontal } from 'lucide-react'
-import { useRouter, useSearchParams } from 'next/navigation'
 import { peso } from "@/lib/constants"
-import { deleteUser, UsersData } from "@/lib/actions/user.actions"
+import { UsersData } from "@/lib/actions/user.actions"
 import DeleteUserAlert from "./DeleteUserAlert"
 import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
 
 function UsersTable({ usersData }: { usersData: UsersData }) {
 
-  const searchParams = useSearchParams()
-  const page = Number(searchParams.get('page') ?? 1)
-  const totalPages = Math.floor(usersData.aggregate._count / 10) + 1
   const [alertOpen, setAlertOpen] = useState(false)
-  const router = useRouter()
   const [deletedUserId, setDeletedUserId] = useState<number | null>(null)
-
   return (
-    <Card x-chunk="dashboard-06-chunk-0" className='mb-16'>
+    <Card>
       <CardHeader>
         <CardTitle>Clientes</CardTitle>
         <CardDescription>
@@ -117,41 +111,7 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
         </Table>
       </CardContent>
       <CardFooter>
-        <div className="space-x-2 ml-auto">
-          {page === 1 &&
-            <Button variant='outline' disabled>Atras</Button>
-          }
-          {page > 1 &&
-            <Button
-              variant='outline'
-              onClick={() => {
-                if (page > 1) {
-                  router.push(`/dashboard/orders?page=${page - 1}`)
-                }
-              }}
-            >
-              Atras
-            </Button>
-
-          }
-          {page < totalPages &&
-            <Button
-              variant='outline'
-              onClick={() => {
-                if (page < totalPages) {
-                  router.push(`/dashboard/orders?page=${page + 1}`)
-                }
-              }}
-            >
-              Siguiente
-            </Button>
-          }
-          {page >= totalPages &&
-            <Button variant='outline' disabled>Siguiente</Button>
-          }
-
-          <DeleteUserAlert isOpen={alertOpen} setIsOpen={setAlertOpen} userId={deletedUserId} />
-        </div>
+        <DeleteUserAlert isOpen={alertOpen} setIsOpen={setAlertOpen} userId={deletedUserId} />
       </CardFooter>
     </Card>
   )

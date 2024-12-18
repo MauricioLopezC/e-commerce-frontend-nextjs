@@ -87,7 +87,15 @@ function CartItem({ cartItem }: { cartItem: CartItemInterface }) {
           const res = await deleteCartItem(cartItem.id, cartItem.cartId)
           if (res.ok) {
             console.log("cartItem deleted successfully")
-          } else console.log("error deleting product")
+            toast({
+              title: "eliminado correctamente del carrito",
+            })
+          } else {
+            toast({
+              variant: 'destructive',
+              title: "error al eliminar",
+            })
+          }
           router.refresh()
         }}>
           <XMarkIcon className="h-5 w-5 mt-2 mr-2 opacity-50 hover:opacity-100" />

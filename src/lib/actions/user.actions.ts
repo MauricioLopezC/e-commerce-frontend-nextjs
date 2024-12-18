@@ -4,11 +4,6 @@ import { BACKEND_URL } from "@/queries/constants"
 import { revalidatePath } from "next/cache"
 import { User } from "@/interfaces/users";
 
-interface ErrorResponse {
-  ok: boolean;
-  message: string;
-}
-
 export interface UsersData {
   users: User[];
   aggregate: { _count: number }
@@ -16,44 +11,42 @@ export interface UsersData {
 
 interface UsersResponse {
   usersData?: UsersData;
-  error?: ErrorResponse;
+  error?: any;
+}
+interface GetUsersOptions {
+  limit?: number;
+  page?: number;
 }
 
-//NOTE: better approach to handle api responses
-export async function getUsers(limit: number = 10, page: number = 1): Promise<UsersResponse> {
+export async function getUsers(options: GetUsersOptions): Promise<UsersResponse> {
   const token = cookies().get('access-token')?.value
+  const queryParams = new URLSearchParams()
+  let key: keyof GetUsersOptions
+  for (key in options) {
+    const value = options[key]
+    if (value) {
+      queryParams.set(key, value.toString())
+    }
+  }
 
-  const res = await fetch(`${BACKEND_URL}/users?limit=${limit}&page=${page}`, {
+  const res = await fetch(`${BACKEND_URL}/users?${queryParams.toString()}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
       Cookie: `access-token=${token}`
     },
   })
-  console.log(res)
   if (res.ok) {
-    console.log("OK")
-
-    const data = await res.json()
+    const usersData = await res.json()
     return {
-      usersData: data
+      usersData
     }
   }
-
-  if (res.status === 401) {
-    return {
-      error: {
-        ok: false,
-        message: "No autorizado"
-      }
-    }
-  }
+  const error = await res.json()
   return {
-    error: {
-      ok: false,
-      message: "Error al traer los usuarios"
-    }
+    error
   }
+
 }
 
 export async function deleteUser(userId: number) {
@@ -81,3 +74,7 @@ export async function deleteUser(userId: number) {
     error
   }
 }
+
+//TODO: dar de baja a un usuario o bloquarlo, implmentar campo en el bakcend que diga si el
+//usario esta bloqueado
+

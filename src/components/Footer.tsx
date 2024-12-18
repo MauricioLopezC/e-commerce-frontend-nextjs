@@ -2,10 +2,10 @@ import { Facebook, Instagram, Twitter } from "lucide-react"
 
 function Footer() {
   return (
-    <footer className="bg-[#333232] flex flex-wrap text-white px-2 py-16 gap-x-16 gap-y-6 md:justify-center">
-      <div className="max-w-44">
+    <footer className="w-full bg-[#333232] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 content-center text-white px-8 py-16  gap-y-6 ">
+      <div className="hidden lg:inline max-w-44">
         <h1 className="font-bold">April</h1>
-        <p className="hidden text-xs md:inline">
+        <p className=" text-xs lg:inline">
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestias
           neque ea rerum sunt id distinctio, deleniti ut incidunt ipsa quasi,
         </p>
@@ -13,9 +13,9 @@ function Footer() {
       <div>
         <h1 className="font-bold">Category</h1>
         <ul className="text-xs">
-          <li>Women</li>
-          <li>Men</li>
-          <li>Shoes</li>
+          <li>Mujer</li>
+          <li>Hombre</li>
+          <li>Zapatillas</li>
         </ul>
       </div>
       <div>
@@ -44,7 +44,7 @@ function Footer() {
           <li>Mon. - Fri. 9AM-6PM</li>
         </ul>
 
-        <ul className="flex gap-1">
+        <ul className="hidden lg:flex lg:gap-1">
           <li>
             <Instagram className="w-6 h-6" />
           </li>

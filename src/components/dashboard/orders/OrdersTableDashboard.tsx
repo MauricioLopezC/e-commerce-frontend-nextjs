@@ -1,11 +1,9 @@
 "use client"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -17,22 +15,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { OrderData } from "@/lib/actions/order.actions"
+import { OrdersData } from "@/lib/actions/order.actions"
 import { peso } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import { useOrdersStore } from "@/store/order-page-store"
-import { useRouter, useSearchParams } from "next/navigation"
 
-function OrdersTableDashBoard({ orderData }: { orderData: OrderData }) {
+function OrdersTableDashBoard({ ordersData }: { ordersData: OrdersData }) {
   const updateSelectedOrderId = useOrdersStore((state) => state.updateSelectedOrderId)
   const selectedOrderId = useOrdersStore((state) => state.orderId)
-  const router = useRouter()
 
-  const searchParams = useSearchParams()
-  const page = Number(searchParams.get('page') ?? 1)
-  // console.log("page", page)
-  const totalPages = Math.floor(orderData.aggregate._count / 10) + 1
-  // console.log(totalPages)
   return (
     <Card>
       <CardHeader className="px-7">
@@ -50,7 +41,7 @@ function OrdersTableDashBoard({ orderData }: { orderData: OrderData }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orderData.orders.map((order, idx) => (
+            {ordersData.orders.map((order, idx) => (
               <TableRow
                 className={cn(order.id === selectedOrderId ? "bg-accent" : '')}
                 onClick={() => {
@@ -78,41 +69,6 @@ function OrdersTableDashBoard({ orderData }: { orderData: OrderData }) {
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter>
-        <div className="space-x-2 ml-auto">
-          {page === 1 &&
-            <Button variant='outline' disabled>Atras</Button>
-          }
-          {page > 1 &&
-            <Button
-              variant='outline'
-              onClick={() => {
-                if (page > 1) {
-                  router.push(`/dashboard/orders?page=${page - 1}`)
-                }
-              }}
-            >
-              Atras
-            </Button>
-
-          }
-          {page < totalPages &&
-            <Button
-              variant='outline'
-              onClick={() => {
-                if (page < totalPages) {
-                  router.push(`/dashboard/orders?page=${page + 1}`)
-                }
-              }}
-            >
-              Siguiente
-            </Button>
-          }
-          {page >= totalPages &&
-            <Button variant='outline' disabled>Siguiente</Button>
-          }
-        </div>
-      </CardFooter>
     </Card>
   )
 }

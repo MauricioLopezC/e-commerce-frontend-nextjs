@@ -5,7 +5,6 @@ import { ShoppingCart } from "lucide-react";
 async function CartList({ cartItems }: { cartItems: CartItemInterface[] }) {
   return (
     <div>
-      <h1 className='font-bold text-lg flex justify-center lg:justify-start'>PRODUCTOS</h1>
       <div className='flex flex-col gap-4 items-center'>
         {cartItems.length === 0 &&
           <div className="flex items-center mt-6 space-x-2">

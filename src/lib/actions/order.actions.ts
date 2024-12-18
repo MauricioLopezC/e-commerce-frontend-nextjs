@@ -3,12 +3,12 @@ import { cookies } from "next/headers"
 import { BACKEND_URL } from "@/queries/constants"
 import { getPayload } from "../jwt-decode"
 import { Order } from "@/interfaces/orders"
-import { ErrorResponse } from "@/queries/cart.api"
 import { revalidatePath } from "next/cache"
 
 export async function addOrder(formData: FormData) {
   const token = cookies().get('access-token')?.value
   const user = getPayload(token ?? '')
+  if (!user) return null
 
   const shipping = {
     country: formData.get('countryInput'),
@@ -50,6 +50,7 @@ export async function addOrder(formData: FormData) {
 export async function getUserOrders() {
   const token = cookies().get('access-token')?.value
   const user = getPayload(token ?? '')
+  if (!user) return null
 
   const res = await fetch(`${BACKEND_URL}/users/${user.id}/orders`, {
     method: 'GET',
@@ -69,20 +70,35 @@ export async function getUserOrders() {
   }
 }
 
-export interface OrderData {
+export interface OrdersData {
   orders: Order[];
   aggregate: { _sum: { total: number }, _count: number };
 }
 
 interface OrdersResponse {
-  data?: OrderData;
+  ordersData?: OrdersData;
   error?: any;
 }
 
-export async function getAllOrders(limit: number = 10, page: number = 1): Promise<OrdersResponse> {
+interface GetOrdersOptions {
+  limit?: number;
+  page?: number;
+}
+
+export async function getAllOrders(options: GetOrdersOptions): Promise<OrdersResponse> {
   const token = cookies().get('access-token')?.value
 
-  const res = await fetch(`${BACKEND_URL}/orders?limit=${limit}&page=${page}`, {
+  const queryParams = new URLSearchParams()
+  let key: keyof GetOrdersOptions
+  for (key in options) {
+    const value = options[key]
+    if (value) {
+      queryParams.set(key, value.toString())
+    }
+  }
+
+
+  const res = await fetch(`${BACKEND_URL}/orders?${queryParams.toString()}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -90,9 +106,9 @@ export async function getAllOrders(limit: number = 10, page: number = 1): Promis
     }
   })
   if (res.ok) {
-    const data = await res.json()
+    const ordersData = await res.json()
     return {
-      data
+      ordersData
     }
   }
   return {

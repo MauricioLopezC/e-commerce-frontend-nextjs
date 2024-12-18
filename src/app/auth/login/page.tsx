@@ -9,6 +9,9 @@ import {
   Dialog,
   DialogContent,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
 } from "@/components/ui/dialog"
 import { AlertCircle, UserRoundCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -116,12 +119,18 @@ function LoginPage() {
       </div>
       <Dialog open={isOpen}>
         <DialogContent>
+          <DialogHeader>
+            <DialogTitle>¡Bienvenido!</DialogTitle>
+            <DialogDescription className="hidden">
+              Inicio de sesión
+            </DialogDescription>
+          </DialogHeader>
           <div className="flex space-x-2">
             <UserRoundCheck className="h-6 w-6 text-green-500" />
             <h1>Sesión iniciada correctamente</h1>
           </div>
           <DialogFooter >
-            <Button onClick={() => router.push('/')}>OK</Button>
+            <Button onClick={() => router.push('/')}>Continuar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

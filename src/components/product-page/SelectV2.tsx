@@ -23,7 +23,7 @@ function CantidadSelectV2({ setValue }: CantidadSelectProps) {
         setValue(Number(value))
       }}
     >
-      <SelectTrigger className="w-full">
+      <SelectTrigger className="w-[180px]">
         <SelectValue
           placeholder="Selecciona la cantidad"
         />

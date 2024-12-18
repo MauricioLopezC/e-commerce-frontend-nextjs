@@ -48,10 +48,9 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
     const checkFavorite = async () => {
       const session = await checkSession()
       if (session) {
-        const { favorites } = await getFavorites()
-        const favoriteFound = favorites?.find((favorite) => {
-          return favorite.productId === productId;
-        })
+        const { favoritesData } = await getFavorites({ productId })
+        console.log(favoritesData)
+        const favoriteFound = favoritesData?.favorites[0]
         if (favoriteFound) {
           setIsFavorite(true)
           setFavorite(favoriteFound)
@@ -86,7 +85,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       }
     }
     if (!isFavoriteValue && favorite) {
-      const { favorite: deletedFavorite, error } = await deleteFavorite(favorite.id)
+      const { favorite: deletedFavorite } = await deleteFavorite(favorite.id)
       if (deletedFavorite) {
         setFavorite(null)
         toast({
@@ -146,21 +145,9 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
 
   return (
     <>
-      <div className="flex flex-row gap-2 mt-2 justify-between">
-        <div className="basis-5/6">
-          <CantidadSelectV2 setValue={setQuanity} />
-        </div>
-        <Button
-          className="basis-1/6"
-          variant='outline'
-          size='icon'
-          onClick={onFavoriteClick}
-        >
-          {isFavorite
-            ? <HeartIcon className="w-5 h-5 fill-red-500 text-red-500" />
-            : <HeartIcon className="w-5 h-5 hover:text-red-600 " />
-          }
-        </Button>
+      <div className="flex flex-col gap-2 mt-2">
+        <label className="text-sm font-medium">Cantidad</label>
+        <CantidadSelectV2 setValue={setQuanity} />
       </div>
 
       <div id="details" className="flex flex-col  mt-4 space-y-4">
@@ -221,22 +208,34 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
         </fieldset>
       </div>
       <h1 className="text-sm font-medium leading-none text-foreground mt-4">Stock: {selectedPSku?.quantity}</h1>
-      {selectedPSku &&
+      <div className="flex gap-4">
+        {selectedPSku &&
+          <Button
+            className="flex-1 text-base" size="lg"
+            onClick={onAddToCartClick}
+          >
+            Agregar al carrito
+          </Button>
+        }
+        {!selectedPSku &&
+          <Button
+            className="flex-1 text-base" size="lg"
+            disabled
+          >
+            No disponible
+          </Button>
+        }
         <Button
-          className='max-w-md w-full px-4 py-2 bg-black text-white mt-2'
-          onClick={onAddToCartClick}
+          variant='outline'
+          size='lg'
+          onClick={onFavoriteClick}
         >
-          Agregar al carrito
+          {isFavorite
+            ? <HeartIcon className="w-5 h-5 fill-red-500 text-red-500" />
+            : <HeartIcon className="w-5 h-5 hover:text-red-600 " />
+          }
         </Button>
-      }
-      {!selectedPSku &&
-        <Button
-          className='max-w-md w-full px-4 py-2 bg-black text-white mt-2'
-          disabled
-        >
-          No disponible
-        </Button>
-      }
+      </div>
       <p className="text-xs text-gray-600 my-3">Envío gratuito en pedidos superiores a $100.000,00</p>
       <NoStockAlertDialog isOpen={isOpenNS} setIsOpen={setIsOpenNS} />
       <NotLoggedInAlertDialog isOpen={isOpenNL} setIsOpen={setIsOpenNL} />

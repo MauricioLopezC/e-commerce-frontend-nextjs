@@ -5,17 +5,37 @@ import { getPayload } from "../jwt-decode"
 import { Favorite } from "@/interfaces/favorites"
 import { revalidatePath } from "next/cache"
 
+interface FavoritesData {
+  favorites: Favorite[];
+  aggregate: { _count: number };
+}
+
 interface FavoritesResponse {
-  favorites?: Favorite[];
+  favoritesData?: FavoritesData;
   error?: any
 }
 
-export async function getFavorites(): Promise<FavoritesResponse> {
+interface GetFavoritesOptions {
+  limit?: number;
+  page?: number;
+  productId?: number;
+}
+
+export async function getFavorites(options: GetFavoritesOptions): Promise<FavoritesResponse> {
   const token = cookies().get('access-token')?.value
   if (!token) return { error: { message: 'user not logged in' } }
   const user = getPayload(token)
 
-  const res = await fetch(`${BACKEND_URL}/users/${user?.id}/favorites`, {
+  const queryParams = new URLSearchParams()
+  let key: keyof GetFavoritesOptions
+  for (key in options) {
+    const value = options[key]
+    if (value) {
+      queryParams.set(key, value.toString())
+    }
+  }
+
+  const res = await fetch(`${BACKEND_URL}/users/${user?.id}/favorites?${queryParams.toString()}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -24,9 +44,9 @@ export async function getFavorites(): Promise<FavoritesResponse> {
   })
 
   if (res.ok) {
-    const data = await res.json()
+    const favoritesData = await res.json()
     return {
-      favorites: data
+      favoritesData
     }
   }
 
@@ -36,6 +56,7 @@ export async function getFavorites(): Promise<FavoritesResponse> {
   }
 }
 
+
 interface CreateOrDeleteFavoriteResponse {
   favorite?: Favorite;
   error?: any
@@ -44,9 +65,6 @@ interface CreateOrDeleteFavoriteResponse {
 export async function addFavorite(productId: number): Promise<CreateOrDeleteFavoriteResponse> {
   const token = cookies().get('access-token')?.value
   const user = getPayload(token ?? '')
-
-  console.log('SERVER ACTION', productId)
-  console.log('SERVER ACTION', typeof productId)
 
   const res = await fetch(`${BACKEND_URL}/users/${user?.id}/favorites`, {
     method: 'POST',

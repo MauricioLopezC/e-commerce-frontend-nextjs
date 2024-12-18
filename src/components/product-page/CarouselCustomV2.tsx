@@ -8,32 +8,31 @@ interface CarouselProps {
 }
 
 function Carousel({ images }: CarouselProps) {
-  //FIX: improove performance
   const [mainImage, setMainImage] = useState<string>(images[0].imgSrc)
   return (
-    <div>
+    <div className="space-y-4">
       {/* Main image */}
-      <CldImage
-        src={mainImage}
-        height='500'
-        width='500'
-        className="aspect-square w-full rounded-md object-cover"
-        alt={`product-image`}
-        priority
-      />
+      <div className="aspect-square relative overflow-hidden rounded-lg bg-gray-100">
+        <CldImage
+          src={mainImage}
+          fill
+          className="object-cover"
+          alt={`product-image`}
+          priority
+        />
+      </div>
       {/* thumbs */}
-      <div className="flex gap-2 mt-4">
+      <div className="grid grid-cols-4 gap-4">
         {images.map((image, idx) => (
           <button
-            className="h-24 w-24 focus:ring-2 focus:ring-black rounded-md"
+            className="aspect-square relative overflow-hidden rounded-lg bg-gray-100 focus:ring focus:ring-black focus:ring-offset-2"
             key={image.id}
             onClick={() => setMainImage(images[idx].imgSrc)}
           >
             <CldImage
               src={image.imgSrc}
-              className="aspect-square w-full rounded-md object-cover"
-              height="84"
-              width="84"
+              className="object-cover"
+              fill
               priority
               alt="Product image"
             />
