@@ -12,6 +12,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { OrderByMenu } from "@/components/product-catalog-page/FiltersAndSorting"
 
 export const metadata = {
   title: 'Products page'
@@ -23,10 +24,15 @@ interface ProductsPageProps {
 
 async function ProductsPage({ searchParams }: ProductsPageProps) {
   const filters = await searchParams
-  const pageSize = Number(filters.limit ?? 10)
+  const pageSize = Number(filters.limit ?? 9)
   const currentPage = Number(filters.page ?? 1)
 
-  const { productsData } = await getAllProducts(filters)
+  const { productsData, error } = await getAllProducts({
+    ...filters,
+    limit: pageSize,
+    page: currentPage
+  })
+  console.log(productsData?.products, error)
 
   if (!productsData) return null
   return (
@@ -49,13 +55,13 @@ async function ProductsPage({ searchParams }: ProductsPageProps) {
       <h1 className="font-bold text-xl flex justify-center items-center">PRODUCTOS</h1>
       {/* products section */}
       <div className="w-fit mx-auto mt-10 mb-5">
-        {/* <div className="flex justify-between"> */}
-        {/*   <FiltersMenu /> */}
-        {/*   <div className="flex items-center"> */}
-        {/*     Ordenar por */}
-        {/*     <ChevronDownIcon className="h-4 w-4 mx-2" /> */}
-        {/*   </div> */}
-        {/* </div> */}
+        <div className="flex justify-between mb-4">
+          <FiltersMenu />
+          <div className="flex items-center">
+            Ordenar por
+            <OrderByMenu />
+          </div>
+        </div>
 
         <div className=" grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-8 gap-x-8">
           {productsData.products.map((product) => (
@@ -76,6 +82,7 @@ async function ProductsPage({ searchParams }: ProductsPageProps) {
     </section>
   )
 }
+
 
 
 function FiltersMenu() {

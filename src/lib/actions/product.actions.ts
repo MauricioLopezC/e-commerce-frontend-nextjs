@@ -4,19 +4,13 @@ import { BACKEND_URL } from "@/queries/constants"
 import { revalidateTag } from "next/cache"
 import { cookies } from "next/headers"
 
-export interface BadRequestResponse {
-  message: string;
-  error: string;
-  statusCode: number
-}
-
 interface GetProductsOptions {
   limit?: number;
   page?: number;
   category?: string;
   name?: string;
   sex?: string;
-  //orderBy: string;
+  orderBy?: string;
 }
 
 interface ProductsData {
@@ -24,12 +18,25 @@ interface ProductsData {
   aggregate: { _count: number };
 }
 
-interface ProductsResponse {
+interface AllProductsResponse {
   productsData?: ProductsData;
   error?: any;
 }
 
-export async function getAllProducts(options: GetProductsOptions): Promise<ProductsResponse> {
+interface OneProductResponse {
+  product?: Product;
+  error?: any;
+}
+
+interface CreateOrUpdateProductDto {
+  category: string;
+  name: string;
+  sex: string;
+  price: number;
+  description: string;
+}
+
+export async function getAllProducts(options: GetProductsOptions): Promise<AllProductsResponse> {
   const queryParams = new URLSearchParams()
   let key: keyof GetProductsOptions
   for (key in options) {
@@ -59,7 +66,7 @@ export async function getAllProducts(options: GetProductsOptions): Promise<Produ
   }
 }
 
-export async function getProduct(productId: number): Promise<ProductResponse> {
+export async function getProduct(productId: number): Promise<OneProductResponse> {
   const res = await fetch(`${BACKEND_URL}/products/${productId}`, {
     method: 'GET',
     next: {
@@ -77,20 +84,9 @@ export async function getProduct(productId: number): Promise<ProductResponse> {
   return {
     error
   }
-
 }
 
-
-interface CreateOrUpdateProductDto {
-  category: string;
-  name: string;
-  sex: string;
-  price: number;
-  description: string;
-}
-
-
-export async function createProduct(createProductDto: CreateOrUpdateProductDto) {
+export async function createProduct(createProductDto: CreateOrUpdateProductDto): Promise<OneProductResponse> {
   const token = cookies().get('access-token')?.value
 
   const res = await fetch(`${BACKEND_URL}/products`, {
@@ -104,9 +100,9 @@ export async function createProduct(createProductDto: CreateOrUpdateProductDto) 
   })
   revalidateTag('products')
   if (res.ok) {
-    const data = await res.json()
+    const product = await res.json()
     return {
-      createdProduct: data
+      product
     }
   }
 
@@ -116,40 +112,10 @@ export async function createProduct(createProductDto: CreateOrUpdateProductDto) 
   }
 }
 
-
-export async function uploadImage(formData: FormData) {
-  //TODO: validate that formData has productId productSkuId and file properties
-  const token = cookies().get('access-token')?.value
-  const res = await fetch(`${BACKEND_URL}/images`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      Cookie: `access-token=${token}`
-    },
-    body: formData,
-  })
-  if (res.ok) {
-    const createdImage = await res.text()
-    return {
-      createdImage
-    }
-  }
-  const error = res.json()
-  return {
-    error
-  }
-}
-
-interface ProductResponse {
-  product?: Product;
-  error?: any;
-}
-
-
 export async function updateProduct(
   productId: number,
   data: CreateOrUpdateProductDto
-): Promise<ProductResponse> {
+): Promise<OneProductResponse> {
   const token = cookies().get('access-token')?.value ?? ''
   const res = await fetch(`${BACKEND_URL}/products/${productId}`, {
     method: 'PATCH',
@@ -177,12 +143,7 @@ export async function updateProduct(
 
 }
 
-interface DeleteProductResponse {
-  product?: Product;
-  error?: any;
-}
-
-export async function deleteProduct(id: number): Promise<DeleteProductResponse> {
+export async function deleteProduct(id: number): Promise<OneProductResponse> {
   const token = cookies().get('access-token')?.value ?? ''
 
   const res = await fetch(`${BACKEND_URL}/products/${id}`, {
@@ -195,9 +156,9 @@ export async function deleteProduct(id: number): Promise<DeleteProductResponse> 
 
   if (res.ok) {
     revalidateTag('products')
-    const data = await res.json()
+    const product = await res.json()
     return {
-      product: data
+      product
     }
   }
 

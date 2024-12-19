@@ -1,7 +1,8 @@
 'use client'
 import ProductDetailsV2 from '@/components/dashboard/product/create/ProductDetailsV2'
 import { Button } from '@/components/ui/button'
-import { createProduct, uploadImage } from '@/lib/actions/product.actions'
+import { createProduct } from '@/lib/actions/product.actions'
+import { uploadImage } from '@/lib/actions/image.actions'
 import { createProductSku } from '@/lib/actions/product-skus.actions'
 import { useState } from 'react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -68,8 +69,8 @@ function CreateProductPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
     const { variations, ...rest } = values
-    const { createdProduct, error: productError } = await createProduct(rest)
-    if (!createdProduct) {
+    const { product } = await createProduct(rest)
+    if (!product) {
       toast({
         variant: "destructive",
         title: "¡Vaya! Algo salió mal.",
@@ -78,8 +79,8 @@ function CreateProductPage() {
       })
       return null
     }
-    const productId = createdProduct.id
-    console.log(createdProduct)
+    const productId = product.id
+    console.log(product)
 
     for (let variation of variations) {
       const { createdProductSku, error: productSkuError } = await createProductSku({

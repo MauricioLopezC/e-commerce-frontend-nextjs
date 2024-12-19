@@ -3,27 +3,30 @@ import { cookies } from "next/headers"
 import { BACKEND_URL } from "@/queries/constants"
 import { revalidatePath } from "next/cache"
 
-export async function uploadImage(formData: FormData, productId: number) {
-  console.log(formData)
-  const image = formData.get('image') ?? ''
-  const productSkuId = formData.get('productSkuId') ?? ''
-  console.log(image)
+export async function uploadImage(formData: FormData) {
+  if (!formData.has('file') || formData.has('product') || formData.has('productSkuId')) {
+    return { error: { statusCode: 400, message: 'Error: some formData properties are missing' } }
+  }
 
-  const imgData = new FormData()
-  imgData.append('productId', productId.toString())
-  imgData.append('productSkuId', productSkuId)
-  imgData.append('file', image)
   const token = cookies().get('access-token')?.value
-  const imageResponse = await fetch(`${BACKEND_URL}/images`, {
+  const res = await fetch(`${BACKEND_URL}/images`, {
     method: 'POST',
     credentials: 'include',
     headers: {
       Cookie: `access-token=${token}`
     },
-    body: imgData,
+    body: formData,
   })
-  revalidatePath(`/dashboard/products/edit/${productId}`)
-  return imageResponse.text()
+  if (res.ok) {
+    const createdImage = await res.text()
+    return {
+      createdImage
+    }
+  }
+  const error = res.json()
+  return {
+    error
+  }
 }
 
 export async function deleteImage(imageId: number, productId: number) {

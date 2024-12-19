@@ -161,7 +161,10 @@ function UploadButtonDialog({ skus, productId }: { skus: number[], productId: nu
           className="grid gap-4 py-4"
           id="upload-image"
           action={async (formData: FormData) => {
-            const res = await uploadImage(formData, productId)
+            setIsLoading(true)
+            formData.append('productId', productId.toString())
+            const { createdImage, error } = await uploadImage(formData)
+            console.log(createdImage, error)
             setIsCreated(true)
             setIsLoading(false)
           }}

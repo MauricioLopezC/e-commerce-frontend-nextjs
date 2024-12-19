@@ -10,12 +10,12 @@ async function DashBoard() {
   const { productsData } = await getAllProducts({})
   if (!productsData) return null
   const { ordersData } = await getAllOrders({})
-  const { usersData } = await getUsers()
+  const { usersData } = await getUsers({})
   if (!usersData) return null
   if (!ordersData) return null
 
   return (
-    <div className='flex min-h-screen w-full flex-col'>
+    <div className='container mx-auto'>
       <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
         <div id='small-cards' className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4'>
           <SmallCards ordersData={ordersData} usersData={usersData} />

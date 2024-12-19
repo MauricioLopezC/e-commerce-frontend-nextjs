@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from 'next/headers'
 import { getPayload } from "./lib/jwt-decode";
 
-const publicRoutes = ["/", "/products"]
+const publicRoutes = ["/", "/products", "/search", "/about"]
 const authRoutes = ["/auth/login", "auth/register"]
 
 

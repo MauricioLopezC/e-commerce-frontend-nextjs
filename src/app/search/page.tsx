@@ -12,7 +12,7 @@ async function SearchPage({ searchParams }: { searchParams: Promise<{ [key: stri
   const productName = (await searchParams).productName
   if (!productName) return null
 
-  const { products, error } = await searchByName(productName)
+  const { products } = await searchByName(productName)
   if (!products) return null
   return (
     <section className="mt-6 ">

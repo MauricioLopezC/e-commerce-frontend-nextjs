@@ -1,10 +1,8 @@
-
 import { create } from 'zustand'
 
 interface OrderState {
   orderId: number | null;
   updateSelectedOrderId: (newSelectedId: number) => void;
-
 }
 
 export const useOrdersStore = create<OrderState>()((set) => ({

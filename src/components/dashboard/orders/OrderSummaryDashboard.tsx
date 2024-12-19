@@ -5,8 +5,8 @@ import {
   TrashIcon,
   CheckIcon,
   Truck,
+  MoreVertical,
 } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -16,10 +16,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Separator } from "@/components/ui/separator"
 import { Order } from "@/interfaces/orders"
 import { useOrdersStore } from "@/store/order-page-store"
 import { peso } from "@/lib/constants"
+import { cn } from "@/lib/utils"
 
 export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
   const selectedOrderId = useOrdersStore((state) => state.orderId)
@@ -63,10 +72,23 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
               Seguir
             </span>
           </Button>
-          <Button size="icon" variant="outline" className="h-8 w-8">
-            <CheckIcon className="h-3.5 w-3.5" />
-            <span className="sr-only">Delete</span>
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="icon" variant="outline" className="h-8 w-8">
+                <MoreVertical className="h-3.5 w-3.5" />
+                <span className="sr-only">Mas</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Estado</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => console.log("compleado")}>COMPLETADO</DropdownMenuItem>
+              <DropdownMenuItem>EN_PROGRESO</DropdownMenuItem>
+              <DropdownMenuItem>CANCELADO</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Editar</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardHeader>
       <CardContent className="p-6 text-sm">
