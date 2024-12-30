@@ -1,26 +1,9 @@
 'use server'
-import { addToCart, getCartId } from "@/queries/cart.api"
 import { cookies } from "next/headers"
 import { getPayload } from "../jwt-decode"
-import { revalidatePath, revalidateTag } from "next/cache"
-import { UnauthorizedResponse } from "@/interfaces/responses"
+import { revalidateTag } from "next/cache"
 import { BACKEND_URL } from "@/queries/constants"
 import { Cart, CartItem } from "@/interfaces/cart-item/cart"
-
-export async function addToCartAction(productId: number, productSkuId: number, quantity: number) {
-  const cookie = cookies().get('access-token')
-  if (!cookie) return { error: "user is not logged in", message: "user is not logged in", statusCode: 401 }
-  const token = cookie.value
-
-  const payload = getPayload(token)
-  if (!payload) return { error: "user is not logged in", message: "user is not logged in", statusCode: 401 }
-  const cartId = await getCartId(payload.id, token)
-  if (!cartId) return { ok: false, message: "error al obtener el cartId" }
-
-  const response = await addToCart(productId, productSkuId, quantity, cartId, token)
-  revalidatePath('/cart')
-  return response.json()
-}
 
 interface CartResponse {
   cart?: Cart;
@@ -41,14 +24,10 @@ export async function getCart(): Promise<CartResponse> {
   })
   if (res.ok) {
     const cart = await res.json()
-    return {
-      cart
-    }
+    return { cart }
   }
   const error = await res.json()
-  return {
-    error
-  }
+  return { error }
 }
 
 export async function addCartItem(
@@ -76,14 +55,10 @@ export async function addCartItem(
   revalidateTag('cartItems')
   if (res.ok) {
     const cartItem = await res.json()
-    return {
-      cartItem
-    }
+    return { cartItem }
   }
   const error = await res.json()
-  return {
-    error
-  }
+  return { error }
 }
 
 interface CartItemsResponse {
@@ -105,9 +80,7 @@ export async function getCartItems(cartId: number): Promise<CartItemsResponse> {
   })
   if (res.ok) {
     const cartItems = await res.json()
-    return {
-      cartItems
-    }
+    return { cartItems }
   }
   const error = await res.json()
   return { error }

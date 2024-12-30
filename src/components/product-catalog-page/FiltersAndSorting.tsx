@@ -21,16 +21,22 @@ export function OrderByMenu() {
       <DropdownMenuContent>
         <DropdownMenuLabel >Orden</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => {
-          const params = new URLSearchParams(searchParams.toString())
-          params.set('orderBy', 'price')
-          router.push(`/products?${params.toString()}`)
-        }}>Menor precio</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => {
-          const params = new URLSearchParams(searchParams.toString())
-          params.set('orderBy', '-price')
-          router.push(`/products?${params.toString()}`)
-        }}>Mayor precio</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            const params = new URLSearchParams(searchParams.toString())
+            params.set('orderBy', 'price')
+            router.push(`/products?${params.toString()}`)
+          }}>
+          Menor precio
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            const params = new URLSearchParams(searchParams.toString())
+            params.set('orderBy', '-price')
+            router.push(`/products?${params.toString()}`)
+          }}>
+          Mayor precio
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

@@ -1,6 +1,5 @@
 import CartList from "@/components/cart-page/cart-list"
 import CheckOutForm from "@/components/checkout/CheckOutForm"
-import Order from "@/components/checkout/Order"
 import NotLoggedPage from "@/components/common/notlogged-page"
 import { getPayload, isTokenExpired } from "@/lib/jwt-decode"
 import { getCartId, getCartItems } from "@/queries/cart.api"
@@ -12,6 +11,7 @@ async function CheckOutPage() {
   if (isTokenExpired(token?.value ?? '')) return (<NotLoggedPage />) //expired session
 
   const user = getPayload(token?.value ?? '')
+  if (!user) return null
   const cartId = await getCartId(user.id, token.value)
   if (!cartId) return (<NotLoggedPage />)
   const cart = await getCartItems(cartId, token.value)

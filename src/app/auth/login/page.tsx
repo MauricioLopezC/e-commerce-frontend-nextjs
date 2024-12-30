@@ -30,6 +30,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert"
+import { useSearchParams } from 'next/navigation'
 
 const formSchema = z.object({
   email: z.string().min(2).max(100).email(),
@@ -40,6 +41,8 @@ function LoginPage() {
   const [errorMessage, setErrorMessage] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect: string | null = searchParams.get('redirect')
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -130,7 +133,7 @@ function LoginPage() {
             <h1>Sesión iniciada correctamente</h1>
           </div>
           <DialogFooter >
-            <Button onClick={() => router.push('/')}>Continuar</Button>
+            <Button onClick={() => router.push(redirect ?? '/')}>Continuar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

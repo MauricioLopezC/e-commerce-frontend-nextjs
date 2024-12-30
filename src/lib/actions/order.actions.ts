@@ -3,7 +3,64 @@ import { cookies } from "next/headers"
 import { BACKEND_URL } from "@/queries/constants"
 import { getPayload } from "../jwt-decode"
 import { Order } from "@/interfaces/orders"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
+import { ErrorResponse } from "@/interfaces/responses"
+
+
+export interface OrdersData {
+  orders: Order[];
+  aggregate: { _sum: { total: number }, _count: number };
+}
+interface OrdersResponse {
+  ordersData?: OrdersData;
+  error?: any;
+}
+
+interface OneOrderResponse {
+  order?: Order;
+  error?: ErrorResponse
+}
+
+interface GetOrdersOptions {
+  limit?: number;
+  page?: number;
+  orderBy?: string;
+  status?: string
+}
+
+export async function getAllOrders(options: GetOrdersOptions): Promise<OrdersResponse> {
+  const token = cookies().get('access-token')?.value
+
+  const queryParams = new URLSearchParams()
+  let key: keyof GetOrdersOptions
+  for (key in options) {
+    const value = options[key]
+    if (value) {
+      queryParams.set(key, value.toString())
+    }
+  }
+
+  const res = await fetch(`${BACKEND_URL}/orders?${queryParams.toString()}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `access-token=${token}`
+    },
+    next: {
+      tags: ['orders']
+    }
+  })
+  if (res.ok) {
+    const ordersData = await res.json()
+    return {
+      ordersData
+    }
+  }
+  return {
+    error: await res.json()
+  }
+}
 
 export async function addOrder(formData: FormData) {
   const token = cookies().get('access-token')?.value
@@ -61,57 +118,33 @@ export async function getUserOrders() {
   })
   if (res.ok) {
     const data = await res.json()
-    return {
-      data
-    }
+    return { data }
   }
-  return {
-    error: await res.json()
-  }
+  const error = await res.json()
+  return { error }
 }
 
-export interface OrdersData {
-  orders: Order[];
-  aggregate: { _sum: { total: number }, _count: number };
-}
 
-interface OrdersResponse {
-  ordersData?: OrdersData;
-  error?: any;
-}
 
-interface GetOrdersOptions {
-  limit?: number;
-  page?: number;
-}
 
-export async function getAllOrders(options: GetOrdersOptions): Promise<OrdersResponse> {
+export async function updateOrderStatus(orderId: number, status: string): Promise<OneOrderResponse> {
+  console.log(orderId, status)
   const token = cookies().get('access-token')?.value
-
-  const queryParams = new URLSearchParams()
-  let key: keyof GetOrdersOptions
-  for (key in options) {
-    const value = options[key]
-    if (value) {
-      queryParams.set(key, value.toString())
-    }
-  }
-
-
-  const res = await fetch(`${BACKEND_URL}/orders?${queryParams.toString()}`, {
-    method: 'GET',
+  const res = await fetch(`${BACKEND_URL}/orders/${orderId}`, {
+    method: 'PATCH',
     credentials: 'include',
     headers: {
+      "Content-Type": "application/json",
       Cookie: `access-token=${token}`
-    }
+    },
+    body: JSON.stringify({ status: status })
+
   })
+  revalidateTag('orders')
   if (res.ok) {
-    const ordersData = await res.json()
-    return {
-      ordersData
-    }
+    const order = await res.json()
+    return { order }
   }
-  return {
-    error: await res.json()
-  }
+  const error = await res.json()
+  return { error }
 }

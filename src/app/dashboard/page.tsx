@@ -6,8 +6,10 @@ import { getUsers } from "@/lib/actions/user.actions"
 import { getAllProducts } from "@/lib/actions/product.actions"
 
 async function DashBoard() {
-  //TODO: implement orderby query param for send to backend
-  const { productsData } = await getAllProducts({})
+  const { productsData } = await getAllProducts({
+    orderBy: '-unitsOnOrder',
+    limit: 5
+  })
   if (!productsData) return null
   const { ordersData } = await getAllOrders({})
   const { usersData } = await getUsers({})

@@ -56,7 +56,9 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
                   <TableCell className="font-medium flex space-x-2">
                     <p>{`${user.firstName} ${user.lastName}`}</p>
                     {user.role === "ADMIN" &&
-                      <Badge>TÚ</Badge>
+                      <>
+                        <Badge>TÚ</Badge>
+                      </>
                     }
                   </TableCell>
                   <TableCell className="hidden md:table-cell">

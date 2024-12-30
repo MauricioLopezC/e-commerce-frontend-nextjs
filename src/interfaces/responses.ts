@@ -9,7 +9,7 @@ export interface UnauthorizedResponse {
   message?: string;
 }
 
-export interface HttpException {
+export interface ErrorResponse {
   error?: string;
   statusCode: number;
   message: string | string[];

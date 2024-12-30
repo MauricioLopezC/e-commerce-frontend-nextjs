@@ -27,8 +27,7 @@ export default async function middleware(req: NextRequest) {
     !authRoutes.includes(path) &&
     !publicRoutes.includes(path)
   ) {
-    //TODO: implment query param ?redirect=url for redirect previous route
-    return NextResponse.redirect(new URL("/auth/login", nextUrl))
+    return NextResponse.redirect(new URL(`/auth/login?redirect=${path}`, nextUrl))
   }
 }
 

@@ -6,6 +6,7 @@ import {
   CheckIcon,
   Truck,
   MoreVertical,
+  CircleCheckBig,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -28,16 +29,16 @@ import { Separator } from "@/components/ui/separator"
 import { Order } from "@/interfaces/orders"
 import { useOrdersStore } from "@/store/order-page-store"
 import { peso } from "@/lib/constants"
-import { cn } from "@/lib/utils"
+import { updateOrderStatus } from "@/lib/actions/order.actions"
+import { useToast } from "@/hooks/use-toast"
 
 export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
+  const { toast } = useToast()
   const selectedOrderId = useOrdersStore((state) => state.orderId)
-  const updateSelectedOrderId = useOrdersStore((state) => state.updateSelectedOrderId)
-  if (!selectedOrderId) updateSelectedOrderId(orders[0].id)
 
   const order = orders.find((order) => (
     order.id === selectedOrderId
-  )) ?? orders[0]
+  ))
 
   if (!order) {
     return (
@@ -82,9 +83,80 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Estado</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => console.log("compleado")}>COMPLETADO</DropdownMenuItem>
-              <DropdownMenuItem>EN_PROGRESO</DropdownMenuItem>
-              <DropdownMenuItem>CANCELADO</DropdownMenuItem>
+
+              <DropdownMenuItem
+                className="gap-1.5"
+                onClick={async () => {
+                  const { order: createdOrder, error } = await updateOrderStatus(order.id, "COMPLETED")
+                  console.log(createdOrder, error)
+                  if (createdOrder) {
+                    toast({
+                      description: (
+                        <div>
+                          <h2 className="font-semibold text-md">
+                            <span><CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" /></span>
+                            Estado actualizado a {createdOrder.status}
+                          </h2>
+                        </div>
+                      ),
+                    })
+                  }
+                }}>
+                {order.status === 'COMPLETED' &&
+                  <span className="size-1.5 rounded-full bg-black" aria-hidden="true"></span>
+                }
+                COMPLETADO
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                className="gap-1.5"
+                onClick={async () => {
+                  const { order: createdOrder } = await updateOrderStatus(order.id, "IN_PROGRESS")
+                  console.log(createdOrder)
+                  if (createdOrder) {
+                    toast({
+                      description: (
+                        <div>
+                          <h2 className="font-semibold text-md">
+                            <span><CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" /></span>
+                            Estado actualizado a {createdOrder.status}
+                          </h2>
+                        </div>
+                      ),
+                    })
+                  }
+                }}
+              >
+                {order.status === 'IN_PROGRESS' &&
+                  <span className="size-1.5 rounded-full bg-black" aria-hidden="true"></span>
+                }
+                EN PROGRESO
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                className="gap-1.5"
+                onClick={async () => {
+                  const { order: createdOrder } = await updateOrderStatus(order.id, "CANCELLED")
+                  console.log(createdOrder)
+                  if (createdOrder) {
+                    toast({
+                      description: (
+                        <div>
+                          <h2 className="font-semibold text-md">
+                            <span><CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" /></span>
+                            Estado actualizado a {createdOrder.status}
+                          </h2>
+                        </div>
+                      ),
+                    })
+                  }
+                }}
+              >
+                {order.status === 'CANCELLED' &&
+                  <span className="size-1.5 rounded-full bg-black" aria-hidden="true"></span>
+                }
+                CANCELADO
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Editar</DropdownMenuItem>
             </DropdownMenuContent>

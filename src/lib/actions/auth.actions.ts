@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache"
 import { cookies } from "next/headers"
 import { getPayload } from "../jwt-decode"
 import { User } from "@/interfaces/users"
-import { ClassValidatorResponse, UnauthorizedResponse } from "@/interfaces/responses"
+import { ErrorResponse } from "@/interfaces/responses"
 
 export async function logOut() {
   const cookieStore = cookies()
@@ -12,14 +12,9 @@ export async function logOut() {
   revalidatePath('/profile')
 }
 
-
-// interface LoginSuccess {
-//   access_token: string;
-// }
-
 interface LoginResponse {
   access_token?: string;
-  error?: UnauthorizedResponse | ClassValidatorResponse;
+  error?: ErrorResponse;
 }
 
 
@@ -65,9 +60,14 @@ interface UserResponse {
  *Only andmin
  */
 export async function getUserById(): Promise<UserResponse> {
-  //TODO: fix error
   const token = cookies().get('access-token')?.value
   const user = getPayload(token ?? '')
+  if (!user) return {
+    error: {
+      statusCode: 401,
+      message: 'Unauthorized'
+    }
+  }
 
   const res = await fetch(`${BACKEND_URL}/users/${user?.id}`, {
     method: 'GET',
@@ -77,9 +77,9 @@ export async function getUserById(): Promise<UserResponse> {
     }
   })
   if (res.ok) {
-    const data = await res.json()
+    const user = await res.json()
     return {
-      user: data
+      user
     }
   }
   const error = await res.json()

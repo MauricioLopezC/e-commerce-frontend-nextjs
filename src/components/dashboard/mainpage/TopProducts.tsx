@@ -1,6 +1,6 @@
 'use client'
 import { CldImage } from 'next-cloudinary'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Product } from '@/interfaces/products/product'
 import { peso } from '@/lib/constants'
@@ -22,7 +22,7 @@ function TopProductsTable({ products }: { products: Product[] }) {
               <TableHead className="hidden md:table-cell">
                 Precio
               </TableHead>
-              <TableHead className="hidden md:table-cell">
+              <TableHead className="hidden md:table-cell text-center">
                 Ventas totales
               </TableHead>
               <TableHead className="hidden md:table-cell">
@@ -33,9 +33,6 @@ function TopProductsTable({ products }: { products: Product[] }) {
           <TableBody>
             {
               products
-                .sort((a, b) => (b.unitsOnOrder - a.unitsOnOrder))
-                .filter((product) => (product.unitsOnOrder > 0))
-                .slice(0, 4)
                 .map((product, idx) => (
                   <TableRow key={idx}>
                     <TableCell className="hidden sm:table-cell">
@@ -53,11 +50,11 @@ function TopProductsTable({ products }: { products: Product[] }) {
                     <TableCell className="hidden md:table-cell">
                       {peso.format(product.price)}
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">
+                    <TableCell className="hidden md:table-cell text-center">
                       {product.unitsOnOrder}
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      {peso.format(product.unitsOnOrder * product.price)}
+                      {peso.format(product.totalCollected)}
                     </TableCell>
                   </TableRow>
                 ))

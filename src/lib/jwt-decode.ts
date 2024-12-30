@@ -1,4 +1,4 @@
-interface User {
+interface UserPayload {
   id: number,
   email: string,
   role: string,
@@ -6,7 +6,7 @@ interface User {
   exp: number
 }
 
-export function getPayload(token: string): User | null {
+export function getPayload(token: string): UserPayload | null {
   try {
     const arrayToken = token.split('.')
     const tokenPayload = JSON.parse(atob(arrayToken[1]));

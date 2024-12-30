@@ -1,7 +1,6 @@
 import { getProfile } from "@/queries/auth.api"
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
-import { logOut } from "@/lib/actions/auth.actions"
 import LogOutButton from "./LogOutButton"
 import { revalidatePath } from "next/cache"
 
@@ -13,8 +12,6 @@ async function UserProfile() {
 
   const cookie = getCookie("access-token")
   const res = await getProfile(cookie)
-  // console.log("RES: ", res)
-  // console.log("ALOJAAA")
   if (!res.ok) {
     redirect("/auth/login")
   }
