@@ -57,10 +57,7 @@ async function ProductsPage({ searchParams }: ProductsPageProps) {
       <div className="w-fit mx-auto mt-10 mb-5">
         <div className="flex justify-between mb-4">
           <FiltersMenu />
-          <div className="flex items-center">
-            Ordenar por
-            <OrderByMenu />
-          </div>
+          <OrderByMenu />
         </div>
 
         <div className=" grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-8 gap-x-8">

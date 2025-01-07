@@ -9,8 +9,8 @@ import { useSearchParams } from "next/navigation"
 function OrdersFilters() {
   const searchParams = useSearchParams()
   const params = new URLSearchParams(searchParams.toString())
-  const [status, setStatus] = useState<string>(params.get('status') ?? 'ALL')
   const router = useRouter()
+  const [status, setStatus] = useState<string>(params.get('status') ?? 'ALL')
 
   useEffect(() => {
     status === 'ALL' ? params.delete('status') : params.set('status', status)

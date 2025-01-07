@@ -64,7 +64,7 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
               <span className="sr-only">Copy Order ID</span>
             </Button>
           </CardTitle>
-          <CardDescription>{new Date(order.createdAt).toLocaleDateString()}</CardDescription>
+          <CardDescription>{new Date(order.createdAt).toLocaleString('es-AR')}</CardDescription>
         </div>
         <div className="ml-auto flex items-center gap-1">
           <Button size="sm" variant="outline" className="h-8 gap-1">

@@ -1,4 +1,4 @@
-import { Home, Shirt, Package, UsersRound } from "lucide-react"
+import { Home, Shirt, Package, UsersRound, TicketPercent } from "lucide-react"
 
 import {
   Sidebar,
@@ -33,6 +33,11 @@ const items = [
     title: "Clientes",
     url: "/dashboard/users",
     icon: UsersRound,
+  },
+  {
+    title: "Descuentos",
+    url: "/dashboard/promotions",
+    icon: TicketPercent,
   },
 ]
 

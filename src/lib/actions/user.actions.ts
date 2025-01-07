@@ -1,12 +1,12 @@
-'use server'
-import { cookies } from "next/headers"
-import { BACKEND_URL } from "@/queries/constants"
-import { revalidatePath } from "next/cache"
+"use server";
+import { cookies } from "next/headers";
+import { BACKEND_URL } from "@/queries/constants";
+import { revalidatePath } from "next/cache";
 import { User } from "@/interfaces/users";
 
 export interface UsersData {
   users: User[];
-  aggregate: { _count: number }
+  aggregate: { _count: number };
 }
 
 interface UsersResponse {
@@ -18,63 +18,63 @@ interface GetUsersOptions {
   page?: number;
 }
 
-export async function getUsers(options: GetUsersOptions): Promise<UsersResponse> {
-  const token = cookies().get('access-token')?.value
-  const queryParams = new URLSearchParams()
-  let key: keyof GetUsersOptions
+export async function getUsers(
+  options: GetUsersOptions
+): Promise<UsersResponse> {
+  const token = cookies().get("access-token")?.value;
+  const queryParams = new URLSearchParams();
+  let key: keyof GetUsersOptions;
   for (key in options) {
-    const value = options[key]
+    const value = options[key];
     if (value) {
-      queryParams.set(key, value.toString())
+      queryParams.set(key, value.toString());
     }
   }
 
   const res = await fetch(`${BACKEND_URL}/users?${queryParams.toString()}`, {
-    method: 'GET',
-    credentials: 'include',
+    method: "GET",
+    credentials: "include",
     headers: {
-      Cookie: `access-token=${token}`
+      Cookie: `access-token=${token}`,
     },
-  })
+  });
   if (res.ok) {
-    const usersData = await res.json()
+    const usersData = await res.json();
     return {
-      usersData
-    }
+      usersData,
+    };
   }
-  const error = await res.json()
+  const error = await res.json();
   return {
-    error
-  }
-
+    error,
+  };
 }
 
 export async function deleteUser(userId: number) {
-  const token = cookies().get('access-token')?.value
-  console.log("USERID ===> ", userId)
+  const token = cookies().get("access-token")?.value;
+  console.log("USERID ===> ", userId);
 
   const res = await fetch(`${BACKEND_URL}/users/${userId}`, {
-    method: 'DELETE',
-    credentials: 'include',
+    method: "DELETE",
+    credentials: "include",
     headers: {
-      Cookie: `access-token=${token}`
+      Cookie: `access-token=${token}`,
     },
-  })
+  });
 
-  revalidatePath('/dashboard/users')
+  revalidatePath("/dashboard/users");
   if (res.ok) {
-    const data = await res.json()
+    const data = await res.json();
     return {
-      user: data
-    }
+      user: data,
+    };
   }
 
-  const error = await res.json()
+  const error = await res.json();
   return {
-    error
-  }
+    error,
+  };
 }
 
-//TODO: dar de baja a un usuario o bloquarlo, implmentar campo en el bakcend que diga si el
-//usario esta bloqueado
-
+//TODO: dar de baja a un usuario o bloquearlo, implementar campo en el backend que diga si el
+//usuario esta bloqueado

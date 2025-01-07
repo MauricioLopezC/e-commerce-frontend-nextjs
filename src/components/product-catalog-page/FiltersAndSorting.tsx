@@ -9,14 +9,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useRouter, useSearchParams } from "next/navigation"
+import { Button } from "../ui/button"
 
 export function OrderByMenu() {
   const searchParams = useSearchParams()
   const router = useRouter()
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <ChevronDownIcon className="h-4 w-4 mx-2" />
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-7 gap-1 text-sm"
+        >
+          <ChevronDownIcon className="h-3.5 w-3.5" />
+          <span className="sr-only sm:not-sr-only">Ordenar por</span>
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel >Orden</DropdownMenuLabel>
