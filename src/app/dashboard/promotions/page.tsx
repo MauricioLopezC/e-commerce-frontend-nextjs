@@ -2,6 +2,7 @@ import DiscountsTable from "@/components/dashboard/promotions/DiscountsTable"
 import { Button } from "@/components/ui/button"
 import { getAllDiscounts } from "@/lib/actions/discounts.actions"
 import { PlusCircle } from "lucide-react"
+import Link from "next/link"
 
 async function PromotionsPage() {
   const { discounts } = await getAllDiscounts()

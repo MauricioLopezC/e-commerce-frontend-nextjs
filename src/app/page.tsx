@@ -13,7 +13,8 @@ async function Home() {
   //and places with many images because vercel charges on you for that optimization
   //use CldImage only in few necessary places
   //for example when Cloudinary awesome transformations are needed
-  const { productsData } = await getAllProducts({
+  const { productsData: newProducts } = await getAllProducts({
+    orderBy: 'createdAt',
     limit: 5,
   });
   const { productsData: bestSellersData } = await getAllProducts({
@@ -73,7 +74,7 @@ async function Home() {
         </div>
         <ScrollArea className="mb-16 mx-6 whitespace-nowrap rounded-md border">
           <div className="flex w-max space-x-6 p-4">
-            {productsData?.products.map((product: Product, idx: number) => (
+            {newProducts?.products.map((product: Product, idx: number) => (
               <ProductCard
                 key={idx}
                 id={product.id}

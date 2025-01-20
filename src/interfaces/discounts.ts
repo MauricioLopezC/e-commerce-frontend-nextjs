@@ -16,8 +16,8 @@ export interface Discount {
   isActive: boolean
   createdAt: Date
   updatedAt: Date
-  products?: Product[]
-  categories?: Category[]
+  products: Product[]
+  categories: Category[]
 }
 
 export enum DiscountType {

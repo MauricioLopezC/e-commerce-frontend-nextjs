@@ -29,19 +29,25 @@ interface EditFormProps {
 const formSchema = z.object({
   name: z.string().min(1).max(100),
   description: z.string().min(1).max(200).optional(),
-  dicountType: z.nativeEnum(DiscountType),
+  discountType: z.nativeEnum(DiscountType),
   value: z.coerce.number().min(0).step(0.01, "Solo se admiten 2 decimales"),
   startDate: z.date({ coerce: true }),
   endDate: z.date({ coerce: true }),
-  //applicableTo: z.nativeEnum(ApplicableTo).optional(),
+  applicableTo: z.nativeEnum(ApplicableTo).optional(),
   orderThreshold: z.number().min(0).step(0.01, "Solo se admiten 2 decimales").optional(),
   maxUses: z.coerce.number().int().positive().optional(),
   isActive: z.boolean()
-}).refine(schema => {
+}).refine((schema) => {
   return (schema.startDate < schema.endDate)
 }, {
   path: ['endDate'],
   message: 'La fecha de vencimiento debe ser posterior a la fecha de inicio'
+}).refine((schema) => {
+  if (schema.discountType === DiscountType.PERCENTAGE && schema.value >= 100) return false
+  return true
+}, {
+  path: ['value'],
+  message: 'Solo se admite porcentaje hasta el 100%'
 })
 
 function EditDiscountForm({ discount }: EditFormProps) {
@@ -50,12 +56,12 @@ function EditDiscountForm({ discount }: EditFormProps) {
     defaultValues: {
       name: discount.name,
       description: discount.description ?? undefined,
-      dicountType: discount.discountType,
+      discountType: discount.discountType,
       value: discount.value,
       startDate: discount.startDate,
       endDate: discount.endDate,
-      //applicableTo: discount.applicableTo,
-      orderThreshold: discount.orderThreshold,
+      applicableTo: discount.applicableTo,
+      orderThreshold: discount.orderThreshold ?? undefined,
       maxUses: discount.maxUses ?? undefined,
       isActive: discount.isActive,
     }
@@ -97,7 +103,7 @@ function EditDiscountForm({ discount }: EditFormProps) {
           />
           <FormField
             control={form.control}
-            name="dicountType"
+            name="discountType"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Tipo de descuento</FormLabel>
@@ -213,6 +219,28 @@ function EditDiscountForm({ discount }: EditFormProps) {
           />
           <FormField
             control={form.control}
+            name="applicableTo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Aplicable a</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value} disabled>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona el tipo" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value={ApplicableTo.PRODUCT}>Producto</SelectItem>
+                    <SelectItem value={ApplicableTo.CATEGORY}>Categoria</SelectItem>
+                    <SelectItem value={ApplicableTo.GENERAL}>General</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="orderThreshold"
             render={({ field }) => (
               <FormItem>
@@ -257,7 +285,7 @@ function EditDiscountForm({ discount }: EditFormProps) {
             )}
           />
         </div>
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Guardar</Button>
       </form>
     </Form>
   )
