@@ -22,7 +22,7 @@ export interface Discount {
 
 export enum DiscountType {
   PERCENTAGE = 'PERCENTAGE',
-  FIXED = 'FIXED'
+  FIXED = 'FIXED',
 }
 
 export enum ApplicableTo {

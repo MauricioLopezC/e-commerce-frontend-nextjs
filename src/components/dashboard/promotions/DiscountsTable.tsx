@@ -1,3 +1,4 @@
+'use client'
 import { Badge } from "@/components/ui/badge"
 import {
   Card,
@@ -15,13 +16,31 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Discount } from "@/interfaces/discounts"
 import { peso } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
-import { Pencil, Trash2 } from "lucide-react"
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
+import { useState } from "react"
+import { deleteDiscount } from "@/lib/actions/discounts.actions"
+import { useToast } from "@/hooks/use-toast"
+import { CheckCircleIcon } from "@heroicons/react/24/solid"
+import { XMarkIcon } from "@heroicons/react/24/outline"
 
 function DiscountsTable({ discounts }: { discounts: Discount[] }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const router = useRouter()
+  const { toast } = useToast()
+  const [discountId, setDiscountId] = useState<number | null>(null)
   return (
     <Card>
       <CardHeader>
@@ -79,19 +98,34 @@ function DiscountsTable({ discounts }: { discounts: Discount[] }) {
                   </Badge>
                 </TableCell>
                 <TableCell className="py-3 px-4">
-                  {/* <ActionButtons discountId={discount.id} /> */}
-                  <div className="flex space-x-2">
-                    <Button variant="outline" size="sm" className="text-blue-600 hover:text-blue-700" asChild >
-                      <Link href={`/dashboard/promotions/discounts/edit/${discount.id}`}>
-                        <Pencil className="h-4 w-4 md:mr-1" />
-                        <span className="hidden md:inline">Editar</span>
-                      </Link>
-                    </Button>
-                    <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                      <Trash2 className="h-4 w-4 md:mr-1" />
-                      <span className="hidden md:inline">Eliminar</span>
-                    </Button>
-                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        aria-haspopup="true"
+                        size="icon"
+                        variant="ghost"
+                      >
+                        <MoreHorizontal className="h-4 w-4" />
+                        <span className="sr-only">Toggle menu</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Opciones</DropdownMenuLabel>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          router.push(`/dashboard/promotions/discounts/edit/${discount.id}`)
+                        }}>
+                        Editar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={async () => {
+                        setIsOpen(true)
+                        setDiscountId(discount.id)
+                      }}>
+                        Eliminar
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
                 </TableCell>
               </TableRow>
             ))}
@@ -99,7 +133,54 @@ function DiscountsTable({ discounts }: { discounts: Discount[] }) {
         </Table>
       </CardContent>
       <CardFooter>
-        <p>Card Footer</p>
+        <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>¿Estás completamente seguro?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Esta acción no se puede deshacer. Eliminará permanentemente al descuento.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={async () => {
+                  console.log(discountId)
+                  if (discountId) {
+                    const { discount, error } = await deleteDiscount(discountId)
+                    console.log(discount, error)
+                    if (discount) {
+                      toast({
+                        description: (
+                          <div>
+                            <h2 className="font-semibold text-md">
+                              <span><CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" /></span>
+                              Descuento eliminado
+                            </h2>
+                          </div>
+                        ),
+                      })
+                      setDiscountId(null)
+                    }
+                    if (error) {
+                      toast({
+                        description: (
+                          <div>
+                            <h2 className="font-semibold text-md">
+                              <span><XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline" /></span>
+                              Error al eliminar
+                            </h2>
+                          </div>
+                        ),
+                      })
+                    }
+                  }
+                }}>
+                Continuar
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardFooter>
     </Card>
   )

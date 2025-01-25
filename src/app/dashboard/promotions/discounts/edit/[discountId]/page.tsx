@@ -1,3 +1,4 @@
+import NotFoundPage from "@/components/common/NotFoundPage";
 import DiscountCategoriesTable from "@/components/dashboard/promotions/DicountCategoriesTable";
 import DiscountProductsTable from "@/components/dashboard/promotions/DicountProductsTable";
 import EditDiscountForm from "@/components/dashboard/promotions/EditForm"
@@ -14,7 +15,7 @@ import { getAllProducts } from "@/lib/actions/product.actions";
 import Link from "next/link";
 async function EditDiscountPage({ params }: { params: { discountId: string } }) {
   const discountId = Number(params.discountId);
-  if (!discountId) return null;
+  if (!discountId) return NotFoundPage();
   const { discount } = await getOneDiscount(discountId)
   if (!discount) return null
   const discountProducts = discount.products
@@ -38,7 +39,7 @@ async function EditDiscountPage({ params }: { params: { discountId: string } }) 
             <CardTitle>Descuento</CardTitle>
           </CardHeader>
           <CardContent>
-            <EditDiscountForm discount={discount} />
+            <EditDiscountForm discount={discount} discountId={discountId} />
           </CardContent>
         </Card>
         <DiscountProductsTable products={discountProducts} allProducts={productsData.products} />

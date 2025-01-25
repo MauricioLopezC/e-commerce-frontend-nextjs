@@ -58,21 +58,47 @@ function ProductDetailsV2({ form }: {
               )}
             />
           </div>
+          {/* <div className="grid gap-3"> */}
+          {/*   <FormField */}
+          {/*     control={form.control} */}
+          {/*     name="category" */}
+          {/*     render={({ field }) => ( */}
+          {/*       <FormItem> */}
+          {/*         <FormLabel>Categoría</FormLabel> */}
+          {/*         <FormControl> */}
+          {/*           <Input placeholder="Remeras" {...field} /> */}
+          {/*         </FormControl> */}
+          {/*         <FormMessage /> */}
+          {/*       </FormItem> */}
+          {/*     )} */}
+          {/*   /> */}
+          {/* </div> */}
+
           <div className="grid gap-3">
             <FormField
               control={form.control}
               name="category"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Categoría</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Remeras" {...field} />
-                  </FormControl>
+                  <FormLabel>sexo</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger id="sex" aria-label="Select sex">
+                        <SelectValue placeholder="Seleccionar sexo de la prenda" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="hombre">Hombre</SelectItem>
+                      <SelectItem value="mujer">Mujer</SelectItem>
+                      <SelectItem value="unisex">Unisex</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
+
           <div className="grid gap-3">
             <FormField
               control={form.control}

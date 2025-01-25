@@ -21,10 +21,9 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-
-interface EditFormProps {
-  discount: Discount;
-}
+import { updateDiscount } from '@/lib/actions/discounts.actions';
+import { useToast } from '@/hooks/use-toast';
+import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/solid';
 
 const formSchema = z.object({
   name: z.string().min(1).max(100),
@@ -50,7 +49,14 @@ const formSchema = z.object({
   message: 'Solo se admite porcentaje hasta el 100%'
 })
 
-function EditDiscountForm({ discount }: EditFormProps) {
+interface EditFormProps {
+  discount: Discount;
+  discountId: number;
+}
+
+function EditDiscountForm({ discount, discountId }: EditFormProps) {
+  const { toast } = useToast()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -67,8 +73,33 @@ function EditDiscountForm({ discount }: EditFormProps) {
     }
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
+    const { discount, error } = await updateDiscount(discountId, values)
+    if (discount) {
+      toast({
+        description: (
+          <div>
+            <h2 className="font-semibold text-md">
+              <span><CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" /></span>
+              Descuento actualizado
+            </h2>
+          </div>
+        ),
+      })
+    }
+    if (error) {
+      toast({
+        description: (
+          <div>
+            <h2 className="font-semibold text-md">
+              <span><XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline" /></span>
+              Error al actualizar
+            </h2>
+          </div>
+        ),
+      })
+    }
   }
 
   return (
@@ -88,6 +119,7 @@ function EditDiscountForm({ discount }: EditFormProps) {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="description"
@@ -101,6 +133,7 @@ function EditDiscountForm({ discount }: EditFormProps) {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="discountType"
@@ -122,6 +155,7 @@ function EditDiscountForm({ discount }: EditFormProps) {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="value"
@@ -135,6 +169,7 @@ function EditDiscountForm({ discount }: EditFormProps) {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="startDate"
@@ -176,6 +211,7 @@ function EditDiscountForm({ discount }: EditFormProps) {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="endDate"
@@ -217,6 +253,7 @@ function EditDiscountForm({ discount }: EditFormProps) {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="applicableTo"

@@ -145,6 +145,7 @@ function CreateProductPage() {
                 onSubmit={form.handleSubmit(onSubmit)}
               >
                 <ProductDetailsV2 form={form} />
+
                 <Card>
                   <CardHeader>
                     <CardTitle>Variaciones</CardTitle>

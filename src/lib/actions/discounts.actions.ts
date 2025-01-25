@@ -3,17 +3,56 @@
 import { Discount } from "@/interfaces/discounts"
 import { ErrorResponse } from "@/interfaces/responses";
 import { BACKEND_URL } from "@/queries/constants"
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers"
 
 interface OneDiscountResponse {
   discount?: Discount;
-  error?: any
+  error?: ErrorResponse;
+}
+
+interface CreateDiscountDto {
+  name: string
+  description: string
+  discountType: string
+  value: number
+  startDate: Date
+  endDate: Date
+  applicableTo: string
+  orderThreshold: number
+  maxUses?: number
+  isActive: boolean
+  products?: number[]
+  categories?: number[]
+}
+
+export async function createDiscount(data: CreateDiscountDto) {
+  const token = cookies().get("access-token")?.value;
+
+  const res = await fetch(`${BACKEND_URL}/promotions/discounts`, {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `access-token=${token}`,
+    },
+    body: JSON.stringify(data)
+
+  })
+  revalidateTag('discounts')
+  if (res.ok) {
+    const discount: Discount = await res.json()
+    return { discount }
+  }
+  const error: ErrorResponse = await res.json()
+  return { error }
 }
 
 export async function getAllDiscounts() {
   const res = await fetch(`${BACKEND_URL}/promotions/discounts`, {
     method: 'GET',
+    next: {
+      tags: ['discounts']
+    }
   })
   if (res.ok) {
     const discounts = await res.json()
@@ -37,6 +76,43 @@ export async function getOneDiscount(id: number): Promise<OneDiscountResponse> {
     return { discount }
   }
   const error = await res.json()
+  return { error }
+}
+
+export async function updateDiscount(id: number, data: Partial<CreateDiscountDto>): Promise<OneDiscountResponse> {
+  const token = cookies().get("access-token")?.value;
+  const res = await fetch(`${BACKEND_URL}/promotions/discounts/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `access-token=${token}`,
+    },
+    method: 'PATCH',
+    body: JSON.stringify(data)
+  })
+  revalidateTag('discounts')
+  if (res.ok) {
+    const discount: Discount = await res.json()
+    return { discount }
+  }
+  const error: ErrorResponse = await res.json()
+  return { error }
+
+}
+
+export async function deleteDiscount(id: number): Promise<OneDiscountResponse> {
+  const token = cookies().get("access-token")?.value;
+  const res = await fetch(`${BACKEND_URL}/promotions/discounts/${id}`, {
+    headers: {
+      Cookie: `access-token=${token}`,
+    },
+    method: 'DELETE',
+  })
+  revalidateTag('discounts')
+  if (res.ok) {
+    const discount: Discount = await res.json()
+    return { discount }
+  }
+  const error: ErrorResponse = await res.json()
   return { error }
 }
 
