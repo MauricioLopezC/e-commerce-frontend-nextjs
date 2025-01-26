@@ -28,8 +28,15 @@ interface OneProductResponse {
   error?: any;
 }
 
-interface CreateOrUpdateProductDto {
-  category: string;
+interface CreateProductDto {
+  name: string;
+  sex: string;
+  price: number;
+  description: string;
+  categories: number[];
+}
+
+interface UpdateProductDto {
   name: string;
   sex: string;
   price: number;
@@ -86,7 +93,7 @@ export async function getProduct(productId: number): Promise<OneProductResponse>
   }
 }
 
-export async function createProduct(createProductDto: CreateOrUpdateProductDto): Promise<OneProductResponse> {
+export async function createProduct(createProductDto: CreateProductDto): Promise<OneProductResponse> {
   const token = cookies().get('access-token')?.value
 
   const res = await fetch(`${BACKEND_URL}/products`, {
@@ -114,7 +121,7 @@ export async function createProduct(createProductDto: CreateOrUpdateProductDto):
 
 export async function updateProduct(
   productId: number,
-  data: CreateOrUpdateProductDto
+  data: UpdateProductDto
 ): Promise<OneProductResponse> {
   const token = cookies().get('access-token')?.value ?? ''
   const res = await fetch(`${BACKEND_URL}/products/${productId}`, {

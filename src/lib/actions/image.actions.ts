@@ -4,10 +4,11 @@ import { BACKEND_URL } from "@/queries/constants";
 import { revalidatePath } from "next/cache";
 
 export async function uploadImage(formData: FormData) {
+  console.log(formData)
   if (
     !formData.has("file") ||
-    formData.has("product") ||
-    formData.has("productSkuId")
+    !formData.has("productId") ||
+    !formData.has("productSkuId")
   ) {
     return {
       error: {
