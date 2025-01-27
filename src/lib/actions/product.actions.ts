@@ -175,3 +175,29 @@ export async function deleteProduct(id: number): Promise<OneProductResponse> {
   }
 }
 
+export async function replaceProductCategories(productId: number, categoryIds: number[]): Promise<OneProductResponse> {
+  const token = cookies().get('access-token')?.value ?? ''
+  const res = await fetch(`${BACKEND_URL}/products/${productId}/categories`, {
+    method: 'PUT',
+    credentials: 'include',
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `access-token=${token}`
+    },
+    body: JSON.stringify({ categoryIds })
+  })
+  revalidateTag('product')
+  revalidateTag('products')
+  if (res.ok) {
+    const product = await res.json()
+    return {
+      product
+    }
+  }
+
+  const error = await res.json()
+  return {
+    error
+  }
+}
+

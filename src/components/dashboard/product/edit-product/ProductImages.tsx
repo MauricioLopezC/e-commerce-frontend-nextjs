@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { deleteImage, uploadImage } from "@/lib/actions/image.actions"
 import { useState } from "react"
+import { KittenImageSrc } from "@/lib/constants"
 
 //TODO: edit product sku images, not implmented in backend yet
 //error messages too
@@ -65,7 +66,7 @@ function SmallImageDialog({ image, skus }: { image: Image, skus: number[] }) {
           alt="Product image"
           className="aspect-square w-full rounded-md object-cover"
           height="84"
-          src={image.imgSrc}
+          src={image.imgSrc ?? KittenImageSrc}
           width="84"
           priority
         />

@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
 import { Product } from '@/interfaces/products/product'
 import { updateProduct } from '@/lib/actions/product.actions'
-import { CheckCircleIcon } from 'lucide-react'
+import { CheckCircleIcon, PlusCircleIcon } from 'lucide-react'
 import { useState } from 'react'
 import { z } from '@/lib/zod/es-zod'
 import { useForm } from 'react-hook-form'
@@ -20,20 +20,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { Category } from '@/interfaces/products/categories'
+import { CreateCategoryDialog } from '../create/CreateCategoryDialog'
 
 const formSchema = z.object({
   name: z.string().min(2).max(50).toLowerCase(),
   price: z.coerce.number().positive().step(0.01),
-  category: z.string().min(2).max(100).toLowerCase(),
+  categoryId: z.coerce.number().int().positive(),
   sex: z.string().min(2).max(100),
   description: z.string().min(2).max(100),
 })
 
 
-function ProductDetails({ product }: { product: Product }) {
-
+function ProductDetails({ product, categories }: { product: Product, categories: Category[] }) {
   const [isChanged, setIsChanged] = useState(false)
   const { toast } = useToast()
+  const [descIsOpen, setDescIsOpen] = useState(false)
 
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -41,7 +43,7 @@ function ProductDetails({ product }: { product: Product }) {
     defaultValues: {
       name: product.name,
       price: product.price,
-      category: product.category,
+      categoryId: product.categories[0]?.id ?? 0,
       sex: product.sex,
       description: product.description,
     }
@@ -119,25 +121,10 @@ function ProductDetails({ product }: { product: Product }) {
               <div className="grid gap-3">
                 <FormField
                   control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Categoría</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Remeras" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="grid gap-3">
-                <FormField
-                  control={form.control}
                   name="sex"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>sexo</FormLabel>
+                      <FormLabel>Sexo</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger id="sex" aria-label="Select sex">
@@ -187,6 +174,7 @@ function ProductDetails({ product }: { product: Product }) {
             Guardar
           </Button>
         }
+        <CreateCategoryDialog isOpen={descIsOpen} setIsOpen={setDescIsOpen} />
       </CardFooter>
     </Card>
   )

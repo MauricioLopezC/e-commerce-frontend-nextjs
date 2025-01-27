@@ -30,8 +30,8 @@ function DiscountCategoriesTable({ categories, allCategories }: { categories: Ca
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Categoria</CardTitle>
-        <CardDescription>Lista de las categorias aplicables al descuento</CardDescription>
+        <CardTitle>Categoría</CardTitle>
+        <CardDescription>Lista de las categorías aplicables al descuento</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -76,7 +76,7 @@ function DiscountCategoriesTable({ categories, allCategories }: { categories: Ca
                   colSpan={2}
                   className="h-24 text-center"
                 >
-                  El descuento no aplica  a categorias
+                  El descuento no aplica  a categorías
                 </TableCell>
               </TableRow>
             }

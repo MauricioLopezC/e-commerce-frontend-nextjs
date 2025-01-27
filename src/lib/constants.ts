@@ -3,3 +3,5 @@ export const peso = Intl.NumberFormat('es-AR', {
   currency: 'ARS',
   useGrouping: 'false'
 })
+
+export const KittenImageSrc = 'samples/animals/cat'

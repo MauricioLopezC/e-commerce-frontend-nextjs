@@ -1,7 +1,9 @@
+import ProductCategoriesForm from "@/components/dashboard/product/edit-product/ProductCategories";
 import ProductDetails from "@/components/dashboard/product/edit-product/ProductDetails";
 import ProductImages from "@/components/dashboard/product/edit-product/ProductImages";
 import ProductVariantsCard from "@/components/dashboard/product/edit-product/ProductVariantsCard";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { getAllCategories } from "@/lib/actions/category.actions";
 import { getAllProductsSkus } from "@/lib/actions/product-skus.actions";
 import { getProduct } from "@/lib/actions/product.actions";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
@@ -20,6 +22,8 @@ async function EditProductPage({
   const { product } = await getProduct(productId)
   const { productSkus } = await getAllProductsSkus(productId)
   if (!product || !productSkus) return null
+  const { categories } = await getAllCategories()
+  if (!categories) return null
 
   return (
     <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 mb-16 mt-4">
@@ -45,8 +49,9 @@ async function EditProductPage({
         <div className='grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8"'>
           {/* product details and stock */}
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8 w-full">
-            <ProductDetails product={product} />
+            <ProductDetails product={product} categories={categories} />
             <ProductVariantsCard productSkus={productSkus} />
+            <ProductCategoriesForm categories={categories} productCategories={product.categories} productId={product.id} />
           </div>
           <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
             <ProductImages product={product} productSkus={productSkus} />

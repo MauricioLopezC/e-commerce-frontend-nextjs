@@ -15,8 +15,6 @@ interface OneCateogiresResponse {
   error?: ErrorResponse
 }
 
-
-
 //TODO: create a class named UnauthorizedResponse and return in every actions where token is null
 
 export async function getAllCategories(): Promise<AllCateogiresResponse> {

@@ -1,4 +1,4 @@
-import { Order } from "../orders";
+import { Category } from "./categories";
 import { Image } from "./image";
 
 export interface Product {
@@ -13,7 +13,8 @@ export interface Product {
   images: Image[];
   createdAt: Date;
   updatedAt: Date;
-  productSkus?: ProductSku[]
+  productSkus?: ProductSku[];
+  categories: Category[];
 }
 
 export interface ProductSku {
