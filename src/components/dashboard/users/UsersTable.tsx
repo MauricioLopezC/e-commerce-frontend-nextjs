@@ -16,11 +16,15 @@ import { UsersData } from "@/lib/actions/user.actions"
 import DeleteUserAlert from "./DeleteUserAlert"
 import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
+import BanUserAlert from "./BanUserAlert"
+import UnBanUserAlert from "./UnBanUserAlert"
 
 function UsersTable({ usersData }: { usersData: UsersData }) {
 
   const [alertOpen, setAlertOpen] = useState(false)
-  const [deletedUserId, setDeletedUserId] = useState<number | null>(null)
+  const [alertBanOpen, setAlertBanOpen] = useState(false)
+  const [alertUnBanOpen, setAlertUnBanOpen] = useState(false)
+  const [userId, setUserId] = useState<number | null>(null)
   return (
     <Card>
       <CardHeader>
@@ -35,6 +39,7 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
             <TableRow>
               <TableHead>Nombre</TableHead>
               <TableHead>Email</TableHead>
+              <TableHead className="hidden md:table-cell">Estado</TableHead>
               <TableHead className="hidden md:table-cell">
                 Compras
               </TableHead>
@@ -65,6 +70,15 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
                     {user.email}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
+                    {!user.isBanned &&
+                      <Badge variant='outline'>Activo</Badge>
+                    }
+                    {user.isBanned &&
+                      <Badge variant='destructive'>Bloqueado</Badge>
+                    }
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {/*//OPTIMIZE:  fetch data from rest api to /orders?userId=x */}
                     {user.order.reduce((previous, current) => {
                       if (current.orderItems) {
                         return previous
@@ -96,11 +110,31 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Opciones</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={async () => {
-                          console.log(user.id)
-                          setAlertOpen(true)
-                          setDeletedUserId(user.id)
-                        }}>
+                        {!user.isBanned &&
+                          <DropdownMenuItem
+                            onClick={async () => {
+                              console.log(user.id)
+                              setUserId(user.id)
+                              setAlertBanOpen(true)
+                            }}>
+                            Bloquear
+                          </DropdownMenuItem>
+                        }
+                        {user.isBanned &&
+                          <DropdownMenuItem onClick={async () => {
+                            console.log(user.id)
+                            setUserId(user.id)
+                            setAlertUnBanOpen(true)
+                          }}>
+                            desbloquear
+                          </DropdownMenuItem>
+                        }
+                        <DropdownMenuItem className="text-red-500"
+                          onClick={async () => {
+                            console.log(user.id)
+                            setAlertOpen(true)
+                            setUserId(user.id)
+                          }}>
                           Eliminar
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -113,7 +147,9 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
         </Table>
       </CardContent>
       <CardFooter>
-        <DeleteUserAlert isOpen={alertOpen} setIsOpen={setAlertOpen} userId={deletedUserId} />
+        <DeleteUserAlert isOpen={alertOpen} setIsOpen={setAlertOpen} userId={userId} />
+        <BanUserAlert isOpen={alertBanOpen} setIsOpen={setAlertBanOpen} userId={userId} />
+        <UnBanUserAlert isOpen={alertUnBanOpen} setIsOpen={setAlertUnBanOpen} userId={userId} />
       </CardFooter>
     </Card>
   )

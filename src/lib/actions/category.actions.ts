@@ -5,19 +5,17 @@ import { BACKEND_URL } from "@/queries/constants";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
-interface AllCateogiresResponse {
+interface AllCategoriesResponse {
   categories?: Category[]
   error?: ErrorResponse
 }
 
-interface OneCateogiresResponse {
+interface OneCategoryResponse {
   category?: Category
   error?: ErrorResponse
 }
 
-//TODO: create a class named UnauthorizedResponse and return in every actions where token is null
-
-export async function getAllCategories(): Promise<AllCateogiresResponse> {
+export async function getAllCategories(): Promise<AllCategoriesResponse> {
   const res = await fetch(`${BACKEND_URL}/categories`, {
     method: 'GET',
     next: {
@@ -38,7 +36,7 @@ interface CreateCategoryDto {
   description: string
 }
 
-export async function createCategory(data: CreateCategoryDto): Promise<OneCateogiresResponse> {
+export async function createCategory(data: CreateCategoryDto): Promise<OneCategoryResponse> {
   const token = cookies().get('access-token')?.value
   const res = await fetch(`${BACKEND_URL}/categories`, {
     method: 'POST',
@@ -56,3 +54,4 @@ export async function createCategory(data: CreateCategoryDto): Promise<OneCateog
   const error = await res.json()
   return { error }
 }
+

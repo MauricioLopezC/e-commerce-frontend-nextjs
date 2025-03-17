@@ -44,9 +44,9 @@ export async function logIn(
       error: undefined
     }
   }
-  const data = await res.json()
+  const error = await res.json()
   return {
-    error: data,
+    error,
   }
 }
 

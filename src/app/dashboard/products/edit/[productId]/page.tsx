@@ -9,7 +9,6 @@ import { getProduct } from "@/lib/actions/product.actions";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
-//TODO: prevent page crash when product not have image
 async function EditProductPage({
   params,
 }: {

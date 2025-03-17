@@ -76,5 +76,50 @@ export async function deleteUser(userId: number) {
   };
 }
 
-//TODO: dar de baja a un usuario o bloquearlo, implementar campo en el backend que diga si el
-//usuario esta bloqueado
+export async function banUser(userId: number) {
+  const token = cookies().get('access-token')?.value
+  const res = await fetch(`${BACKEND_URL}/users/${userId}/ban`, {
+    method: "PATCH",
+    credentials: "include",
+    headers: {
+      Cookie: `access-token=${token}`,
+    },
+  });
+  revalidatePath("/dashboard/users");
+  if (res.ok) {
+    const data = await res.json();
+    return {
+      user: data,
+    };
+  }
+
+  const error = await res.json();
+  return {
+    error,
+  };
+
+}
+
+export async function unBanUser(userId: number) {
+  const token = cookies().get('access-token')?.value
+  const res = await fetch(`${BACKEND_URL}/users/${userId}/unban`, {
+    method: "PATCH",
+    credentials: "include",
+    headers: {
+      Cookie: `access-token=${token}`,
+    },
+  });
+  revalidatePath("/dashboard/users");
+  if (res.ok) {
+    const data = await res.json();
+    return {
+      user: data,
+    };
+  }
+
+  const error = await res.json();
+  return {
+    error,
+  };
+}
+

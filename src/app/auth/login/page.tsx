@@ -65,6 +65,10 @@ function LoginPage() {
     if (error?.statusCode === 401) {
       setErrorMessage("email o contraseña incorrectas")
     }
+
+    if (error?.statusCode === 403) {
+      setErrorMessage("Has sido bloqueado no puedes ingresar a tu cuenta")
+    }
   }
 
   return (

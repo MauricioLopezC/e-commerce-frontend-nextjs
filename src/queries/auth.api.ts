@@ -1,9 +1,5 @@
 import { BACKEND_URL } from "./constants";
 
-
-//TODO: extend this response in backend adding more user information
-//using user.service
-
 /**
  * if request is made from a server component the request
  * will not include cookies automatically

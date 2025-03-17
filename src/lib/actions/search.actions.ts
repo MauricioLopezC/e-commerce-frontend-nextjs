@@ -18,11 +18,9 @@ export async function searchByName(productName: string): Promise<SearchResponse>
       products: data
     }
   }
-
   const error = await res.json()
   return {
     error
   }
-
-
 }
+
