@@ -38,6 +38,7 @@ function ProductDetails({ product, categories }: { product: Product, categories:
   const [descIsOpen, setDescIsOpen] = useState(false)
 
 
+  /* FIX: product.description is not available anymore */
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

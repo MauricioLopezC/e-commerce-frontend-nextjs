@@ -7,7 +7,7 @@ import { peso } from '@/lib/constants'
 
 function TopProductsTable({ products }: { products: Product[] }) {
   return (
-    <Card className='xl:col-span-2'>
+    <Card className='col-span-1 lg:col-span-4'>
       <CardHeader>
         <CardTitle>Los más vendidos</CardTitle>
       </CardHeader>

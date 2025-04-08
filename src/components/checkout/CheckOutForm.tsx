@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 
 function CheckOutForm() {
-  const radios = ["Tarjeta Visa/Mastercard", "Apple pay", "Paypal"]
+  const radios = ["VISA", "MASTERCARD", "APPLE_PAY", "PAYPAL"]
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -16,12 +16,11 @@ function CheckOutForm() {
     <form
       id="checkout-form"
       action={async (formData: FormData) => {
-        console.log("ACTION")
-        const { data, error } = await addOrder(formData)
-        console.log("DATA", data)
+        const { order, error } = await addOrder(formData)
+        console.log("DATA", order)
         console.log("ERROR", error)
         setIsLoading(false)
-        if (data) {
+        if (order) {
           router.push('/checkout/confirm')
         }
       }}>
@@ -106,7 +105,6 @@ function CheckOutForm() {
                 type="submit"
                 form="checkout-form"
                 className='w-full'
-                onClick={() => { console.log("HOLAAAA") }}
               >
                 PAGAR
               </Button>

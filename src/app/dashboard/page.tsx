@@ -1,9 +1,12 @@
 import RecentSalesCard from "@/components/dashboard/mainpage/RecentSales"
-import SmallCards from "@/components/dashboard/mainpage/smallCards"
+import SmallCards from "@/components/dashboard/mainpage/SmallCards"
 import TopProductsTable from "@/components/dashboard/mainpage/TopProducts"
 import { getAllOrders } from "@/lib/actions/order.actions"
 import { getUsers } from "@/lib/actions/user.actions"
 import { getAllProducts } from "@/lib/actions/product.actions"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import SalesChart from "@/components/dashboard/mainpage/SalesChart"
+import { TrendingUp } from "lucide-react"
 
 async function DashBoard() {
   const { productsData } = await getAllProducts({
@@ -17,17 +20,34 @@ async function DashBoard() {
   if (!ordersData) return null
 
   return (
-    <div className='container mx-auto'>
-      <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
+    <>
+      <main className='flex flex-1 flex-col gap-4 p-4  md:p-8'>
         <div id='small-cards' className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4'>
           <SmallCards ordersData={ordersData} usersData={usersData} />
         </div>
-        <div id='big-cards' className='grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3'>
-          <TopProductsTable products={productsData.products} />
+        <div id='big-cards' className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
+          <Card className="col-span-1 lg:col-span-4">
+            <CardHeader>
+              <CardTitle>Ventas</CardTitle>
+              <CardDescription>January - June 2024</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {/* <SalesChart /> */}
+            </CardContent>
+            <CardFooter className="flex-col items-start gap-2 text-sm">
+              <div className="flex gap-2 font-medium leading-none">
+                Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              </div>
+              <div className="leading-none text-muted-foreground">
+                Showing total visitors for the last 6 months
+              </div>
+            </CardFooter>
+          </Card>
+          {/* <TopProductsTable products={productsData.products} /> */}
           <RecentSalesCard orders={ordersData.orders} />
         </div>
       </main>
-    </div>
+    </>
   )
 }
 

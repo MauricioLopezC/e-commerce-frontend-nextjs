@@ -8,8 +8,10 @@ import { Separator } from "@/components/ui/separator";
 
 async function CartPage() {
   const { cart } = await getCart();
-  if (!cart) return null;
-  const { cartItems } = await getCartItems(cart.id);
+  if (!cart) return null
+  console.log(cart)
+  const { cartItems } = await getCartItems(cart[0].id);
+  console.log(cartItems)
   if (!cartItems) return null;
 
   return (

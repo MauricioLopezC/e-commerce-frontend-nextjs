@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Discount } from "@/interfaces/discounts";
 import { ChevronRight, TicketPercent, X } from "lucide-react";
@@ -15,6 +14,9 @@ interface TimeLeft {
 }
 
 export default function DiscountBanner({ discounts }: { discounts: Discount[] }) {
+  if (discounts.length === 0) {
+    return null;
+  }
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isVisible, setIsVisible] = useState(true);

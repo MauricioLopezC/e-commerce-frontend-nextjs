@@ -6,7 +6,7 @@ import { User } from "@/interfaces/users";
 
 export interface UsersData {
   users: User[];
-  aggregate: { _count: number };
+  metadata: { _count: number };
 }
 
 interface UsersResponse {

@@ -2,8 +2,6 @@
 import { HeartIcon, TrashIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSku } from "@/interfaces/products/product";
-// import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
-
 import { RadioGroup, RadioGroupItem } from "@/components/origin-ui/radio-group";
 import { NoStockAlertDialog } from "./NoStockAlert";
 import { NotLoggedInAlertDialog } from "./NotLoggedInAltert";

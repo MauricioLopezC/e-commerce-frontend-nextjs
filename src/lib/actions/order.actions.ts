@@ -63,17 +63,18 @@ export async function getAllOrders(
   };
 }
 
-export async function addOrder(formData: FormData) {
+export async function addOrder(formData: FormData): Promise<OneOrderResponse> {
   const token = cookies().get("access-token")?.value;
   const user = getPayload(token ?? "");
-  if (!user) return null;
+  if (!user) return { error: { statusCode: 401, message: "Error al obtener usuario" } };
 
   const shipping = {
     country: formData.get("countryInput"),
     city: formData.get("cityInput"),
     postalCode: formData.get("cpInput"),
-    adress: formData.get("addressInput"),
+    address: formData.get("addressInput"),
   };
+  console.log(shipping)
 
   const payment = { provider: formData.get("paymentMethod") };
   const email = formData.get("emailInput");
@@ -95,9 +96,9 @@ export async function addOrder(formData: FormData) {
   revalidatePath("dashboard/products");
 
   if (res.ok) {
-    const data = await res.json();
+    const order = await res.json();
     return {
-      data,
+      order,
     };
   }
   return {

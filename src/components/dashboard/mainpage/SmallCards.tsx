@@ -36,7 +36,7 @@ function SmallCards({ ordersData, usersData }: { ordersData: OrdersData, usersDa
           <Users className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">+{usersData.aggregate._count}</div>
+          <div className="text-2xl font-bold">+{usersData.metadata._count}</div>
           {/* <p className="text-xs text-muted-foreground"> */}
           {/*   +180.1% from last month */}
           {/* </p> */}

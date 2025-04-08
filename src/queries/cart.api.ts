@@ -66,7 +66,7 @@ export async function getCartId(userId: number, token: string): Promise<number |
   })
   const cart = await res.json()
   console.log('CART', cart)
-  return cart?.id
+  return cart[0]?.id
 }
 
 

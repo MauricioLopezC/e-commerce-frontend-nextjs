@@ -6,7 +6,7 @@ import { BACKEND_URL } from "@/queries/constants"
 import { Cart, CartItem } from "@/interfaces/cart-item/cart"
 
 interface CartResponse {
-  cart?: Cart;
+  cart?: Cart[];
   error?: any;
 }
 
@@ -39,7 +39,7 @@ export async function addCartItem(
   const { cart, error: cartError } = await getCart()
   if (!cart) return { error: cartError }
 
-  const res = await fetch(`${BACKEND_URL}/cart/${cart.id}/cart-items`, {
+  const res = await fetch(`${BACKEND_URL}/cart/${cart[0].id}/cart-items`, {
     method: "POST",
     credentials: 'include',
     headers: {

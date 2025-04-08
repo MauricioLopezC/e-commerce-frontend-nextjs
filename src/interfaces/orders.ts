@@ -6,6 +6,7 @@ export interface Order {
   userId: number;
   status: string;
   total: number;
+  finalTotal: number;
   createdAt: Date;
   updatedAt: Date;
 

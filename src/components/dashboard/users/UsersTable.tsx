@@ -79,19 +79,10 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
                     {/*//OPTIMIZE:  fetch data from rest api to /orders?userId=x */}
-                    {user.order.reduce((previous, current) => {
-                      if (current.orderItems) {
-                        return previous
-                          + current.orderItems?.reduce((previous, current) => (previous + current.quantity), 0)
-                      } else return 0
-                    }, 0)}
+                    {user.totalOrders}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {peso.format(
-                      user.order.reduce((previous, current) => (
-                        previous + current.total
-                      ), 0)
-                    )}
+                    {peso.format(user.totalSpent ?? 0)}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
                     {new Date(user.createdAt).toLocaleDateString('es-AR')}

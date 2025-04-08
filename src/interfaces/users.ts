@@ -1,14 +1,14 @@
-import { Order } from "./orders";
-
 export interface User {
   id: number;
   firstName: string;
   lastName: string;
-  isBanned: boolean;
-  profileImage?: string
   email: string;
+  verifiedEmail: boolean;
   role: string;
+  isBanned: boolean;
+  profileImage: string;
   createdAt: Date;
   updatedAt: Date;
-  order: Order[];
+  totalSpent?: number;
+  totalOrders?: number;
 }

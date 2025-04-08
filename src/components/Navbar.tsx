@@ -8,8 +8,8 @@ import { checkSession, isAdminAction } from '@/lib/actions/navbar.actions'
 
 const navigation = [
   { name: "Todo", href: "/products?limit=9", current: false },
-  { name: "Hombre", href: "/products?sex=hombre&limit=9", current: false },
-  { name: "Mujer", href: "/products?sex=mujer&limit=9", current: false },
+  { name: "Hombre", href: "/products?sex=MALE&limit=9", current: false },
+  { name: "Mujer", href: "/products?sex=FEMALE&limit=9", current: false },
   { name: "About", href: "/about", current: false },
 ];
 

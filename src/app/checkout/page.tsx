@@ -13,9 +13,12 @@ async function CheckOutPage() {
   const user = getPayload(token?.value ?? '')
   if (!user) return null
   const cartId = await getCartId(user.id, token.value)
+  console.log("CARDID", cartId)
   if (!cartId) return (<NotLoggedPage />)
   const cart = await getCartItems(cartId, token.value)
 
+  //OPTIMIZE: perform this calculation in backend instead hera
+  //for avoid round errors
   const total = cart.reduce((previous, current) => (
     previous + current.product.price * current.quantity
   ), 0)
