@@ -42,7 +42,7 @@ async function UsersPage(
         {chartData &&
           <SalesByUserChart chartData={chartData} />
         }
-        <OrdersByUserChart />
+        {/* <OrdersByUserChart /> */}
       </div>
 
     </section>

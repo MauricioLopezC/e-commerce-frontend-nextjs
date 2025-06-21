@@ -11,7 +11,6 @@ import { peso } from "@/lib/constants"
 import { Activity, CreditCard, DollarSign, Users } from "lucide-react"
 
 function SmallCards({ ordersData, usersData }: { ordersData: OrdersData, usersData: UsersData }) {
-  console.log(ordersData)
   return (
     <>
       <Card x-chunk="dashboard-01-chunk-0">

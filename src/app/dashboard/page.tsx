@@ -1,12 +1,12 @@
 import RecentSalesCard from "@/components/dashboard/mainpage/RecentSales"
 import SmallCards from "@/components/dashboard/mainpage/SmallCards"
-import TopProductsTable from "@/components/dashboard/mainpage/TopProducts"
 import { getAllOrders } from "@/lib/actions/order.actions"
 import { getUsers } from "@/lib/actions/user.actions"
 import { getAllProducts } from "@/lib/actions/product.actions"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import SalesChart from "@/components/dashboard/mainpage/SalesChart"
 import { TrendingUp } from "lucide-react"
+import { salesByMonth } from "@/lib/actions/statistics.actions"
 
 async function DashBoard() {
   const { productsData } = await getAllProducts({
@@ -16,8 +16,16 @@ async function DashBoard() {
   if (!productsData) return null
   const { ordersData } = await getAllOrders({})
   const { usersData } = await getUsers({})
+  const endDate = new Date()
+  const startDate = new Date()
+  startDate.setFullYear(endDate.getFullYear() - 1)
+  console.log(startDate, endDate)
+  const { data: salesByMonthData, error } = await salesByMonth(startDate, endDate)
+  console.log(salesByMonthData)
+  console.log(error)
   if (!usersData) return null
   if (!ordersData) return null
+  if (!salesByMonthData) return null
 
   return (
     <>
@@ -29,20 +37,22 @@ async function DashBoard() {
           <Card className="col-span-1 lg:col-span-4">
             <CardHeader>
               <CardTitle>Ventas</CardTitle>
-              <CardDescription>January - June 2024</CardDescription>
+              <CardDescription>{startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* <SalesChart /> */}
+              <SalesChart AllSalesByMonth={salesByMonthData} />
             </CardContent>
             <CardFooter className="flex-col items-start gap-2 text-sm">
-              <div className="flex gap-2 font-medium leading-none">
-                Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-              </div>
+              {/* <div className="flex gap-2 font-medium leading-none"> */}
+              {/*   <p>Trending up by ${salesMothlyVariation}% this month</p> */}
+              {/*   <TrendingUp className="h-4 w-4" /> */}
+              {/* </div> */}
               <div className="leading-none text-muted-foreground">
-                Showing total visitors for the last 6 months
+                Mostrando el total de ventas el último año
               </div>
             </CardFooter>
           </Card>
+
           {/* <TopProductsTable products={productsData.products} /> */}
           <RecentSalesCard orders={ordersData.orders} />
         </div>

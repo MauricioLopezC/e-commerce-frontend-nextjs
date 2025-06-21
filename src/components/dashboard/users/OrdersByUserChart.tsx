@@ -37,7 +37,7 @@ export function OrdersByUserChart() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart</CardTitle>
+        <CardTitle>Ordenes por cliente</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>

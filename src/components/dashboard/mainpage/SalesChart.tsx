@@ -7,24 +7,22 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import { Order } from "@/interfaces/orders"
+import { TotalSalesByMonth } from "@/interfaces/statistics"
 
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-]
-
-function getLastMonths() {
-  const now = new Date()
-  const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-  const currentMonth = now.getMonth()
-  console.log()
-}
+// const chartData = [
+//   { month: "January", total_sales: 186 },
+//   { month: "February", total_sales: 305 },
+//   { month: "March", total_sales: 0 },
+//   { month: "April", total_sales: 73 },
+//   { month: "May", total_sales: 0 },
+//   { month: "June", total_sales: 214 },
+//   { month: "July", total_sales: 100 },
+//   { month: "Agosto", total_sales: 94 },
+//   { month: "Septiembre", total_sales: 0 },
+//   { month: "Octubre", total_sales: 300 },
+//   { month: "Noviembre", total_sales: 196 },
+//   { month: "Diciembre", total_sales: 200 },
+// ]
 
 const chartConfig = {
   desktop: {
@@ -33,7 +31,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-function SalesChart({ orders }: { orders: Order[] }) {
+function SalesChart({ AllSalesByMonth }: { AllSalesByMonth: TotalSalesByMonth[] }) {
+  const chartData = AllSalesByMonth.map((item) => {
+    const date = new Date(item.month)
+    const monthname = date.toLocaleString('es-AR', { month: 'long' })
+    return { month: monthname, total_sales: item.total_sales }
+  })
   return (
     <ChartContainer config={chartConfig}>
       <BarChart accessibilityLayer data={chartData}>
@@ -49,7 +52,7 @@ function SalesChart({ orders }: { orders: Order[] }) {
           cursor={false}
           content={<ChartTooltipContent hideLabel />}
         />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} />
+        <Bar dataKey="total_sales" fill="var(--color-desktop)" radius={8} name={"Total"} />
       </BarChart>
     </ChartContainer>
   )

@@ -34,8 +34,8 @@ export function SalesByUserChart({ chartData }: { chartData: ChartData[] }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Total gastado por cliente</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Compras por cliente</CardTitle>
+        <CardDescription>Total del valor de las compras por cliente</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -52,18 +52,18 @@ export function SalesByUserChart({ chartData }: { chartData: ChartData[] }) {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="totalSpent" fill="var(--color-desktop)" radius={8} name="Gastado" />
+            <Bar dataKey="totalSpent" fill="var(--color-desktop)" radius={8} name="Total" />
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter>
+      {/* <CardFooter className="flex-col items-start gap-2 text-sm"> */}
+      {/*   <div className="flex gap-2 font-medium leading-none"> */}
+      {/*     Trending up by 5.2% this month <TrendingUp className="h-4 w-4" /> */}
+      {/*   </div> */}
+      {/*   <div className="leading-none text-muted-foreground"> */}
+      {/*     Showing total visitors for the last 6 months */}
+      {/*   </div> */}
+      {/* </CardFooter> */}
     </Card>
   )
 }
