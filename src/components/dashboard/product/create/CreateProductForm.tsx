@@ -123,6 +123,7 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
     setIsCreated(true)
     setIsLoading(false)
   }
+
   return (
     <div className='space-y-2'>
       <div className="flex items-center gap-2">

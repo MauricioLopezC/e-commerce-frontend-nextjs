@@ -23,6 +23,7 @@ import {
 import { createCategory } from "@/lib/actions/category.actions";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -49,7 +50,7 @@ export function CreateCategoryDialog({ isOpen, setIsOpen }: CreateCategoryDialog
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
-    const { category } = await createCategory(values)
+    const { category, error } = await createCategory(values)
     if (category) {
       toast({
         description: (
@@ -57,6 +58,18 @@ export function CreateCategoryDialog({ isOpen, setIsOpen }: CreateCategoryDialog
             <h2 className="font-semibold text-md">
               <span><CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" /></span>
               Categoría creada
+            </h2>
+          </div>
+        ),
+      })
+    }
+    if (error && error.statusCode === 409) {
+      toast({
+        description: (
+          <div>
+            <h2 className="font-semibold text-md">
+              <span><XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline" /></span>
+              Ya existe una categoría con ese nombre
             </h2>
           </div>
         ),
