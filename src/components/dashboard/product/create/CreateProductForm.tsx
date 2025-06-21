@@ -21,6 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea'
 import { Category } from '@/interfaces/products/categories'
 import { CreateCategoryDialog } from './CreateCategoryDialog'
+import { Sex } from '@/interfaces/products/product'
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -35,11 +36,12 @@ const pVariationsSchema = z.object({
     .refine((file) => file?.size <= MAX_FILE_SIZE, 'El tamaño máximo de la imagen es 5 MB.')
 })
 
+
 const formSchema = z.object({
   name: z.string().min(2).max(50).toLowerCase(),
   price: z.coerce.number().positive().step(0.01),
   categoryId: z.coerce.number().int().positive(),
-  sex: z.string().min(2).max(100),
+  sex: z.nativeEnum(Sex),
   description: z.string().min(2).max(100),
   variations: z.array(pVariationsSchema).min(1)
 })
@@ -80,6 +82,7 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
         description: "Hubo un problema al crear el producto, intento nuevamente mas tarde",
         // action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
+      setIsLoading(false)
       return
     }
     const productId = product.id
@@ -100,6 +103,7 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
           description: "Hubo un problema al crear la variación, intente nuevamente mas tarde",
           // action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
+        setIsLoading(false)
         return
       }
 
@@ -117,6 +121,8 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
           description: "Hubo un problema al subir la imagen, intente nuevamente mas tarde",
           // action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
+        setIsLoading(false)
+        return
       }
     }
     setProductId(productId)
@@ -229,9 +235,9 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="hombre">Hombre</SelectItem>
-                            <SelectItem value="mujer">Mujer</SelectItem>
-                            <SelectItem value="unisex">Unisex</SelectItem>
+                            <SelectItem value={Sex.MALE}>Hombre</SelectItem>
+                            <SelectItem value={Sex.FEMALE}>Mujer</SelectItem>
+                            <SelectItem value={Sex.UNISEX}>Unisex</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />

@@ -1,6 +1,13 @@
 import { Category } from "./categories";
 import { Image } from "./image";
 
+
+export enum Sex {
+  MALE = "MALE",
+  FEMALE = "FEMALE",
+  UNISEX = 'UNISEX'
+}
+
 export interface Product {
   id: number;
   name: string;
