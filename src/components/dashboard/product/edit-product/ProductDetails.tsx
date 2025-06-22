@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
-import { Product } from '@/interfaces/products/product'
+import { Product, Sex } from '@/interfaces/products/product'
 import { updateProduct } from '@/lib/actions/product.actions'
 import { CheckCircleIcon, PlusCircleIcon } from 'lucide-react'
 import { useState } from 'react'
@@ -32,13 +32,12 @@ const formSchema = z.object({
 })
 
 
-function ProductDetails({ product, categories }: { product: Product, categories: Category[] }) {
+function ProductDetails({ product }: { product: Product, categories: Category[] }) {
   const [isChanged, setIsChanged] = useState(false)
   const { toast } = useToast()
   const [descIsOpen, setDescIsOpen] = useState(false)
 
 
-  /* FIX: product.description is not available anymore */
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,7 +51,7 @@ function ProductDetails({ product, categories }: { product: Product, categories:
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
-    const { product: updatedProduct, error } = await updateProduct(product.id, values)
+    const { product: updatedProduct } = await updateProduct(product.id, values)
     if (updatedProduct) {
       toast({
         description: (
@@ -68,7 +67,7 @@ function ProductDetails({ product, categories }: { product: Product, categories:
       toast({
         variant: "destructive",
         title: "¡Vaya! Algo salió mal.",
-        description: "Hubo un problema al crear el producto, intento nuevamente mas tarde",
+        description: "Hubo un problema al crear el producto, intente nuevamente mas tarde",
       })
     }
   }
@@ -133,9 +132,9 @@ function ProductDetails({ product, categories }: { product: Product, categories:
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="hombre">Hombre</SelectItem>
-                          <SelectItem value="mujer">Mujer</SelectItem>
-                          <SelectItem value="unisex">Unisex</SelectItem>
+                          <SelectItem value={Sex.MALE}>Hombre</SelectItem>
+                          <SelectItem value={Sex.FEMALE}>Mujer</SelectItem>
+                          <SelectItem value={Sex.UNISEX}>Unisex</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
