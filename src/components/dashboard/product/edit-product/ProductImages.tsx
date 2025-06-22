@@ -19,9 +19,9 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { deleteImage } from "@/lib/actions/image.actions"
-import { useState } from "react"
 import { KittenImageSrc } from "@/lib/constants"
 import UploadImageDialog from "./UploadImageDialog"
+import { useToast } from "@/hooks/use-toast"
 
 //TODO: edit product sku images, not implmented in backend yet
 //error messages too
@@ -57,11 +57,9 @@ function ProductImages({ product, productSkus }: { product: Product, productSkus
 }
 
 function SmallImageDialog({ image, skus }: { image: Image, skus: number[] }) {
-  const [isDeleted, setIsDeleted] = useState(false)
+  const { toast } = useToast()
   return (
-    <Dialog onOpenChange={() => {
-      setIsDeleted(false)
-    }}>
+    <Dialog>
       <DialogTrigger asChild>
         <CldImage
           alt="Product image"
@@ -75,20 +73,9 @@ function SmallImageDialog({ image, skus }: { image: Image, skus: number[] }) {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Editar Imagen</DialogTitle>
-          <DialogDescription>
-            {isDeleted &&
-              <div className='flex space-x-1 items-center'>
-                <CircleCheckBig className='w-5 h-5 text-green-500' />
-                <p>Imagen eliminada</p>
-              </div>
-            }</DialogDescription>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
-        <form
-          className="grid gap-4 py-4"
-          action={async () => {
-            console.log("EDITANDO")
-          }}
-        >
+        <form className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="ProductId" className="text-right">
               Id del producto
@@ -120,10 +107,12 @@ function SmallImageDialog({ image, skus }: { image: Image, skus: number[] }) {
             variant='destructive'
             onClick={async () => {
               console.log(`eliminando imagen con id ${image.id} ${image.productId} ${image.productSkuId}`)
-              const res = await deleteImage(image.id, image.productId)
-              console.log(res)
-              if (res.result === 'ok') {
-                setIsDeleted(true)
+              const { data } = await deleteImage(image.id)
+              if (data) {
+                toast({
+                  variant: "default",
+                  title: "Imagen eliminada correctamente",
+                })
               }
             }}
           >
@@ -137,10 +126,11 @@ function SmallImageDialog({ image, skus }: { image: Image, skus: number[] }) {
 
 
 function MainImageDialog({ image, skus }: { image: Image, skus: number[] }) {
-  const [isDeleted, setIsDeleted] = useState(false)
+  const { toast } = useToast()
+
 
   return (
-    <Dialog onOpenChange={() => { setIsDeleted(false) }}>
+    <Dialog>
       <DialogTrigger asChild>
         <CldImage
           alt="Product image"
@@ -154,19 +144,10 @@ function MainImageDialog({ image, skus }: { image: Image, skus: number[] }) {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Editar Imagen</DialogTitle>
-          <DialogDescription>
-            {isDeleted &&
-              <div className='flex space-x-1 items-center'>
-                <CircleCheckBig className='w-5 h-5 text-green-500' />
-                <p>Imagen eliminada</p>
-              </div>
-            }</DialogDescription>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <form
           className="grid gap-4 py-4"
-          action={async () => {
-
-          }}
         >
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="ProductId" className="text-right">
@@ -199,10 +180,12 @@ function MainImageDialog({ image, skus }: { image: Image, skus: number[] }) {
           <Button variant='destructive'
             onClick={async () => {
               console.log(`eliminando imagen con id ${image.id} ${image.productId} ${image.productSkuId}`)
-              const res = await deleteImage(image.id, image.productId)
-              console.log(res)
-              if (res.result === 'ok') {
-                setIsDeleted(true)
+              const { data } = await deleteImage(image.id)
+              if (data) {
+                toast({
+                  variant: "default",
+                  title: "Imagen Eliminada correctamente",
+                })
               }
             }}>Borrar imagen</Button>
         </DialogFooter>

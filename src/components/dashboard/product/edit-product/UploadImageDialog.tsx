@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { CircleCheckBig, Loader2, Upload } from "lucide-react"
+import { Loader2, Upload } from "lucide-react"
 import { useState } from "react"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -40,7 +40,6 @@ const formSchema = z.object({
 })
 
 export default function UploadImageDialog({ skus, productId }: { skus: number[], productId: number }) {
-  const [isCreated, setIsCreated] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
 
@@ -66,7 +65,6 @@ export default function UploadImageDialog({ skus, productId }: { skus: number[],
         title: "¡Vaya! Algo salió mal.",
         description: "Hubo un problema al subir la imagen, intente nuevamente mas tarde",
       })
-      setIsCreated(false)
       setIsLoading(false)
       return
     }
@@ -75,13 +73,11 @@ export default function UploadImageDialog({ skus, productId }: { skus: number[],
       title: "Imagen subida correctamente",
       description: "Ahora puede ver la nueva imagen del producto",
     })
-    setIsCreated(true)
     setIsLoading(false)
   }
 
   return (
     <Dialog onOpenChange={() => {
-      setIsCreated(false)
       setIsLoading(false)
     }}>
       <DialogTrigger asChild>

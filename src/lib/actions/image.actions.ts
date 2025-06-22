@@ -1,7 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import { BACKEND_URL } from "@/queries/constants";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { ErrorResponse } from "@/interfaces/responses";
 
 interface UploadImageResponse {
@@ -34,8 +34,7 @@ export async function uploadImage(formData: FormData): Promise<UploadImageRespon
     body: formData,
   });
   if (res.ok) {
-    revalidatePath(`/dashboard/products/edit/${formData.get("productId")}`)
-    //TODO: revalidate /products/:productId, use tags in getOneProduct
+    revalidateTag('product')
     const imgSrc = await res.text();
     return { imgSrc };
   }
@@ -43,15 +42,21 @@ export async function uploadImage(formData: FormData): Promise<UploadImageRespon
   return { error };
 }
 
-export async function deleteImage(imageId: number, productId: number) {
+export async function deleteImage(imageId: number) {
   const token = cookies().get("access-token")?.value;
-  const imageResponse = await fetch(`${BACKEND_URL}/images/${imageId}`, {
+  const res = await fetch(`${BACKEND_URL}/images/${imageId}`, {
     method: "DELETE",
     credentials: "include",
     headers: {
       Cookie: `access-token=${token}`,
     },
   });
-  revalidatePath(`/dashboard/products/edit/${productId}`);
-  return imageResponse.json(); //si devuelve json
+
+  if (res.ok) {
+    const data = await res.json()
+    return { data }
+  }
+
+  const error = res.json()
+  return { error }
 }
