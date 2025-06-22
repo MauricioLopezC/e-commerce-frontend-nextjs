@@ -112,9 +112,9 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
       imageData.append('productId', productId.toString())
       imageData.append('productSkuId', createdProductSku.id.toString())
       console.log(imageData)
-      const { createdImage, error: imageError } = await uploadImage(imageData)
-      console.log(createdImage, imageError)
-      if (!createdImage) {
+      const { imgSrc, error: imageError } = await uploadImage(imageData)
+      console.log(imgSrc, imageError)
+      if (!imgSrc) {
         toast({
           variant: "destructive",
           title: "¡Vaya! Algo salió mal.",

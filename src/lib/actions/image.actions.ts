@@ -2,8 +2,14 @@
 import { cookies } from "next/headers";
 import { BACKEND_URL } from "@/queries/constants";
 import { revalidatePath } from "next/cache";
+import { ErrorResponse } from "@/interfaces/responses";
 
-export async function uploadImage(formData: FormData) {
+interface UploadImageResponse {
+  imgSrc?: string
+  error?: ErrorResponse
+}
+
+export async function uploadImage(formData: FormData): Promise<UploadImageResponse> {
   console.log(formData)
   if (
     !formData.has("file") ||
@@ -28,15 +34,13 @@ export async function uploadImage(formData: FormData) {
     body: formData,
   });
   if (res.ok) {
-    const createdImage = await res.text();
-    return {
-      createdImage,
-    };
+    revalidatePath(`/dashboard/products/edit/${formData.get("productId")}`)
+    //TODO: revalidate /products/:productId, use tags in getOneProduct
+    const imgSrc = await res.text();
+    return { imgSrc };
   }
-  const error = res.json();
-  return {
-    error,
-  };
+  const error = await res.json();
+  return { error };
 }
 
 export async function deleteImage(imageId: number, productId: number) {
