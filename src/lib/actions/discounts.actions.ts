@@ -38,8 +38,8 @@ export async function createDiscount(data: CreateDiscountDto) {
     body: JSON.stringify(data)
 
   })
-  revalidateTag('discounts')
   if (res.ok) {
+    revalidateTag('discounts')
     const discount: Discount = await res.json()
     return { discount }
   }

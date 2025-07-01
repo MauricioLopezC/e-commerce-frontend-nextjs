@@ -2,7 +2,6 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Image } from "@/interfaces/products/image"
 import { Product, ProductSku } from "@/interfaces/products/product"
-import { CircleCheckBig } from "lucide-react"
 import { CldImage } from "next-cloudinary"
 
 import {
