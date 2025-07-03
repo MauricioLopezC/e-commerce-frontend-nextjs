@@ -1,6 +1,7 @@
 import CartList from "@/components/cart-page/cart-list"
 import CheckOutForm from "@/components/checkout/CheckOutForm"
 import NotLoggedPage from "@/components/common/notlogged-page"
+import { peso } from "@/lib/constants"
 import { getPayload, isTokenExpired } from "@/lib/jwt-decode"
 import { getCartId, getCartItems } from "@/queries/cart.api"
 import { cookies } from "next/headers"
@@ -13,7 +14,6 @@ async function CheckOutPage() {
   const user = getPayload(token?.value ?? '')
   if (!user) return null
   const cartId = await getCartId(user.id, token.value)
-  console.log("CARDID", cartId)
   if (!cartId) return (<NotLoggedPage />)
   const cart = await getCartItems(cartId, token.value)
 
@@ -34,7 +34,7 @@ async function CheckOutPage() {
           <CartList cartItems={cart} />
           <div className="flex mt-6 pt-2  justify-between">
             <p className="font-bold">PRECIO TOTAL</p>
-            <p className="font-bold">{total} ARS</p>
+            <p className="font-bold">{peso.format(total)} ARS</p>
           </div>
         </div>
 

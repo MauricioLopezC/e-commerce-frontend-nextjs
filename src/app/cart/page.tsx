@@ -3,16 +3,18 @@ import Link from "next/link";
 import TotalList from "@/components/cart-page/total-list";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getCart, getCartItems } from "@/lib/actions/cart.actions";
+import { calculateDiscounts, getCart, getCartItems } from "@/lib/actions/cart.actions";
 import { Separator } from "@/components/ui/separator";
 
 async function CartPage() {
-  const { cart } = await getCart();
-  if (!cart) return null
-  console.log(cart)
-  const { cartItems } = await getCartItems(cart[0].id);
-  console.log(cartItems)
+  const { cartData } = await getCart();
+  if (!cartData) return null;
+  const { cartItems } = await getCartItems(cartData.cart.id);
   if (!cartItems) return null;
+
+  const { calcDiscountsData } = await calculateDiscounts();
+  console.log(calcDiscountsData)
+  if (!calcDiscountsData) return null;
 
   return (
     <main>
@@ -27,7 +29,7 @@ async function CartPage() {
         <div className="flex flex-col justify-start max-w-md">
           <h2 className="font-bold text-xl text-start mb-4">TOTAL</h2>
           <Separator />
-          <TotalList cartItems={cartItems} />
+          <TotalList cartTotal={cartData.metadata.cartTotal} calcDiscountsData={calcDiscountsData} />
           {/* Promo and checkout button */}
           <div>
             <div className="max-w-md">

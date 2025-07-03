@@ -4,9 +4,15 @@ import { getPayload } from "../jwt-decode"
 import { revalidateTag } from "next/cache"
 import { BACKEND_URL } from "@/queries/constants"
 import { Cart, CartItem } from "@/interfaces/cart-item/cart"
+import { ErrorResponse } from "@/interfaces/responses"
+
+interface CartData {
+  cart: Cart,
+  metadata: { cartTotal: number }
+}
 
 interface CartResponse {
-  cart?: Cart[];
+  cartData?: CartData;
   error?: any;
 }
 
@@ -24,7 +30,7 @@ export async function getCart(): Promise<CartResponse> {
   })
   if (res.ok) {
     const cart = await res.json()
-    return { cart }
+    return { cartData: cart }
   }
   const error = await res.json()
   return { error }
@@ -36,10 +42,10 @@ export async function addCartItem(
   quantity: number,
 ) {
   const token = cookies().get('access-token')?.value ?? ''
-  const { cart, error: cartError } = await getCart()
-  if (!cart) return { error: cartError }
+  const { cartData, error: cartError } = await getCart()
+  if (!cartData) return { error: cartError }
 
-  const res = await fetch(`${BACKEND_URL}/cart/${cart[0].id}/cart-items`, {
+  const res = await fetch(`${BACKEND_URL}/cart/${cartData.cart.id}/cart-items`, {
     method: "POST",
     credentials: 'include',
     headers: {
@@ -84,6 +90,51 @@ export async function getCartItems(cartId: number): Promise<CartItemsResponse> {
   }
   const error = await res.json()
   return { error }
+}
+
+
+interface AppliedDiscount {
+  discountId: number
+  discountName: string
+  discountValue: number
+  discountAmount: number
+  appliedTimes: number
+}
+
+export interface CalcDiscountsData {
+  appliedDiscounts: AppliedDiscount[]
+  discountAmount: number
+  finalTotal: number
+}
+
+interface CalcDiscountsResponse {
+  calcDiscountsData?: CalcDiscountsData
+  error?: ErrorResponse
+}
+
+export async function calculateDiscounts(): Promise<CalcDiscountsResponse> {
+  const token = cookies().get('access-token')?.value ?? ''
+  const userSession = getPayload(token)
+  const userId = userSession?.id
+  //TODO: handle error if userId is null
+  //
+  const res = await fetch(`${BACKEND_URL}/users/${userId}/cart/total-discount`, {
+    credentials: 'include',
+    method: "GET",
+    headers: {
+      Cookie: `access-token=${token}`
+    },
+    next: {
+      tags: ['discount-amount']
+    }
+  })
+  if (res.ok) {
+    const calcDiscountsData = await res.json()
+    return { calcDiscountsData }
+  }
+  const error = await res.json()
+  return { error }
+
 }
 
 
