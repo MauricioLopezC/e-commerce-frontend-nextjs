@@ -8,7 +8,7 @@ import { ErrorResponse } from "@/interfaces/responses";
 
 export interface OrdersData {
   orders: Order[];
-  aggregate: { _sum: { total: number }; _count: number };
+  metadata: { _sum: { total: number }; _count: number };
 }
 interface OrdersResponse {
   ordersData?: OrdersData;

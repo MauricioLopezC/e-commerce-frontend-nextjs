@@ -74,6 +74,7 @@ function CheckOutForm() {
                   required
                   type="text"
                   placeholder="XXXX XXXX XXXX XXXX"
+                  defaultValue="4242 4242 4242 4242"
                   className="w-full pl-12 pr-3 py-1 text-gray-500 bg-transparent outline-none border border-black"
                 />
               </div>

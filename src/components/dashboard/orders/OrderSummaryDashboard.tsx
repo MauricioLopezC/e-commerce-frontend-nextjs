@@ -2,8 +2,6 @@
 import {
   Copy,
   CreditCard,
-  TrashIcon,
-  CheckIcon,
   Truck,
   MoreVertical,
   CircleCheckBig,
@@ -54,7 +52,7 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
       <CardHeader className="flex flex-row items-start bg-muted/50">
         <div className="grid gap-0.5">
           <CardTitle className="group flex items-center gap-2 text-lg">
-            Orden con ID: {order.id}
+            Orden número {order.id}
             <Button
               size="icon"
               variant="outline"
@@ -179,8 +177,16 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
           <Separator className="my-2" />
           <ul className="grid gap-3">
             <li className="flex items-center justify-between font-semibold">
-              <span className="text-muted-foreground">Total</span>
+              <span className="text-muted-foreground">Subtotal</span>
               <span>{peso.format(order.total)}</span>
+            </li>
+            <li className="flex items-center justify-between font-semibold">
+              <span className="text-muted-foreground">Importe de descuento</span>
+              <span>{peso.format(order.discountAmount)}</span>
+            </li>
+            <li className="flex items-center justify-between font-semibold">
+              <span className="text-muted-foreground">Total final</span>
+              <span>{peso.format(order.finalTotal)}</span>
             </li>
           </ul>
         </div>
@@ -190,8 +196,8 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
             <div className="font-semibold">Información de envío</div>
             <address className="grid gap-0.5 not-italic text-muted-foreground">
               <span>{order.user?.firstName} {order.user?.lastName}</span>
-              <span>{order.Shipping?.adress}</span>
-              <span>{order.Shipping?.city}</span>
+              <span>{order.shipping?.address}</span>
+              <span>{order.shipping?.city}</span>
             </address>
           </div>
         </div>

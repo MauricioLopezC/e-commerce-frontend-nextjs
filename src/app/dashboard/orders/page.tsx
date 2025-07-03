@@ -19,7 +19,6 @@ async function OrdersPageDashboard(
     page: currentPage,
     limit: pageSize,
   })
-  console.log(ordersData)
 
   if (!ordersData) return null
   return (
@@ -37,7 +36,7 @@ async function OrdersPageDashboard(
               <PaginationWithLinks
                 page={currentPage}
                 pageSize={pageSize}
-                totalCount={ordersData.aggregate._count}
+                totalCount={ordersData.metadata._count}
               />
             </div>
           </div>

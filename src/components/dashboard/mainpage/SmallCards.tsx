@@ -21,7 +21,7 @@ function SmallCards({ ordersData, usersData }: { ordersData: OrdersData, usersDa
           <DollarSign className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{peso.format(ordersData.aggregate._sum.total)}</div>
+          <div className="text-2xl font-bold">{peso.format(ordersData.metadata._sum.total)}</div>
           {/* <p className="text-xs text-muted-foreground"> */}
           {/*   +20.1% from last month */}
           {/* </p> */}
@@ -47,7 +47,7 @@ function SmallCards({ ordersData, usersData }: { ordersData: OrdersData, usersDa
           <CreditCard className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">+{ordersData.aggregate._count}</div>
+          <div className="text-2xl font-bold">+{ordersData.metadata._count}</div>
           {/* <p className="text-xs text-muted-foreground"> */}
           {/*   +19% from last month */}
           {/* </p> */}

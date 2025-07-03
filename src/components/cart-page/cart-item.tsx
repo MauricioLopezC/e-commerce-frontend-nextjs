@@ -10,6 +10,7 @@ import { peso } from "@/lib/constants"
 
 function CartItem({ cartItem }: { cartItem: CartItemInterface }) {
   //TODO: migrate updateQuantity to server actions in cart.actions
+
   const [cantidad, setCantidad] = useState(cartItem.quantity)
   const { toast } = useToast()
   const router = useRouter()
@@ -56,6 +57,7 @@ function CartItem({ cartItem }: { cartItem: CartItemInterface }) {
           <button
             className="px-2 py-1"
             onClick={async () => {
+              //BUG: in some cases updateQuantity updated wrong product quantity
               if (cantidad < 10) {
                 const nextCantidad = cantidad + 1
                 setCantidad(nextCantidad)
@@ -86,7 +88,6 @@ function CartItem({ cartItem }: { cartItem: CartItemInterface }) {
         <button onClick={async () => {
           const res = await deleteCartItem(cartItem.id, cartItem.cartId)
           if (res.ok) {
-            console.log("cartItem deleted successfully")
             toast({
               title: "eliminado correctamente del carrito",
             })

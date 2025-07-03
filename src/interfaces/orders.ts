@@ -1,19 +1,22 @@
 import { Product, ProductSku } from '@/interfaces/products/product'
 import { User } from './users';
+import { Discount } from './discounts';
 
 export interface Order {
   id: number;
   userId: number;
   status: string;
   total: number;
+  discountAmount: number;
   finalTotal: number;
   createdAt: Date;
   updatedAt: Date;
 
   orderItems?: OrderItem[];
   payment?: Payment;
-  Shipping?: Shipping;
+  shipping?: Shipping;
   user?: User;
+  discounts?: Discount[];
 }
 
 export interface OrderItem {
@@ -43,7 +46,7 @@ export interface Shipping {
   country: string;
   city: string;
   postalCode: string;
-  adress: string;
+  address: string;
   createdAt: Date;
   updatedAt: Date;
 }
