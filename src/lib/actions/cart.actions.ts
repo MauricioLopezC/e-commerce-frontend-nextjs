@@ -26,6 +26,9 @@ export async function getCart(): Promise<CartResponse> {
     credentials: 'include',
     headers: {
       Cookie: `access-token=${token}`
+    },
+    next: {
+      tags: ['cart']
     }
   })
   if (res.ok) {
@@ -58,7 +61,7 @@ export async function addCartItem(
       quantity
     })
   })
-  revalidateTag('cartItems')
+  revalidateTag('cart-items')
   if (res.ok) {
     const cartItem = await res.json()
     return { cartItem }
@@ -81,7 +84,7 @@ export async function getCartItems(cartId: number): Promise<CartItemsResponse> {
       Cookie: `access-token=${token}`
     },
     next: {
-      tags: ['cartItems']
+      tags: ['cart-items']
     }
   })
   if (res.ok) {
@@ -92,6 +95,57 @@ export async function getCartItems(cartId: number): Promise<CartItemsResponse> {
   return { error }
 }
 
+interface OneCartItemResponse {
+  cartItem?: CartItem
+  error?: ErrorResponse
+}
+
+export async function updateCartItemQuantity(quantity: number, cartItemId: number, cartId: number): Promise<OneCartItemResponse> {
+  const token = cookies().get('access-token')?.value ?? ''
+
+  const res = await fetch(`${BACKEND_URL}/cart/${cartId}/cart-items/${cartItemId}`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `access-token=${token}`
+    },
+    body: JSON.stringify({
+      quantity,
+    }),
+  })
+  if (res.ok) {
+    revalidateTag('discount-amount')
+    revalidateTag('cart-items')
+    revalidateTag('cart')
+    const cartItem = await res.json()
+    return { cartItem }
+  }
+  const error = await res.json()
+  return { error }
+}
+
+
+export async function deleteCartItem(cartId: number, cartItemId: number): Promise<OneCartItemResponse> {
+  const token = cookies().get('access-token')?.value ?? ''
+
+  const res = await fetch(`${BACKEND_URL}/cart/${cartId}/cart-items/${cartItemId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {
+      Cookie: `access-token=${token}`
+    },
+  })
+  if (res.ok) {
+    revalidateTag('discount-amount')
+    revalidateTag('cart-items')
+    revalidateTag('cart')
+    const cartItem = await res.json()
+    return { cartItem }
+  }
+  const error = await res.json()
+  return { error }
+}
 
 interface AppliedDiscount {
   discountId: number
@@ -111,6 +165,7 @@ interface CalcDiscountsResponse {
   calcDiscountsData?: CalcDiscountsData
   error?: ErrorResponse
 }
+
 
 export async function calculateDiscounts(): Promise<CalcDiscountsResponse> {
   const token = cookies().get('access-token')?.value ?? ''

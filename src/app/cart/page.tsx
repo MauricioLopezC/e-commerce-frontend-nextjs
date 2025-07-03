@@ -1,10 +1,11 @@
-import CartList from "@/components/cart-page/cart-list";
 import Link from "next/link";
 import TotalList from "@/components/cart-page/total-list";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { calculateDiscounts, getCart, getCartItems } from "@/lib/actions/cart.actions";
-import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import CartItemCard from "@/components/cart-page/cart-itemv2";
 
 async function CartPage() {
   const { cartData } = await getCart();
@@ -13,49 +14,63 @@ async function CartPage() {
   if (!cartItems) return null;
 
   const { calcDiscountsData } = await calculateDiscounts();
-  console.log(calcDiscountsData)
   if (!calcDiscountsData) return null;
 
   return (
-    <main>
-      <h1 className="font-bold text-2xl flex justify-center items-center mt-4">
-        CARRITO
-      </h1>
-      <section className="container mx-auto mb-6 min-h-[70vh] lg:flex lg:justify-center lg:space-x-24 mt-4">
-        <div>
-          <h1 className="font-bold text-xl text-start mb-4">PRODUCTOS</h1>
-          <CartList cartItems={cartItems} />
-        </div>
-        <div className="flex flex-col justify-start max-w-md">
-          <h2 className="font-bold text-xl text-start mb-4">TOTAL</h2>
-          <Separator />
-          <TotalList cartTotal={cartData.metadata.cartTotal} calcDiscountsData={calcDiscountsData} />
-          {/* Promo and checkout button */}
-          <div>
-            <div className="max-w-md">
-              <label htmlFor="codeInput" className="block py-2">
-                Tienes un código de descuento?
-              </label>
-              <div className="flex w-full max-w-sm items-center space-x-2">
-                <Input type="text" placeholder="Código" />
-                <Button type="submit" className="px-6">
-                  APLICAR
-                </Button>
-              </div>
-            </div>
-            {cartItems.length !== 0 && (
-              <Link href={"/checkout"} className="">
-                <Button className="w-full mt-2">VERIFICAR</Button>
-              </Link>
-            )}
-            {cartItems.length === 0 && (
-              <Button className="w-full mt-2" disabled>
-                VERIFICAR
-              </Button>
-            )}
+    <main className="max-w-6xl mx-auto p-6 min-h-screen">
+      <div className="grid lg:grid-cols-3 gap-8">
+        {/* Products Section */}
+        <section className="lg:col-span-2 space-y-6">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-gray-900">CARRITO</h1>
+            <Badge variant="secondary" className="text-sm">
+              {cartItems.length} productos
+            </Badge>
           </div>
+          <div className="space-y-4">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">PRODUCTOS</h2>
+            {/* TODO: empty cart  */}
+            {cartItems.map((cartItem) => (
+              <CartItemCard cartItem={cartItem} key={cartItem.id} />
+            ))}
+          </div>
+        </section>
+
+        {/* Order Summary */}
+        <div className="lg-col-span-1">
+          <Card className="sticky top-6 bg-gray-50">
+            <CardContent className="p-6">
+              <h2 className="font-semibold text-lg mb-6">TOTAL</h2>
+
+              <TotalList cartTotal={cartData.metadata.cartTotal} calcDiscountsData={calcDiscountsData} />
+              {/* Promo and checkout button */}
+              <div>
+                <div className="max-w-md">
+                  <label htmlFor="codeInput" className="block py-2">
+                    Tienes un código de descuento?
+                  </label>
+                  <div className="flex w-full max-w-sm items-center space-x-2">
+                    <Input type="text" placeholder="Código" id="codeInput" />
+                    <Button className="px-6">
+                      APLICAR
+                    </Button>
+                  </div>
+                </div>
+                {cartItems.length !== 0 && (
+                  <Link href={"/checkout"} className="">
+                    <Button className="w-full mt-2">VERIFICAR</Button>
+                  </Link>
+                )}
+                {cartItems.length === 0 && (
+                  <Button className="w-full mt-2" disabled>
+                    VERIFICAR
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </section>
+      </div>
     </main>
   );
 }
