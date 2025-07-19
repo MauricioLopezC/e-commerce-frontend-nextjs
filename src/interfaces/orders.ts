@@ -16,7 +16,16 @@ export interface Order {
   payment?: Payment;
   shipping?: Shipping;
   user?: User;
-  discounts?: Discount[];
+  discounts?: DiscountsData[];
+}
+
+interface DiscountsData {
+  discountId: number
+  orderId: number
+  appliedTimes: number
+  discountAmount: number
+  assignedAt: Date
+  discount: Discount
 }
 
 export interface OrderItem {

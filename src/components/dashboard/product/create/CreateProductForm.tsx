@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { createProduct } from '@/lib/actions/product.actions'
 import { uploadImage } from '@/lib/actions/image.actions'
-import { createProductSku } from '@/lib/actions/product-skus.actions'
+import { createBatchProductSkus, createProductSku } from '@/lib/actions/product-skus.actions'
 import { useState } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { CircleCheckBig, Loader2, TrashIcon } from 'lucide-react'
@@ -80,7 +80,6 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
         variant: "destructive",
         title: "¡Vaya! Algo salió mal.",
         description: "Hubo un problema al crear el producto, intento nuevamente mas tarde",
-        // action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
       setIsLoading(false)
       return
@@ -101,10 +100,8 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
           variant: "destructive",
           title: "¡Vaya! Algo salió mal.",
           description: "Hubo un problema al crear la variación, intente nuevamente mas tarde",
-          // action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
-        setIsLoading(false)
-        return
+        continue
       }
 
       const imageData = new FormData()
@@ -112,17 +109,15 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
       imageData.append('productId', productId.toString())
       imageData.append('productSkuId', createdProductSku.id.toString())
       console.log(imageData)
-      const { imgSrc, error: imageError } = await uploadImage(imageData)
-      console.log(imgSrc, imageError)
-      if (!imgSrc) {
+      const { imageData: createdImageData, error: imageError } = await uploadImage(imageData)
+      console.log(createdImageData?.url, imageError)
+      if (!createdImageData) {
         toast({
           variant: "destructive",
           title: "¡Vaya! Algo salió mal.",
           description: "Hubo un problema al subir la imagen, intente nuevamente mas tarde",
-          // action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
-        setIsLoading(false)
-        return
+        continue
       }
     }
     setProductId(productId)

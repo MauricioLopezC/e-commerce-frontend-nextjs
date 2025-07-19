@@ -11,7 +11,7 @@ import { peso } from "@/lib/constants"
 
 function RecentSalesCard({ orders }: { orders: Order[] }) {
   return (
-    <Card className="col-span-1 lg:col-span-3">
+    <Card >
       <CardHeader>
         <CardTitle>Ventas Recientes</CardTitle>
       </CardHeader>

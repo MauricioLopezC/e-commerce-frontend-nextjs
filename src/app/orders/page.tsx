@@ -10,9 +10,6 @@ async function OrdersPage() {
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight">Tus Compras</h1>
-          <p className="text-muted-foreground mt-2">
-            Check the status of recent orders, manage returns, and discover similar products.
-          </p>
         </div>
 
         <div className="space-y-6">

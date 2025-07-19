@@ -8,7 +8,7 @@ import { ErrorResponse } from "@/interfaces/responses";
 
 export interface OrdersData {
   orders: Order[];
-  metadata: { _sum: { total: number }; _count: number };
+  metadata: { _sum: { total: number, finalTotal: number }; _count: number };
 }
 interface OrdersResponse {
   ordersData?: OrdersData;
@@ -63,21 +63,29 @@ export async function getAllOrders(
   };
 }
 
-export async function addOrder(formData: FormData): Promise<OneOrderResponse> {
+interface CreateOrderDto {
+  email: string
+  country: string
+  city: string
+  postalCode: string
+  address: string
+  provider: string
+}
+
+export async function createOrder(data: CreateOrderDto): Promise<OneOrderResponse> {
   const token = cookies().get("access-token")?.value;
   const user = getPayload(token ?? "");
   if (!user) return { error: { statusCode: 401, message: "Error al obtener usuario" } };
 
   const shipping = {
-    country: formData.get("countryInput"),
-    city: formData.get("cityInput"),
-    postalCode: formData.get("cpInput"),
-    address: formData.get("addressInput"),
+    country: data.country,
+    city: data.city,
+    postalCode: data.postalCode,
+    address: data.address,
   };
-  console.log(shipping)
 
-  const payment = { provider: formData.get("paymentMethod") };
-  const email = formData.get("emailInput");
+  const payment = { provider: data.provider };
+  const email = data.email
 
   const res = await fetch(`${BACKEND_URL}/users/${user.id}/orders`, {
     method: "POST",

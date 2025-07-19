@@ -15,7 +15,7 @@ interface GetProductsOptions {
 
 interface ProductsData {
   products: Product[];
-  aggregate: { _count: number };
+  metadata: { _count: number };
 }
 
 interface AllProductsResponse {

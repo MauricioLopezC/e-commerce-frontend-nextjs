@@ -35,7 +35,7 @@ async function ProductDashboard({ searchParams }: ProductsPageProps) {
         <PaginationWithLinks
           page={currentPage}
           pageSize={pageSize}
-          totalCount={productsData.aggregate._count}
+          totalCount={productsData.metadata._count}
         />
       </div>
     </main>

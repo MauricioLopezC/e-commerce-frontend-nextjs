@@ -4,8 +4,11 @@ import { BACKEND_URL } from "@/queries/constants";
 import { revalidateTag } from "next/cache";
 import { ErrorResponse } from "@/interfaces/responses";
 
+interface ImageData {
+  url: string
+}
 interface UploadImageResponse {
-  imgSrc?: string
+  imageData?: ImageData
   error?: ErrorResponse
 }
 
@@ -35,8 +38,8 @@ export async function uploadImage(formData: FormData): Promise<UploadImageRespon
   });
   if (res.ok) {
     revalidateTag('product')
-    const imgSrc = await res.text();
-    return { imgSrc };
+    const imageData = await res.json();
+    return { imageData };
   }
   const error = await res.json();
   return { error };

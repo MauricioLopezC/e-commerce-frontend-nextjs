@@ -29,7 +29,7 @@ async function CartPage() {
           </div>
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">PRODUCTOS</h2>
-            {/* TODO: empty cart  */}
+            {/* TODO: empty cart section  */}
             {cartItems.map((cartItem) => (
               <CartItemCard cartItem={cartItem} key={cartItem.id} />
             ))}

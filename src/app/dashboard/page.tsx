@@ -5,8 +5,8 @@ import { getUsers } from "@/lib/actions/user.actions"
 import { getAllProducts } from "@/lib/actions/product.actions"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import SalesChart from "@/components/dashboard/mainpage/SalesChart"
-import { TrendingUp } from "lucide-react"
-import { salesByMonth } from "@/lib/actions/statistics.actions"
+import { salesByCategory, salesByMonth } from "@/lib/actions/statistics.actions"
+import SalesByCategoryChart from "@/components/dashboard/mainpage/SalesByCategoryChart"
 
 async function DashBoard() {
   const { productsData } = await getAllProducts({
@@ -19,13 +19,15 @@ async function DashBoard() {
   const endDate = new Date()
   const startDate = new Date()
   startDate.setFullYear(endDate.getFullYear() - 1)
-  console.log(startDate, endDate)
-  const { data: salesByMonthData, error } = await salesByMonth(startDate, endDate)
-  console.log(salesByMonthData)
-  console.log(error)
+  const { data: salesByMonthData } = await salesByMonth(startDate, endDate)
+  const { data: salesByCategoryData, error } = await salesByCategory(startDate, endDate)
+  console.log(salesByCategoryData, error)
   if (!usersData) return null
   if (!ordersData) return null
   if (!salesByMonthData) return null
+  if (!salesByCategoryData) return null
+
+
 
   return (
     <>
@@ -33,8 +35,8 @@ async function DashBoard() {
         <div id='small-cards' className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4'>
           <SmallCards ordersData={ordersData} usersData={usersData} />
         </div>
-        <div id='big-cards' className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
-          <Card className="col-span-1 lg:col-span-4">
+        <div id='big-cards' className='grid grid-cols-1 gap-4 lg:grid-cols-3'>
+          <Card>
             <CardHeader>
               <CardTitle>Ventas</CardTitle>
               <CardDescription>{startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}</CardDescription>
@@ -54,7 +56,28 @@ async function DashBoard() {
           </Card>
 
           {/* <TopProductsTable products={productsData.products} /> */}
-          <RecentSalesCard orders={ordersData.orders} />
+          {/* <RecentSalesCard orders={ordersData.orders} /> */}
+
+          <Card className="h-full" >
+            <CardHeader>
+              <CardTitle>Ventas por categoría</CardTitle>
+              <CardDescription>{startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {/* <SalesChart AllSalesByMonth={salesByMonthData} /> */}
+              <SalesByCategoryChart salesByCategory={salesByCategoryData} />
+
+            </CardContent>
+            <CardFooter className="flex-col items-start gap-2 text-sm">
+              {/* <div className="flex gap-2 font-medium leading-none"> */}
+              {/*   <p>Trending up by ${salesMothlyVariation}% this month</p> */}
+              {/*   <TrendingUp className="h-4 w-4" /> */}
+              {/* </div> */}
+              <div className="leading-none text-muted-foreground">
+                Mostrando el total de ventas por categoría el último año
+              </div>
+            </CardFooter>
+          </Card>
         </div>
       </main>
     </>

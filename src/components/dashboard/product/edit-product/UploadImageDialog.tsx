@@ -58,8 +58,8 @@ export default function UploadImageDialog({ skus, productId }: { skus: number[],
     imageData.append('productId', productId.toString())
     imageData.append('file', values.image)
     imageData.append('productSkuId', values.productSkuId.toString())
-    const { imgSrc } = await uploadImage(imageData)
-    if (!imgSrc) {
+    const { imageData: createdImageData } = await uploadImage(imageData)
+    if (!createdImageData) {
       toast({
         variant: "destructive",
         title: "¡Vaya! Algo salió mal.",

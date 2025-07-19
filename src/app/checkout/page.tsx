@@ -1,45 +1,40 @@
-import CartList from "@/components/cart-page/cart-list"
 import CheckOutForm from "@/components/checkout/CheckOutForm"
-import NotLoggedPage from "@/components/common/notlogged-page"
+import { calculateDiscounts, getCart, getCartItems } from "@/lib/actions/cart.actions"
 import { peso } from "@/lib/constants"
-import { getPayload, isTokenExpired } from "@/lib/jwt-decode"
-import { getCartId, getCartItems } from "@/queries/cart.api"
-import { cookies } from "next/headers"
+import { Card, CardContent } from "@/components/ui/card";
+import TotalList from "@/components/cart-page/total-list";
+import CheckOutFormv2 from "@/components/checkout/CheckOutFormv2";
+
 async function CheckOutPage() {
-  const cookieStore = cookies()
-  const token = cookieStore.get('access-token')
-  if (!token) return (<NotLoggedPage />)
-  if (isTokenExpired(token?.value ?? '')) return (<NotLoggedPage />) //expired session
+  const { cartData, error } = await getCart()
+  if (!cartData) return null
+  const { cartItems } = await getCartItems(cartData.cart.id);
+  if (!cartItems) return null;
+  //TODO: get user email for autofill
 
-  const user = getPayload(token?.value ?? '')
-  if (!user) return null
-  const cartId = await getCartId(user.id, token.value)
-  if (!cartId) return (<NotLoggedPage />)
-  const cart = await getCartItems(cartId, token.value)
-
-  //OPTIMIZE: perform this calculation in backend instead hera
-  //for avoid round errors
-  const total = cart.reduce((previous, current) => (
-    previous + current.product.price * current.quantity
-  ), 0)
-
+  const { calcDiscountsData } = await calculateDiscounts();
+  if (!calcDiscountsData) return null;
   return (
-    <>
-      <h1 className="font-bold text-xl flex justify-center items-center mt-4">
-        VERIFICAR
-      </h1>
-      <section className="container mx-auto mb-6 lg:flex lg:justify-center lg:space-x-24 min-h-[70vh]">
-        <CheckOutForm />
-        <div className=" divide-y">
-          <CartList cartItems={cart} />
-          <div className="flex mt-6 pt-2  justify-between">
-            <p className="font-bold">PRECIO TOTAL</p>
-            <p className="font-bold">{peso.format(total)} ARS</p>
+    <div className="min-h-screen p-4">
+      <div className="mx-auto max-w-6xl">
+        <h1 className="mb-8 text-center text-2xl font-bold">VERIFICAR</h1>
+        <main className="grid gap-8 lg:grid-cols-3">
+          {/* form */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* <CheckOutForm /> */}
+            <CheckOutFormv2 />
           </div>
-        </div>
-
-      </section>
-    </>
+          {/* summary */}
+          <div className="lg:col-span-1">
+            <Card className="sticky top-6 bg-gray-50">
+              <CardContent className="p-6">
+                <TotalList cartTotal={cartData.metadata.cartTotal} calcDiscountsData={calcDiscountsData} />
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+    </div>
   )
 }
 

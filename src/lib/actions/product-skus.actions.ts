@@ -3,6 +3,7 @@ import { cookies } from "next/headers"
 import { BACKEND_URL } from "@/queries/constants"
 import { revalidatePath } from "next/cache"
 import { ProductSku } from "@/interfaces/products/product";
+import { ErrorResponse } from "@/interfaces/responses";
 
 interface CreateProductSkuDto {
   quantity: number;
@@ -43,6 +44,36 @@ export async function createProductSku(createProductSkuDto: CreateProductSkuDto,
   return {
     error
   }
+}
+
+interface BatchPayload {
+  count: number
+}
+
+interface CreateBatchProductSkusResponse {
+  data?: BatchPayload,
+  error?: ErrorResponse
+}
+
+export async function createBatchProductSkus(productId: number, createProductSkusDto: CreateProductSkuDto[]): Promise<CreateBatchProductSkusResponse> {
+  const token = cookies().get('access-token')?.value
+  const res = await fetch(`${BACKEND_URL}/products/${productId}/product-skus/batch`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `access-token=${token}`
+    },
+    body: JSON.stringify({ "productSkus": createProductSkusDto })
+  })
+  if (res.ok) {
+    revalidatePath(`/dashboard/products/edit/${productId}`)
+    const data: BatchPayload = await res.json()
+    return { data }
+  }
+
+  const error = await res.json()
+  return { error }
 }
 
 export async function getAllProductsSkus(productId: number): Promise<AllProductSkusResponse> {
