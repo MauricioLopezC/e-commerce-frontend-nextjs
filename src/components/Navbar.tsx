@@ -84,10 +84,8 @@ function NavBar() {
                   <MenuButton onClick={async () => {
                     //server action here
                     const session = await checkSession()
-                    console.log(session)
                     setIsAuthenticated(session)
                     const admin = await isAdminAction()
-                    console.log(admin)
                     setIsAdmin(admin)
                   }}>
                     <UserIcon className="h-6 w-6 rounded-full" />

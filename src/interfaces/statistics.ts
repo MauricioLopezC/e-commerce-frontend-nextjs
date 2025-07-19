@@ -5,6 +5,11 @@ export interface TotalSalesByMonth {
 
 export interface SalesByCategory {
   id: number,
-  categoryname: string,
+  categoryName: string,
+  total: number
+}
+
+export interface SalesByProduct {
+  name: string
   total: number
 }

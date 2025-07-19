@@ -1,6 +1,6 @@
 "use client"
 
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import {
   ChartConfig,
   ChartContainer,
@@ -28,26 +28,32 @@ interface ChartData {
 
 function SalesByCategoryChart({ salesByCategory }: SalesByCategoryChartProps) {
   const chartData: ChartData[] = salesByCategory.map((item) => {
-    return { category: item.categoryname, total: item.total }
+    return { category: item.categoryName, total: item.total }
   })
-  console.log(chartData)
+  const maxVentas = Math.max(...salesByCategory.map(item => item.total))
+
   return (
-    <ChartContainer config={chartConfig}>
-      <BarChart accessibilityLayer data={chartData}
+    <ChartContainer config={chartConfig} >
+      <BarChart
+        accessibilityLayer
+        data={chartData}
       >
         <CartesianGrid vertical={false} />
+        <YAxis domain={[0, maxVentas * 1.1]} hide type="number" />
         <XAxis
           dataKey="category"
           tickLine={false}
           tickMargin={10}
           axisLine={false}
           tickFormatter={(value) => value.slice(0, 10)}
+          type="category"
         />
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent hideLabel />}
         />
-        <Bar dataKey="total" fill="var(--color-desktop)" radius={8} name={"Total"} />
+        <Bar dataKey="total" fill="var(--color-desktop)" radius={8} name={"Total"}>
+        </Bar>
       </BarChart>
     </ChartContainer>
   )
