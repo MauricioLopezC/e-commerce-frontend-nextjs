@@ -174,6 +174,23 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
               </li>
             ))}
           </ul>
+          {(order.discounts && order.discounts.length > 0) &&
+            <>
+              <Separator className="my-2" />
+              <div className="font-semibold">Descuentos</div>
+              <ul className="grid gap-3">
+                {order.discounts.map((discount, idx) => (
+                  <li key={idx} className="flex items-center justify-between">
+                    <span className="text-muted-foreground">
+                      {discount.discount.name} x <span>{discount.appliedTimes}</span>
+                    </span>
+                    <span>{peso.format(discount.discountAmount)}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          }
+
           <Separator className="my-2" />
           <ul className="grid gap-3">
             <li className="flex items-center justify-between font-semibold">

@@ -56,15 +56,23 @@ function OrdersTableDashBoard({ orders }: { orders: Order[] }) {
                 <TableCell className="hidden sm:table-cell">
                   <Badge className="text-xs gap-1.5" variant="outline">
                     {order.status === 'IN_PROGRESS' &&
-                      <span className="size-1.5 rounded-full bg-amber-500" aria-hidden="true"></span>
+                      <>
+                        <span className="size-1.5 rounded-full bg-amber-500" aria-hidden="true"></span>
+                        PENDIENTE
+                      </>
                     }
                     {order.status === 'COMPLETED' &&
-                      <span className="size-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
+                      <>
+                        <span className="size-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
+                        <p>COMPLETADO</p>
+                      </>
                     }
                     {order.status === 'CANCELLED' &&
-                      <span className="size-1.5 rounded-full bg-red-500" aria-hidden="true"></span>
+                      <>
+                        <span className="size-1.5 rounded-full bg-red-500" aria-hidden="true"></span>
+                        <p>CANCELADO</p>
+                      </>
                     }
-                    {order.status}
                   </Badge>
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
