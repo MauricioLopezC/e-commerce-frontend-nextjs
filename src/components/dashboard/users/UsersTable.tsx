@@ -47,7 +47,7 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
                 Total Comprado
               </TableHead>
               <TableHead className="hidden md:table-cell">
-                Creado el
+                Regitrado el
               </TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
