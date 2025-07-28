@@ -33,7 +33,7 @@ import {
 import { useSearchParams } from 'next/navigation'
 
 const formSchema = z.object({
-  email: z.string().min(2).max(100).email(),
+  email: z.string().min(2).max(100).email({}),
   password: z.string().min(2).max(100),
 })
 
