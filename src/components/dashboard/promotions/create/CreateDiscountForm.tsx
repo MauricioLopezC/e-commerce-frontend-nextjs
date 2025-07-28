@@ -38,6 +38,7 @@ import {
 import MultipleSelector, { Option } from "@/components/shadcn-expansions/multiselect";
 import { Product } from "@/interfaces/products/product";
 import { Category } from "@/interfaces/products/categories";
+import { searchByName } from "@/lib/actions/search.actions";
 
 
 const categoryOptionSchema = z.object({
@@ -89,6 +90,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
   const router = useRouter()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [createdDiscountId, setCreatedDiscountId] = useState<number | null>(null)
+  const [isTriggered, setIsTriggered] = useState(false);
   const { toast } = useToast()
 
   const now = new Date()
@@ -338,6 +340,24 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                             no hay resultados.
                           </p>
                         }
+                        loadingIndicator={
+                          <p className="py-2 text-center text-lg leading-10 text-muted-foreground">Buscando...</p>
+                        }
+                        onSearch={async (value) => {
+                          setIsTriggered(true)
+                          const { products, error } = await searchByName(value)
+                          if (error || !products) {
+                            return []
+
+                          }
+                          const options: Option[] = products.map((product) => (
+                            {
+                              label: product.name,
+                              value: product.id.toString()
+                            }
+                          ))
+                          return options;
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
