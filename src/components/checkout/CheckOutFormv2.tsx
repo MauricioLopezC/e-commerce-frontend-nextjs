@@ -17,7 +17,7 @@ import { useState } from 'react'
 import { Calendar, CreditCard, Lock } from 'lucide-react'
 import { Button } from '../ui/button'
 import { createOrder } from '@/lib/actions/order.actions'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 enum PaymentProvider {
   PAYPAL = "PAYPAL",
@@ -51,6 +51,7 @@ const formSchema = z.object({
 
 function CheckOutFormv2() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -85,7 +86,7 @@ function CheckOutFormv2() {
     })
     if (order) {
       setIsSubmitting(false)
-      redirect('/checkout/confirm')
+      router.push('/checkout/confirm')
     }
 
   }

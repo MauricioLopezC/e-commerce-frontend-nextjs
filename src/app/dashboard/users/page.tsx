@@ -1,6 +1,5 @@
 import UsersTable from "@/components/dashboard/users/UsersTable"
 import { PaginationWithLinks } from "@/components/ui/paginations-with-links"
-import { salesByUser } from "@/lib/actions/statistics.actions"
 import { getUsers } from "@/lib/actions/user.actions"
 
 async function UsersPage(
@@ -15,10 +14,7 @@ async function UsersPage(
     page: currentPage,
     limit: pageSize
   })
-  console.log(usersData);
   if (!usersData) return null
-
-  const { data: salesByUserData } = await salesByUser()
 
   return (
     <section className="container mx-auto px-4 mt-4 mb-16">

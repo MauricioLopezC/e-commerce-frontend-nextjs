@@ -47,16 +47,42 @@ export async function createDiscount(data: CreateDiscountDto) {
   return { error }
 }
 
-export async function getAllDiscounts() {
-  const res = await fetch(`${BACKEND_URL}/promotions/discounts`, {
+interface GetDiscountOptions {
+  limit?: number;
+  page?: number;
+  orderBy?: string;
+  isActive?: boolean
+}
+
+interface DiscountsData {
+  discounts: Discount[];
+  metadata: { _count: number }
+}
+
+interface DiscountsResponse {
+  discountsData?: DiscountsData
+  error?: ErrorResponse
+}
+
+export async function getAllDiscounts(options: GetDiscountOptions): Promise<DiscountsResponse> {
+  const queryParams = new URLSearchParams();
+  let key: keyof GetDiscountOptions;
+  for (key in options) {
+    const value = options[key];
+    if (value) {
+      queryParams.set(key, value.toString());
+    }
+  }
+
+  const res = await fetch(`${BACKEND_URL}/promotions/discounts?${queryParams.toString()}`, {
     method: 'GET',
     next: {
       tags: ['discounts']
     }
   })
   if (res.ok) {
-    const discounts = await res.json()
-    return { discounts }
+    const discountsData = await res.json()
+    return { discountsData }
   }
   const error = await res.json()
   return { error }
@@ -80,6 +106,7 @@ export async function getOneDiscount(id: number): Promise<OneDiscountResponse> {
 }
 
 export async function updateDiscount(id: number, data: Partial<CreateDiscountDto>): Promise<OneDiscountResponse> {
+  console.log(data)
   const token = cookies().get("access-token")?.value;
   const res = await fetch(`${BACKEND_URL}/promotions/discounts/${id}`, {
     headers: {
@@ -90,6 +117,7 @@ export async function updateDiscount(id: number, data: Partial<CreateDiscountDto
     body: JSON.stringify(data)
   })
   revalidateTag('discounts')
+  revalidateTag('discount-amount')
   if (res.ok) {
     const discount: Discount = await res.json()
     return { discount }

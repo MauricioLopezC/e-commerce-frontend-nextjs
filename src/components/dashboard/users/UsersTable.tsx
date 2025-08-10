@@ -88,48 +88,50 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
                     {new Date(user.createdAt).toLocaleDateString('es-AR')}
                   </TableCell>
                   <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          aria-haspopup="true"
-                          size="icon"
-                          variant="ghost"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Opciones</DropdownMenuLabel>
-                        {!user.isBanned &&
-                          <DropdownMenuItem
-                            onClick={async () => {
+                    {user.role !== 'ADMIN' &&
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            aria-haspopup="true"
+                            size="icon"
+                            variant="ghost"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Toggle menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Opciones</DropdownMenuLabel>
+                          {!user.isBanned &&
+                            <DropdownMenuItem
+                              onClick={async () => {
+                                console.log(user.id)
+                                setUserId(user.id)
+                                setAlertBanOpen(true)
+                              }}>
+                              Bloquear
+                            </DropdownMenuItem>
+                          }
+                          {user.isBanned &&
+                            <DropdownMenuItem onClick={async () => {
                               console.log(user.id)
                               setUserId(user.id)
-                              setAlertBanOpen(true)
+                              setAlertUnBanOpen(true)
                             }}>
-                            Bloquear
+                              Desbloquear
+                            </DropdownMenuItem>
+                          }
+                          <DropdownMenuItem className="text-red-500"
+                            onClick={async () => {
+                              console.log(user.id)
+                              setAlertOpen(true)
+                              setUserId(user.id)
+                            }}>
+                            Eliminar
                           </DropdownMenuItem>
-                        }
-                        {user.isBanned &&
-                          <DropdownMenuItem onClick={async () => {
-                            console.log(user.id)
-                            setUserId(user.id)
-                            setAlertUnBanOpen(true)
-                          }}>
-                            desbloquear
-                          </DropdownMenuItem>
-                        }
-                        <DropdownMenuItem className="text-red-500"
-                          onClick={async () => {
-                            console.log(user.id)
-                            setAlertOpen(true)
-                            setUserId(user.id)
-                          }}>
-                          Eliminar
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    }
                   </TableCell>
                 </TableRow>
               ))

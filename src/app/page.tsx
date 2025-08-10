@@ -22,11 +22,13 @@ async function Home() {
     limit: 5,
   });
 
-  const { discounts, error } = await getAllDiscounts()
-  console.log(discounts, error)
+  const { discountsData, error } = await getAllDiscounts({ isActive: true })
+  console.log(discountsData, error)
   return (
     <main>
-      <DiscountBanner discounts={discounts} />
+      {discountsData &&
+        <DiscountBanner discounts={discountsData?.discounts} />
+      }
       <div className="relative w-full bg-[#333232] h-[60vh] md:h-[80vh] xl:h[100vh]">
         {/* <CoverImage /> */}
         <div className="absolute inset-0">

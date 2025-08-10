@@ -15,6 +15,7 @@ async function CartPage() {
 
   const { calcDiscountsData } = await calculateDiscounts();
   if (!calcDiscountsData) return null;
+  console.log(calcDiscountsData)
 
   return (
     <main className="max-w-6xl mx-auto p-6 min-h-screen">

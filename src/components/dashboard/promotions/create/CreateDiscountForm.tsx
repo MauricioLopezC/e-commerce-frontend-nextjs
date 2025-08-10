@@ -366,6 +366,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
               />
             }
 
+            {/* TODO: implement onSearch categories */}
             {applicableTo === ApplicableTo.CATEGORY &&
               <FormField
                 control={form.control}
