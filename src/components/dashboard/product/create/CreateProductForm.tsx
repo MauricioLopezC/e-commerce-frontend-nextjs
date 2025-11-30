@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { createProduct } from '@/lib/actions/product.actions'
 import { uploadImage } from '@/lib/actions/image.actions'
-import { createBatchProductSkus, createProductSku } from '@/lib/actions/product-skus.actions'
+import { createProductSku } from '@/lib/actions/product-skus.actions'
 import { useState } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { CircleCheckBig, Loader2, TrashIcon } from 'lucide-react'
@@ -222,11 +222,11 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
                     name="sex"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Sexo</FormLabel>
+                        <FormLabel>Género</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger id="sex" aria-label="Select sex">
-                              <SelectValue placeholder="Seleccionar sexo de la prenda" />
+                              <SelectValue placeholder="Seleccionar el género" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>

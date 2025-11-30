@@ -28,7 +28,7 @@ export function NotLoggedInAlertDialog({ isOpen, setIsOpen }: AlertDialogProps) 
           }}>
             Iniciar Sesion
           </AlertDialogAction>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -21,7 +21,7 @@ import { z } from '@/lib/zod/es-zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from "date-fns";
 import { es } from 'date-fns/locale';
-import { CalendarIcon } from "lucide-react";
+import {CalendarIcon, CheckCircleIcon} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from 'react-hook-form';
@@ -454,7 +454,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Descuento creado correctamente!</DialogTitle>
+              <DialogTitle>Descuento creado correctamente!</DialogTitle>
             <DialogDescription>
               Ahora puede dirigirse al apartado de edición para conectar productos o categorías si así lo desea
             </DialogDescription>

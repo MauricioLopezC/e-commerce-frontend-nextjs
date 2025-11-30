@@ -1,4 +1,3 @@
-import CheckOutForm from "@/components/checkout/CheckOutForm"
 import { calculateDiscounts, getCart, getCartItems } from "@/lib/actions/cart.actions"
 import { peso } from "@/lib/constants"
 import { Card, CardContent } from "@/components/ui/card";

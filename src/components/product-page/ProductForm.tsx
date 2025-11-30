@@ -1,31 +1,31 @@
 'use client'
-import { HeartIcon, TrashIcon } from "lucide-react";
-import { useState, useEffect } from "react";
-import { ProductSku } from "@/interfaces/products/product";
-import { RadioGroup, RadioGroupItem } from "@/components/origin-ui/radio-group";
-import { NoStockAlertDialog } from "./NoStockAlert";
-import { NotLoggedInAlertDialog } from "./NotLoggedInAltert";
-import { useToast } from "@/hooks/use-toast";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import { addCartItem } from "@/lib/actions/cart.actions";
-import { addFavorite, deleteFavorite, getFavorites } from "@/lib/actions/favorites.actions";
-import { checkSession } from "@/lib/actions/navbar.actions";
-import { Favorite } from "@/interfaces/favorites";
+import {HeartIcon, TrashIcon} from "lucide-react";
+import {useState, useEffect} from "react";
+import {ProductSku} from "@/interfaces/products/product";
+import {RadioGroup, RadioGroupItem} from "@/components/origin-ui/radio-group";
+import {NoStockAlertDialog} from "./NoStockAlert";
+import {NotLoggedInAlertDialog} from "./NotLoggedInAltert";
+import {useToast} from "@/hooks/use-toast";
+import {CheckCircleIcon, XCircleIcon} from "@heroicons/react/24/outline";
+import {addCartItem} from "@/lib/actions/cart.actions";
+import {addFavorite, deleteFavorite, getFavorites} from "@/lib/actions/favorites.actions";
+import {checkSession} from "@/lib/actions/navbar.actions";
+import {Favorite} from "@/interfaces/favorites";
 import CantidadSelectV2 from "./SelectV2";
-import { Button } from "../ui/button";
+import {Button} from "../ui/button";
 
 interface ProductOptionsProps {
   productId: number;
   productSkus: ProductSku[];
 }
 
-function ProductForm({ productId, productSkus }: ProductOptionsProps) {
+function ProductForm({productId, productSkus}: ProductOptionsProps) {
   const [quantity, setQuanity] = useState(1)
   const [size, setSize] = useState(productSkus[0].size)
   const [color, setColor] = useState<string | undefined>(undefined)
   const [isOpenNS, setIsOpenNS] = useState(false)
   const [isOpenNL, setIsOpenNL] = useState(false)
-  const { toast } = useToast()
+  const {toast} = useToast()
   const [isFavorite, setIsFavorite] = useState(false)
   const [favorite, setFavorite] = useState<Favorite | null>()
   const order = ["xs", "s", "m", "l", "xl", "xxl", "xxxl"];
@@ -46,7 +46,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
     const checkFavorite = async () => {
       const session = await checkSession()
       if (session) {
-        const { favoritesData } = await getFavorites({ productId })
+        const {favoritesData} = await getFavorites({productId})
         console.log(favoritesData)
         const favoriteFound = favoritesData?.favorites[0]
         if (favoriteFound) {
@@ -63,7 +63,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
     const isFavoriteValue = !isFavorite
     setIsFavorite(!isFavorite)
     if (isFavoriteValue) {
-      const { favorite, error } = await addFavorite(productId)
+      const {favorite, error} = await addFavorite(productId)
       console.log(favorite, error)
       if (favorite) {
         setFavorite(favorite)
@@ -71,7 +71,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
           description: (
             <div>
               <h2 className="font-semibold text-md">
-                <span><CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" /></span>
+                <span><CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline"/></span>
                 Producto agregado a favoritos
               </h2>
             </div>
@@ -83,14 +83,14 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       }
     }
     if (!isFavoriteValue && favorite) {
-      const { favorite: deletedFavorite } = await deleteFavorite(favorite.id)
+      const {favorite: deletedFavorite} = await deleteFavorite(favorite.id)
       if (deletedFavorite) {
         setFavorite(null)
         toast({
           description: (
             <div>
               <h2 className="font-semibold text-md">
-                <span><TrashIcon className="h-6 w-6 mr-2 text-red-500 inline" /></span>
+                <span><TrashIcon className="h-6 w-6 mr-2 text-red-500 inline"/></span>
                 Producto eliminado de favoritos
               </h2>
             </div>
@@ -107,7 +107,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       setIsOpenNS(true)
       return
     }
-    const { cartItem, error } = await addCartItem(productId, selectedPSku.id, quantity)
+    const {cartItem, error} = await addCartItem(productId, selectedPSku.id, quantity)
     console.log(cartItem, error)
     if (error && error.statusCode === 401) {
       setIsOpenNL(true)
@@ -119,7 +119,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
         description: (
           <div>
             <h2 className="font-semibold text-md">
-              <span><XCircleIcon className="h-6 w-6 mr-2 text-white inline" /></span>
+              <span><XCircleIcon className="h-6 w-6 mr-2 text-white inline"/></span>
               El producto ya fue agregado al carrito
             </h2>
           </div>
@@ -128,12 +128,12 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       })
       return
     }
-    console.log({ quantity, size, color })
+    console.log({quantity, size, color})
     toast({
       description: (
         <div>
           <h2 className="font-semibold text-md">
-            <span><CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" /></span>
+            <span><CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline"/></span>
             Producto agregado correctamente
           </h2>
         </div>
@@ -145,7 +145,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
     <>
       <div className="flex flex-col gap-2 mt-2">
         <label className="text-sm font-medium">Cantidad</label>
-        <CantidadSelectV2 setValue={setQuanity} />
+        <CantidadSelectV2 setValue={setQuanity}/>
       </div>
 
       <div id="details" className="flex flex-col  mt-4 space-y-4">
@@ -208,20 +208,20 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       <h1 className="text-sm font-medium leading-none text-foreground mt-4">Stock: {selectedPSku?.quantity}</h1>
       <div className="flex gap-4">
         {selectedPSku &&
-          <Button
-            className="flex-1 text-base" size="lg"
-            onClick={onAddToCartClick}
-          >
-            Agregar al carrito
-          </Button>
+            <Button
+                className="flex-1 text-base" size="lg"
+                onClick={onAddToCartClick}
+            >
+                Agregar al carrito
+            </Button>
         }
         {!selectedPSku &&
-          <Button
-            className="flex-1 text-base" size="lg"
-            disabled
-          >
-            No disponible
-          </Button>
+            <Button
+                className="flex-1 text-base" size="lg"
+                disabled
+            >
+                No disponible
+            </Button>
         }
         <Button
           variant='outline'
@@ -229,14 +229,14 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
           onClick={onFavoriteClick}
         >
           {isFavorite
-            ? <HeartIcon className="w-5 h-5 fill-red-500 text-red-500" />
-            : <HeartIcon className="w-5 h-5 hover:text-red-600 " />
+            ? <HeartIcon className="w-5 h-5 fill-red-500 text-red-500"/>
+            : <HeartIcon className="w-5 h-5 hover:text-red-600 "/>
           }
         </Button>
       </div>
       <p className="text-xs text-gray-600 my-3">Envío gratuito en pedidos superiores a $100.000,00</p>
-      <NoStockAlertDialog isOpen={isOpenNS} setIsOpen={setIsOpenNS} />
-      <NotLoggedInAlertDialog isOpen={isOpenNL} setIsOpen={setIsOpenNL} />
+      <NoStockAlertDialog isOpen={isOpenNS} setIsOpen={setIsOpenNS}/>
+      <NotLoggedInAlertDialog isOpen={isOpenNL} setIsOpen={setIsOpenNL}/>
     </>
   )
 }

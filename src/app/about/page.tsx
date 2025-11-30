@@ -18,7 +18,7 @@ function AboutPage() {
         </div>
         <div className="md:col-start-1 md:self-center">
           <p>
-            Bievendios a APRIL productos de todo precio.
+            Bienvenido a APRIL productos de todo precio.
           </p>
           <p>
             Vendemos ropa para todas las edades, Hombres Mujeres y niños. Precios acesibles y de buena calidad, tambien tenemos jugetes, pelotas, bazar y mucho mas!
