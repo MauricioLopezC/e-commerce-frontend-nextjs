@@ -5,6 +5,7 @@ import { ErrorResponse } from "@/interfaces/responses";
 import { BACKEND_URL } from "@/queries/constants"
 import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers"
+import {getTokenFromCookies} from "@/lib/actions/utils";
 
 interface OneDiscountResponse {
   discount?: Discount;
@@ -128,7 +129,7 @@ export async function updateDiscount(id: number, data: Partial<CreateDiscountDto
 }
 
 export async function deleteDiscount(id: number): Promise<OneDiscountResponse> {
-  const token = cookies().get("access-token")?.value;
+  const token = getTokenFromCookies();
   const res = await fetch(`${BACKEND_URL}/promotions/discounts/${id}`, {
     headers: {
       Cookie: `access-token=${token}`,

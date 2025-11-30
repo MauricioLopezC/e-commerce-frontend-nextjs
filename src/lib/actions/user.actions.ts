@@ -77,7 +77,7 @@ export async function deleteUser(userId: number) {
 }
 
 export async function banUser(userId: number) {
-  const token = cookies().get('access-token')?.value
+  const token = cookies().get('access-token')?.value ?? ''
   const res = await fetch(`${BACKEND_URL}/users/${userId}/ban`, {
     method: "PATCH",
     credentials: "include",

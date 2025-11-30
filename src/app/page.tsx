@@ -9,7 +9,7 @@ import { getAllDiscounts } from "@/lib/actions/discounts.actions";
 import DiscountBanner from "@/components/banners/discountBanner";
 
 async function Home() {
-  //TODO: change CldImage components for img component in products grids,
+  //Change CldImage components for img component in products grids,
   //and places with many images because vercel charges on you for that optimization
   //use CldImage only in few necessary places
   //for example when Cloudinary awesome transformations are needed
@@ -23,7 +23,6 @@ async function Home() {
   });
 
   const { discountsData, error } = await getAllDiscounts({ isActive: true })
-  console.log(discountsData, error)
   return (
     <main>
       {discountsData &&

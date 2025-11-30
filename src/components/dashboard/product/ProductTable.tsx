@@ -1,5 +1,5 @@
 'use client'
-import { CldImage } from 'next-cloudinary'
+import {CldImage} from 'next-cloudinary'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,20 +8,66 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { MoreHorizontal } from 'lucide-react'
-import { Product } from '@/interfaces/products/product'
-import { useRouter } from 'next/navigation'
-import { peso } from '@/lib/constants'
-import { useState } from 'react'
-import { DeleteProductAlert } from './DeleteProductAlert'
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card'
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table'
+import {Button} from '@/components/ui/button'
+import {CheckCircleIcon, MoreHorizontal} from 'lucide-react'
+import {Product} from '@/interfaces/products/product'
+import {useRouter} from 'next/navigation'
+import {peso} from '@/lib/constants'
+import {useState} from 'react'
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from "@/components/ui/alert-dialog";
+import {deleteProduct} from "@/lib/actions/product.actions";
+import {useToast} from "@/hooks/use-toast";
+import {XMarkIcon} from "@heroicons/react/24/outline";
 
-function ProductsTable({ products }: { products: Product[] }) {
+function ProductsTable({products}: { products: Product[] }) {
   const router = useRouter()
-  const [deleteAlertOpen, setDeleteAlertOpen] = useState(false)
-  const [deleteProductId, setDeleteProductId] = useState<number | null>(null)
+  const [confirmData, setConfirmData] = useState<Product | null>(null)
+  const {toast} = useToast()
+
+  function closeConfirm() {
+    setConfirmData(null);
+  }
+
+  async function handleConfirm() {
+    if (confirmData) {
+      const {product: deletedProduct, error} = await deleteProduct(confirmData.id)
+      console.log(deletedProduct, error)
+      if (error) {
+        toast({
+          description: (
+            <div>
+              <h2 className="font-semibold text-md">
+                <span><XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline"/></span>
+                Error al eliminar
+              </h2>
+            </div>
+          ),
+        })
+      }
+
+      toast({
+        description: (
+          <div>
+            <h2 className="font-semibold text-md">
+              <span><CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline"/></span>
+              Producto eliminado
+            </h2>
+          </div>
+        ),
+      })
+    }
+
+    closeConfirm()
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -91,7 +137,7 @@ function ProductsTable({ products }: { products: Product[] }) {
                           size="icon"
                           variant="ghost"
                         >
-                          <MoreHorizontal className="h-4 w-4" />
+                          <MoreHorizontal className="h-4 w-4"/>
                           <span className="sr-only">Toggle menu</span>
                         </Button>
                       </DropdownMenuTrigger>
@@ -102,10 +148,7 @@ function ProductsTable({ products }: { products: Product[] }) {
                         }}>
                           Editar
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={async () => {
-                          setDeleteProductId(product.id)
-                          setDeleteAlertOpen(true)
-                        }}>
+                        <DropdownMenuItem onClick={() => setConfirmData(product)}>
                           Eliminar
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -122,7 +165,25 @@ function ProductsTable({ products }: { products: Product[] }) {
         {/*   Showing <strong>1-10</strong> of <strong>32</strong>{" "} */}
         {/*   products */}
         {/* </div> */}
-        <DeleteProductAlert isOpen={deleteAlertOpen} setIsOpen={setDeleteAlertOpen} productId={deleteProductId} />
+        {confirmData && (
+          <AlertDialog open={true} onOpenChange={closeConfirm}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>¿Estás completamente seguro?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Esta acción no se puede deshacer. Eliminará permanentemente al usuario.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction onClick={handleConfirm}>
+                  Continuar
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+
       </CardFooter>
     </Card>
   )

@@ -1,5 +1,5 @@
 'use client'
-import { Badge } from "@/components/ui/badge"
+import {Badge} from "@/components/ui/badge"
 import {
   Card,
   CardContent,
@@ -23,24 +23,77 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Discount } from "@/interfaces/discounts"
-import { peso } from "@/lib/constants"
-import { Button } from "@/components/ui/button"
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react"
+import {Discount} from "@/interfaces/discounts"
+import {peso} from "@/lib/constants"
+import {Button} from "@/components/ui/button"
+import {MoreHorizontal, Pencil, Trash2} from "lucide-react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
-import { useState } from "react"
-import { deleteDiscount } from "@/lib/actions/discounts.actions"
-import { useToast } from "@/hooks/use-toast"
-import { CheckCircleIcon } from "@heroicons/react/24/solid"
-import { XMarkIcon } from "@heroicons/react/24/outline"
+import {useRouter} from "next/navigation"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from "@/components/ui/alert-dialog"
+import {useState} from "react"
+import {deleteDiscount} from "@/lib/actions/discounts.actions"
+import {useToast} from "@/hooks/use-toast"
+import {CheckCircleIcon} from "@heroicons/react/24/solid"
+import {XMarkIcon} from "@heroicons/react/24/outline"
 
-function DiscountsTable({ discounts }: { discounts: Discount[] }) {
-  const [isOpen, setIsOpen] = useState(false)
+function DiscountsTable({discounts}: { discounts: Discount[] }) {
+  const [confirmData, setConfirmData] = useState<Discount | null>(null);
   const router = useRouter()
-  const { toast } = useToast()
-  const [discountId, setDiscountId] = useState<number | null>(null)
+  const {toast} = useToast()
+
+  function openConfirm(discount: Discount) {
+    setConfirmData(discount);
+  }
+
+  //close dialog
+  const closeConfirm = () => {
+    setConfirmData(null);
+  };
+
+  async function handleConfirm() {
+    if (confirmData) {
+      //server action
+      const {discount, error} = await deleteDiscount(confirmData.id)
+      console.log(discount, error)
+      if (discount) {
+        toast({
+          description: (
+            <div>
+              <h2 className="font-semibold text-md">
+                <span><CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline"/></span>
+                Descuento eliminado
+              </h2>
+            </div>
+          ),
+        })
+        return
+      }
+
+      toast({
+        description: (
+          <div>
+            <h2 className="font-semibold text-md">
+              <span><XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline"/></span>
+              Error al eliminar
+            </h2>
+          </div>
+        ),
+      })
+    }
+
+    closeConfirm();
+  }
+
+
   return (
     <Card>
       <CardHeader>
@@ -81,10 +134,10 @@ function DiscountsTable({ discounts }: { discounts: Discount[] }) {
                   <div className="flex items-center">
                     <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
                       {discount.maxUses &&
-                        <div
-                          className="bg-blue-600 rounded-full h-2"
-                          style={{ width: `${(discount.currentUses / discount.maxUses) * 100}%` }}
-                        ></div>
+                          <div
+                              className="bg-blue-600 rounded-full h-2"
+                              style={{width: `${(discount.currentUses / discount.maxUses) * 100}%`}}
+                          ></div>
                       }
                     </div>
                     <span className="text-sm text-gray-600">
@@ -105,7 +158,7 @@ function DiscountsTable({ discounts }: { discounts: Discount[] }) {
                         size="icon"
                         variant="ghost"
                       >
-                        <MoreHorizontal className="h-4 w-4" />
+                        <MoreHorizontal className="h-4 w-4"/>
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </DropdownMenuTrigger>
@@ -117,9 +170,9 @@ function DiscountsTable({ discounts }: { discounts: Discount[] }) {
                         }}>
                         Editar
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={async () => {
-                        setIsOpen(true)
-                        setDiscountId(discount.id)
+                      <DropdownMenuItem onClick={async (e) => {
+                        e.stopPropagation();
+                        openConfirm(discount)
                       }}>
                         Eliminar
                       </DropdownMenuItem>
@@ -133,54 +186,25 @@ function DiscountsTable({ discounts }: { discounts: Discount[] }) {
         </Table>
       </CardContent>
       <CardFooter>
-        <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>¿Estás completamente seguro?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Esta acción no se puede deshacer. Eliminará permanentemente al descuento.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={async () => {
-                  console.log(discountId)
-                  if (discountId) {
-                    const { discount, error } = await deleteDiscount(discountId)
-                    console.log(discount, error)
-                    if (discount) {
-                      toast({
-                        description: (
-                          <div>
-                            <h2 className="font-semibold text-md">
-                              <span><CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" /></span>
-                              Descuento eliminado
-                            </h2>
-                          </div>
-                        ),
-                      })
-                      setDiscountId(null)
-                    }
-                    if (error) {
-                      toast({
-                        description: (
-                          <div>
-                            <h2 className="font-semibold text-md">
-                              <span><XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline" /></span>
-                              Error al eliminar
-                            </h2>
-                          </div>
-                        ),
-                      })
-                    }
-                  }
-                }}>
-                Continuar
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        {confirmData && (
+          <AlertDialog open={true} onOpenChange={closeConfirm}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>¿Estás completamente seguro?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Esta acción no se puede deshacer. Eliminará permanentemente al descuento.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={closeConfirm}>Cancelar</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleConfirm}>
+                  Continuar
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </CardFooter>
     </Card>
   )
