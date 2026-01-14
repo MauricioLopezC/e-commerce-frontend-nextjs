@@ -80,8 +80,6 @@ async function ProductsPage({ searchParams }: ProductsPageProps) {
   )
 }
 
-
-
 function FiltersMenu() {
   return (
     <div className="text-right">

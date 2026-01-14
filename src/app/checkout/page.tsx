@@ -7,7 +7,7 @@ import CheckOutFormv2 from "@/components/checkout/CheckOutFormv2";
 async function CheckOutPage() {
   const { cartData, error } = await getCart()
   if (!cartData) return null
-  const { cartItems } = await getCartItems(cartData.cart.id);
+  const { cartItems } = await getCartItems();
   if (!cartItems) return null;
   //TODO: get user email for autofill
 

@@ -32,11 +32,11 @@ function ProductForm({productId, productSkus}: ProductOptionsProps) {
 
   const [selectedPSku, setSelectedPSku] = useState<ProductSku | null>(productSkus[0])
   useEffect(() => {
-    let sPsku = productSkus.find((productSku) => {
+    let selectedProductSku = productSkus.find((productSku) => {
       return productSku.size === size && productSku.color === color
     })
-    if (sPsku) {
-      setSelectedPSku(sPsku)
+    if (selectedProductSku) {
+      setSelectedPSku(selectedProductSku)
     } else {
       setSelectedPSku(null)
     }

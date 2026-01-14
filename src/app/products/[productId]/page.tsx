@@ -20,7 +20,7 @@ import { getAllProductsSkus } from "@/lib/actions/product-skus.actions"
 
 async function ProductPage({ params }: { params: { productId: string } }) {
   //NOTE: params.productId could be NaN, nullish coalescing operator only works
-  //with undefinded and null and || operator with falsy and truthy 
+  //with undefined and null and || operator with falsy and truthy
 
   let productId = Number(params.productId) || 1
   const { product } = await getProduct(productId)

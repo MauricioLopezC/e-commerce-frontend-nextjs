@@ -26,8 +26,8 @@ import {
 } from "@/components/ui/alert"
 
 const formSchema = z.object({
-  firstName: z.string().min(2).max(50),
-  lastName: z.string().min(2).max(50),
+  firstName: z.string().min(2).max(100),
+  lastName: z.string().min(2).max(100),
   email: z.string().min(2).max(100).email(),
   password: z.string().min(2).max(100),
 })
@@ -126,7 +126,7 @@ function RegisterPage() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="example@gmail.com" {...field} />
+                    <Input placeholder="johndoe@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

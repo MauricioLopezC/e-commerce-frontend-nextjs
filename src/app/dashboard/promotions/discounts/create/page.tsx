@@ -1,7 +1,7 @@
 import {
   ChevronLeft,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import {Button} from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -10,15 +10,14 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import Link from "next/link"
-import { getAllCategories } from "@/lib/actions/category.actions"
-import { getAllProducts } from "@/lib/actions/product.actions"
+import {getAllCategories} from "@/lib/actions/category.actions"
+import {getAllProducts} from "@/lib/actions/product.actions"
 import CreateDiscountForm from "@/components/dashboard/promotions/create/CreateDiscountForm"
 
 
-
 async function CreateDiscountPage() {
-  const { categories } = await getAllCategories()
-  const { productsData } = await getAllProducts({})
+  const {categories} = await getAllCategories()
+  const {productsData} = await getAllProducts({})
 
   if (!categories) return null
   if (!productsData) return null
@@ -29,7 +28,7 @@ async function CreateDiscountPage() {
         <div className="flex items-center gap-4">
           <Link href={'/dashboard/promotions'}>
             <Button variant="outline" size="icon" className="h-7 w-7">
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4"/>
               <span className="sr-only">Back</span>
             </Button>
           </Link>
@@ -41,14 +40,15 @@ async function CreateDiscountPage() {
           </div>
         </div>
         <div className="">
-          <Card >
+          <Card>
             <CardHeader>
               <CardTitle>Crear descuento</CardTitle>
-              <CardDescription>La opción para conectar productos o descuentos aplicables se mostrara en el siguiente paso</CardDescription>
+              <CardDescription>La opción para conectar productos o descuentos aplicables se mostrara en el siguiente
+                paso</CardDescription>
             </CardHeader>
             <CardContent>
               {/* main form here */}
-              <CreateDiscountForm categories={categories} products={productsData.products} />
+              <CreateDiscountForm categories={categories} products={productsData.products}/>
             </CardContent>
           </Card>
         </div>

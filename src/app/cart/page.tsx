@@ -9,8 +9,10 @@ import CartItemCard from "@/components/cart-page/cart-itemv2";
 
 async function CartPage() {
   const { cartData } = await getCart();
+  console.log("CARTDATA", cartData)
   if (!cartData) return null;
-  const { cartItems } = await getCartItems(cartData.cart.id);
+  const { cartItems } = await getCartItems();
+  console.log("ITEMS", cartItems)
   if (!cartItems) return null;
 
   const { calcDiscountsData } = await calculateDiscounts();

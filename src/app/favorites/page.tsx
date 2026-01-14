@@ -18,6 +18,7 @@ async function FavoritesPage(
   const currentPage = Number(filters.page ?? 1)
 
   const { favoritesData } = await getFavorites({ page: currentPage, limit: pageSize })
+  console.log(favoritesData)
   if (!favoritesData) return null
 
   return (
@@ -54,7 +55,7 @@ async function FavoritesPage(
             <PaginationWithLinks
               page={currentPage}
               pageSize={pageSize}
-              totalCount={favoritesData.aggregate._count}
+              totalCount={favoritesData.metadata._count}
             />
           </div>
 
