@@ -13,15 +13,13 @@ interface CartData {
 
 interface CartResponse {
   cartData?: CartData;
-  error?: any;
+  error?: ErrorResponse;
 }
 
 export async function getCart(): Promise<CartResponse> {
   const token = cookies().get('access-token')?.value ?? ''
-  const userSession = getPayload(token)
-  const userId = userSession?.id
 
-  const res = await fetch(`${BACKEND_URL}/users/${userId}/cart`, {
+  const res = await fetch(`${BACKEND_URL}/me/cart`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -32,8 +30,8 @@ export async function getCart(): Promise<CartResponse> {
     }
   })
   if (res.ok) {
-    const cart = await res.json()
-    return { cartData: cart }
+    const cartData = await res.json()
+    return { cartData }
   }
   const error = await res.json()
   return { error }
@@ -45,10 +43,7 @@ export async function addCartItem(
   quantity: number,
 ) {
   const token = cookies().get('access-token')?.value ?? ''
-  const { cartData, error: cartError } = await getCart()
-  if (!cartData) return { error: cartError }
-
-  const res = await fetch(`${BACKEND_URL}/cart/${cartData.cart.id}/cart-items`, {
+  const res = await fetch(`${BACKEND_URL}/me/cart-items`, {
     method: "POST",
     credentials: 'include',
     headers: {
@@ -72,12 +67,12 @@ export async function addCartItem(
 
 interface CartItemsResponse {
   cartItems?: CartItem[];
-  error?: any;
+  error?: ErrorResponse;
 }
 
-export async function getCartItems(cartId: number): Promise<CartItemsResponse> {
+export async function getCartItems(): Promise<CartItemsResponse> {
   const token = cookies().get('access-token')?.value ?? ''
-  const res = await fetch(`${BACKEND_URL}/cart/${cartId}/cart-items`, {
+  const res = await fetch(`${BACKEND_URL}/me/cart-items`, {
     credentials: 'include',
     method: "GET",
     headers: {
@@ -103,7 +98,7 @@ interface OneCartItemResponse {
 export async function updateCartItemQuantity(quantity: number, cartItemId: number, cartId: number): Promise<OneCartItemResponse> {
   const token = cookies().get('access-token')?.value ?? ''
 
-  const res = await fetch(`${BACKEND_URL}/cart/${cartId}/cart-items/${cartItemId}`, {
+  const res = await fetch(`${BACKEND_URL}/me/cart-items/${cartItemId}`, {
     method: 'PATCH',
     credentials: 'include',
     headers: {
@@ -129,7 +124,7 @@ export async function updateCartItemQuantity(quantity: number, cartItemId: numbe
 export async function deleteCartItem(cartId: number, cartItemId: number): Promise<OneCartItemResponse> {
   const token = cookies().get('access-token')?.value ?? ''
 
-  const res = await fetch(`${BACKEND_URL}/cart/${cartId}/cart-items/${cartItemId}`, {
+  const res = await fetch(`${BACKEND_URL}/me/cart-items/${cartItemId}`, {
     method: 'DELETE',
     credentials: 'include',
     headers: {
@@ -169,11 +164,8 @@ interface CalcDiscountsResponse {
 
 export async function calculateDiscounts(): Promise<CalcDiscountsResponse> {
   const token = cookies().get('access-token')?.value ?? ''
-  const userSession = getPayload(token)
-  const userId = userSession?.id
-  //TODO: handle error if userId is null
   //
-  const res = await fetch(`${BACKEND_URL}/users/${userId}/cart/total-discount`, {
+  const res = await fetch(`${BACKEND_URL}/me/cart/total-discount`, {
     credentials: 'include',
     method: "GET",
     headers: {

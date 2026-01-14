@@ -1,10 +1,10 @@
 'use server'
-import { BACKEND_URL } from "@/queries/constants"
-import { revalidatePath } from "next/cache"
-import { cookies } from "next/headers"
-import { getPayload } from "../jwt-decode"
-import { User } from "@/interfaces/users"
-import { ErrorResponse } from "@/interfaces/responses"
+import {BACKEND_URL} from "@/queries/constants"
+import {revalidatePath} from "next/cache"
+import {cookies} from "next/headers"
+import {getPayload} from "../jwt-decode"
+import {User} from "@/interfaces/users"
+import {ErrorResponse} from "@/interfaces/responses"
 
 export async function logOut() {
   const cookieStore = cookies()
@@ -41,7 +41,6 @@ export async function logIn(
     revalidatePath('/', 'layout')
     return {
       access_token: data,
-      error: undefined
     }
   }
   const error = await res.json()

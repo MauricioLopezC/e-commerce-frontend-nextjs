@@ -4,15 +4,16 @@ import { BACKEND_URL } from "@/queries/constants"
 import { getPayload } from "../jwt-decode"
 import { Favorite } from "@/interfaces/favorites"
 import { revalidatePath } from "next/cache"
+import { ErrorResponse } from "@/interfaces/responses";
 
 interface FavoritesData {
   favorites: Favorite[];
-  aggregate: { _count: number };
+  metadata: { _count: number };
 }
 
 interface FavoritesResponse {
   favoritesData?: FavoritesData;
-  error?: any
+  error?: ErrorResponse
 }
 
 interface GetFavoritesOptions {
@@ -22,9 +23,7 @@ interface GetFavoritesOptions {
 }
 
 export async function getFavorites(options: GetFavoritesOptions): Promise<FavoritesResponse> {
-  const token = cookies().get('access-token')?.value
-  if (!token) return { error: { message: 'user not logged in' } }
-  const user = getPayload(token)
+  const token = cookies().get('access-token')?.value ?? ''
 
   const queryParams = new URLSearchParams()
   let key: keyof GetFavoritesOptions
@@ -35,7 +34,7 @@ export async function getFavorites(options: GetFavoritesOptions): Promise<Favori
     }
   }
 
-  const res = await fetch(`${BACKEND_URL}/users/${user?.id}/favorites?${queryParams.toString()}`, {
+  const res = await fetch(`${BACKEND_URL}/me/favorites?${queryParams.toString()}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -50,7 +49,7 @@ export async function getFavorites(options: GetFavoritesOptions): Promise<Favori
     }
   }
 
-  const error = res.json()
+  const error = await res.json()
   return {
     error
   }
@@ -59,14 +58,13 @@ export async function getFavorites(options: GetFavoritesOptions): Promise<Favori
 
 interface CreateOrDeleteFavoriteResponse {
   favorite?: Favorite;
-  error?: any
+  error?: ErrorResponse
 }
 
 export async function addFavorite(productId: number): Promise<CreateOrDeleteFavoriteResponse> {
-  const token = cookies().get('access-token')?.value
-  const user = getPayload(token ?? '')
+  const token = cookies().get('access-token')?.value ?? ''
 
-  const res = await fetch(`${BACKEND_URL}/users/${user?.id}/favorites`, {
+  const res = await fetch(`${BACKEND_URL}/me/favorites`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -91,10 +89,9 @@ export async function addFavorite(productId: number): Promise<CreateOrDeleteFavo
 }
 
 export async function deleteFavorite(favoriteId: number) {
-  const token = cookies().get('access-token')?.value
-  const user = getPayload(token ?? '')
+  const token = cookies().get('access-token')?.value ?? ''
 
-  const res = await fetch(`${BACKEND_URL}/users/${user?.id}/favorites/${favoriteId}`, {
+  const res = await fetch(`${BACKEND_URL}/me/favorites/${favoriteId}`, {
     method: 'DELETE',
     credentials: 'include',
     headers: {
@@ -103,9 +100,9 @@ export async function deleteFavorite(favoriteId: number) {
   })
   revalidatePath('/favorites')
   if (res.ok) {
-    const data = await res.json()
+    const favorite = await res.json()
     return {
-      favorite: data
+      favorite
     }
   }
   const error = res.json()

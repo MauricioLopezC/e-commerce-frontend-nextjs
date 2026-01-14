@@ -13,6 +13,6 @@ export async function isAdminAction(): Promise<boolean> {
   const token = cookieStore.get('access-token')
   if (!token) return false
   const user = getPayload(token?.value ?? '')
-  if (user.role !== 'ADMIN') return false
+  if (user !== null && user.role !== 'ADMIN') return false
   return true
 }

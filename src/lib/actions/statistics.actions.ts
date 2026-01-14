@@ -42,7 +42,7 @@ export async function salesByMonth(startDate: Date, endDate: Date): Promise<Sale
 }
 
 export async function salesByUser(): Promise<SalesByUserResponse> {
-  const token = cookies().get("access-token")?.value;
+  const token = cookies().get("access-token")?.value ?? '';
 
   const res = await fetch(`${BACKEND_URL}/statistics/sales/by-user`, {
     method: 'GET',

@@ -1,8 +1,9 @@
 'use server'
-import { Product } from "@/interfaces/products/product"
-import { BACKEND_URL } from "@/queries/constants"
-import { revalidateTag } from "next/cache"
-import { cookies } from "next/headers"
+import {Product} from "@/interfaces/products/product"
+import {BACKEND_URL} from "@/queries/constants"
+import {revalidateTag} from "next/cache"
+import {cookies} from "next/headers"
+import {ErrorResponse} from "@/interfaces/responses";
 
 interface GetProductsOptions {
   limit?: number;
@@ -20,12 +21,12 @@ interface ProductsData {
 
 interface AllProductsResponse {
   productsData?: ProductsData;
-  error?: any;
+  error?: ErrorResponse;
 }
 
 interface OneProductResponse {
   product?: Product;
-  error?: any;
+  error?: ErrorResponse;
 }
 
 interface CreateProductDto {
@@ -184,7 +185,7 @@ export async function replaceProductCategories(productId: number, categoryIds: n
       "Content-Type": "application/json",
       Cookie: `access-token=${token}`
     },
-    body: JSON.stringify({ categoryIds })
+    body: JSON.stringify({categoryIds})
   })
   revalidateTag('product')
   revalidateTag('products')

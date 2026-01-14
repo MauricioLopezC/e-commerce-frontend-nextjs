@@ -22,7 +22,7 @@ interface AllProductSkusResponse {
 }
 
 export async function createProductSku(createProductSkuDto: CreateProductSkuDto, productId: number) {
-  const token = cookies().get('access-token')?.value
+  const token = cookies().get('access-token')?.value ?? ''
   const res = await fetch(`${BACKEND_URL}/products/${productId}/product-skus`, {
     method: 'POST',
     credentials: 'include',

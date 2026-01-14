@@ -1,18 +1,19 @@
 "use server";
-import { cookies } from "next/headers";
-import { BACKEND_URL } from "@/queries/constants";
-import { getPayload } from "../jwt-decode";
-import { Order } from "@/interfaces/orders";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { ErrorResponse } from "@/interfaces/responses";
+import {cookies} from "next/headers";
+import {BACKEND_URL} from "@/queries/constants";
+import {getPayload} from "../jwt-decode";
+import {Order} from "@/interfaces/orders";
+import {revalidatePath, revalidateTag} from "next/cache";
+import {ErrorResponse} from "@/interfaces/responses";
 
 export interface OrdersData {
   orders: Order[];
   metadata: { _sum: { total: number, finalTotal: number }; _count: number };
 }
+
 interface OrdersResponse {
   ordersData?: OrdersData;
-  error?: any;
+  error?: ErrorResponse;
 }
 
 interface OneOrderResponse {
@@ -30,7 +31,7 @@ interface GetOrdersOptions {
 export async function getAllOrders(
   options: GetOrdersOptions
 ): Promise<OrdersResponse> {
-  const token = cookies().get("access-token")?.value;
+  const token = cookies().get("access-token")?.value ?? '';
 
   const queryParams = new URLSearchParams();
   let key: keyof GetOrdersOptions;
@@ -73,9 +74,7 @@ interface CreateOrderDto {
 }
 
 export async function createOrder(data: CreateOrderDto): Promise<OneOrderResponse> {
-  const token = cookies().get("access-token")?.value;
-  const user = getPayload(token ?? "");
-  if (!user) return { error: { statusCode: 401, message: "Error al obtener usuario" } };
+  const token = cookies().get("access-token")?.value ?? '';
 
   const shipping = {
     country: data.country,
@@ -84,10 +83,10 @@ export async function createOrder(data: CreateOrderDto): Promise<OneOrderRespons
     address: data.address,
   };
 
-  const payment = { provider: data.provider };
+  const payment = {provider: data.provider};
   const email = data.email
 
-  const res = await fetch(`${BACKEND_URL}/users/${user.id}/orders`, {
+  const res = await fetch(`${BACKEND_URL}/me/orders`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -115,11 +114,9 @@ export async function createOrder(data: CreateOrderDto): Promise<OneOrderRespons
 }
 
 export async function getUserOrders(): Promise<OrdersResponse> {
-  const token = cookies().get("access-token")?.value;
-  const user = getPayload(token ?? "");
-  if (!user) return { error: { statusCode: 401, message: "no logeado" } };
+  const token = cookies().get("access-token")?.value ?? '';
 
-  const res = await fetch(`${BACKEND_URL}/users/${user.id}/orders`, {
+  const res = await fetch(`${BACKEND_URL}/me/orders`, {
     method: "GET",
     credentials: "include",
     headers: {
@@ -128,10 +125,10 @@ export async function getUserOrders(): Promise<OrdersResponse> {
   });
   if (res.ok) {
     const ordersData = await res.json();
-    return { ordersData };
+    return {ordersData};
   }
   const error = await res.json();
-  return { error };
+  return {error};
 }
 
 export async function updateOrderStatus(
@@ -147,14 +144,14 @@ export async function updateOrderStatus(
       "Content-Type": "application/json",
       Cookie: `access-token=${token}`,
     },
-    body: JSON.stringify({ status: status }),
+    body: JSON.stringify({status: status}),
   });
   revalidateTag("orders");
   if (res.ok) {
     const order = await res.json();
-    return { order };
+    return {order};
   }
   const error = await res.json();
-  return { error };
+  return {error};
 }
 
