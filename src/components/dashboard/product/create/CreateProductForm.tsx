@@ -43,7 +43,7 @@ const formSchema = z.object({
   categoryId: z.coerce.number().int().positive(),
   sex: z.nativeEnum(Sex),
   description: z.string().min(2).max(100),
-  variations: z.array(pVariationsSchema).min(1)
+  variations: z.array(pVariationsSchema).min(1).max(10)
 })
 
 function CreateProductForm({ categories }: { categories: Category[] }) {

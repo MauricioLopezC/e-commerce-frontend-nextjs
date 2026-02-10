@@ -60,6 +60,7 @@ function LoginPage() {
     const { access_token, error } = await logIn(email, password)
     if (access_token) {
       setIsOpen(true)
+      return
     }
 
     if (error?.statusCode === 401) {
@@ -68,6 +69,10 @@ function LoginPage() {
 
     if (error?.statusCode === 403) {
       setErrorMessage("Has sido bloqueado no puedes ingresar a tu cuenta")
+    }
+
+    if (error?.statusCode === 429) {
+      setErrorMessage("Demasiadas solicitudes, intenta nuevamente en 1 minuto")
     }
   }
 
