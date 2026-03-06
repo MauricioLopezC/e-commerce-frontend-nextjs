@@ -1,16 +1,16 @@
-"use client"
+'use client';
 
-import { Bar, BarChart, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { SalesByProduct } from "@/interfaces/statistics"
+} from '@/components/ui/chart';
+import { SalesByProduct } from '@/interfaces/statistics';
 
-export const description = "A bar chart with a custom label"
+export const description = 'A bar chart with a custom label';
 
 // const chartConfig = {
 //   desktop: {
@@ -19,28 +19,28 @@ export const description = "A bar chart with a custom label"
 //   },
 // } satisfies ChartConfig
 
-
 const chartConfig = {
   desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
+    label: 'Desktop',
+    color: 'hsl(var(--chart-1))',
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 interface ChartData {
-  product: string
-  total: number
+  product: string;
+  total: number;
 }
 
 interface SalesByProductChartProps {
-  salesByProduct: SalesByProduct[]
+  salesByProduct: SalesByProduct[];
 }
 
-export function SalesByProductChart({ salesByProduct: salesByCategory }: SalesByProductChartProps) {
-
+export function SalesByProductChart({
+  salesByProduct: salesByCategory,
+}: SalesByProductChartProps) {
   const chartData: ChartData[] = salesByCategory.map((item) => {
-    return { product: item.name, total: item.total }
-  })
+    return { product: item.name, total: item.total };
+  });
   // const maxVentas = Math.max(...salesByCategory.map(item => item.total))
 
   return (
@@ -49,9 +49,9 @@ export function SalesByProductChart({ salesByProduct: salesByCategory }: SalesBy
         accessibilityLayer
         data={chartData}
         layout="vertical"
-      // margin={{
-      //   left: -20,
-      // }}
+        // margin={{
+        //   left: -20,
+        // }}
       >
         <XAxis type="number" dataKey="total" hide />
         <YAxis
@@ -65,8 +65,13 @@ export function SalesByProductChart({ salesByProduct: salesByCategory }: SalesBy
           cursor={false}
           content={<ChartTooltipContent hideLabel />}
         />
-        <Bar dataKey="total" fill="var(--color-desktop)" radius={5} name={"Total"} />
+        <Bar
+          dataKey="total"
+          fill="var(--color-desktop)"
+          radius={5}
+          name={'Total'}
+        />
       </BarChart>
     </ChartContainer>
-  )
+  );
 }

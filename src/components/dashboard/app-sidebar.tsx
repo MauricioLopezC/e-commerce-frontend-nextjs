@@ -1,4 +1,4 @@
-import { Home, Shirt, Package, UsersRound, TicketPercent } from "lucide-react"
+import { Home, Shirt, Package, UsersRound, TicketPercent } from 'lucide-react';
 
 import {
   Sidebar,
@@ -9,37 +9,37 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import Link from "next/link"
+} from '@/components/ui/sidebar';
+import Link from 'next/link';
 
 // Menu items.
 const items = [
   {
-    title: "Home",
-    url: "/dashboard",
+    title: 'Home',
+    url: '/dashboard',
     icon: Home,
   },
   {
-    title: "Productos",
-    url: "/dashboard/products",
+    title: 'Productos',
+    url: '/dashboard/products',
     icon: Shirt,
   },
   {
-    title: "Pedidos",
-    url: "/dashboard/orders",
+    title: 'Pedidos',
+    url: '/dashboard/orders',
     icon: Package,
   },
   {
-    title: "Clientes",
-    url: "/dashboard/users",
+    title: 'Clientes',
+    url: '/dashboard/users',
     icon: UsersRound,
   },
   {
-    title: "Descuentos",
-    url: "/dashboard/promotions",
+    title: 'Descuentos',
+    url: '/dashboard/promotions',
     icon: TicketPercent,
   },
-]
+];
 
 export function AppSidebar() {
   //NOTE: absolute and h-full are neccessary for put sidebar
@@ -66,5 +66,5 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }

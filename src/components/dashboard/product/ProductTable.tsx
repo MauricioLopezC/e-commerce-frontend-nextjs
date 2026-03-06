@@ -1,36 +1,53 @@
-'use client'
-import {CldImage} from 'next-cloudinary'
+'use client';
+import { CldImage } from 'next-cloudinary';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu';
 
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card'
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table'
-import {Button} from '@/components/ui/button'
-import {CheckCircleIcon, MoreHorizontal} from 'lucide-react'
-import {Product} from '@/interfaces/products/product'
-import {useRouter} from 'next/navigation'
-import {peso} from '@/lib/constants'
-import {useState} from 'react'
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { CheckCircleIcon, MoreHorizontal } from 'lucide-react';
+import { Product } from '@/interfaces/products/product';
+import { useRouter } from 'next/navigation';
+import { peso } from '@/lib/constants';
+import { useState } from 'react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter,
+  AlertDialogDescription,
+  AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
-} from "@/components/ui/alert-dialog";
-import {deleteProduct} from "@/lib/actions/product.actions";
-import {useToast} from "@/hooks/use-toast";
-import {XMarkIcon} from "@heroicons/react/24/outline";
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { deleteProduct } from '@/lib/actions/product.actions';
+import { useToast } from '@/hooks/use-toast';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
-function ProductsTable({products}: { products: Product[] }) {
-  const router = useRouter()
-  const [confirmData, setConfirmData] = useState<Product | null>(null)
-  const {toast} = useToast()
+function ProductsTable({ products }: { products: Product[] }) {
+  const router = useRouter();
+  const [confirmData, setConfirmData] = useState<Product | null>(null);
+  const { toast } = useToast();
 
   function closeConfirm() {
     setConfirmData(null);
@@ -38,34 +55,40 @@ function ProductsTable({products}: { products: Product[] }) {
 
   async function handleConfirm() {
     if (confirmData) {
-      const {product: deletedProduct, error} = await deleteProduct(confirmData.id)
-      console.log(deletedProduct, error)
+      const { product: deletedProduct, error } = await deleteProduct(
+        confirmData.id,
+      );
+      console.log(deletedProduct, error);
       if (error) {
         toast({
           description: (
             <div>
               <h2 className="font-semibold text-md">
-                <span><XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline"/></span>
+                <span>
+                  <XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline" />
+                </span>
                 Error al eliminar
               </h2>
             </div>
           ),
-        })
+        });
       }
 
       toast({
         description: (
           <div>
             <h2 className="font-semibold text-md">
-              <span><CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline"/></span>
+              <span>
+                <CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" />
+              </span>
               Producto eliminado
             </h2>
           </div>
         ),
-      })
+      });
     }
 
-    closeConfirm()
+    closeConfirm();
   }
 
   return (
@@ -84,79 +107,67 @@ function ProductsTable({products}: { products: Product[] }) {
                 <span className="sr-only">Image</span>
               </TableHead>
               <TableHead>Nombre</TableHead>
-              <TableHead className="hidden md:table-cell">
-                Precio
-              </TableHead>
+              <TableHead className="hidden md:table-cell">Precio</TableHead>
               <TableHead className="hidden md:table-cell">
                 Ventas totales
               </TableHead>
-              <TableHead className="hidden md:table-cell">
-                Recaudado
-              </TableHead>
-              <TableHead className="hidden md:table-cell">
-                Creado el
-              </TableHead>
+              <TableHead className="hidden md:table-cell">Recaudado</TableHead>
+              <TableHead className="hidden md:table-cell">Creado el</TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {
-              products.map((product, idx) => (
-                <TableRow key={idx}>
-                  <TableCell className="hidden sm:table-cell">
-                    <CldImage
-                      alt="Product image"
-                      className="aspect-square rounded-md object-cover"
-                      height="64"
-                      src={product.images[0]?.imgSrc ?? 'samples/animals/cat'}
-                      width="64"
-                    />
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {product.name}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {peso.format(product.price)}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {product.unitsOnOrder}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {peso.format(product.totalCollected)}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {new Date(product.createdAt).toLocaleDateString('es-AR')}
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          aria-haspopup="true"
-                          size="icon"
-                          variant="ghost"
-                        >
-                          <MoreHorizontal className="h-4 w-4"/>
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Opciones</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => {
-                          router.push(`/dashboard/products/edit/${product.id}`)
-                        }}>
-                          Editar
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setConfirmData(product)}>
-                          Eliminar
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))
-            }
+            {products.map((product, idx) => (
+              <TableRow key={idx}>
+                <TableCell className="hidden sm:table-cell">
+                  <CldImage
+                    alt="Product image"
+                    className="aspect-square rounded-md object-cover"
+                    height="64"
+                    src={product.images[0]?.imgSrc ?? 'samples/animals/cat'}
+                    width="64"
+                  />
+                </TableCell>
+                <TableCell className="font-medium">{product.name}</TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {peso.format(product.price)}
+                </TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {product.unitsOnOrder}
+                </TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {peso.format(product.totalCollected)}
+                </TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {new Date(product.createdAt).toLocaleDateString('es-AR')}
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button aria-haspopup="true" size="icon" variant="ghost">
+                        <MoreHorizontal className="h-4 w-4" />
+                        <span className="sr-only">Toggle menu</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Opciones</DropdownMenuLabel>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          router.push(`/dashboard/products/edit/${product.id}`);
+                        }}
+                      >
+                        Editar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setConfirmData(product)}>
+                        Eliminar
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </CardContent>
@@ -169,9 +180,12 @@ function ProductsTable({products}: { products: Product[] }) {
           <AlertDialog open={true} onOpenChange={closeConfirm}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>¿Estás completamente seguro?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  ¿Estás completamente seguro?
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  Esta acción no se puede deshacer. Eliminará permanentemente al usuario.
+                  Esta acción no se puede deshacer. Eliminará permanentemente al
+                  usuario.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -183,10 +197,9 @@ function ProductsTable({products}: { products: Product[] }) {
             </AlertDialogContent>
           </AlertDialog>
         )}
-
       </CardFooter>
     </Card>
-  )
+  );
 }
 
-export default ProductsTable
+export default ProductsTable;

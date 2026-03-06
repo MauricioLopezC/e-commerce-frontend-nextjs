@@ -1,9 +1,9 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Discount } from "@/interfaces/discounts";
-import { ChevronRight, TicketPercent, X } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+'use client';
+import { Button } from '@/components/ui/button';
+import { Discount } from '@/interfaces/discounts';
+import { ChevronRight, TicketPercent, X } from 'lucide-react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 interface TimeLeft {
   days: number;
@@ -13,12 +13,16 @@ interface TimeLeft {
   isExpired: boolean;
 }
 
-export default function DiscountBanner({ discounts }: { discounts: Discount[] }) {
+export default function DiscountBanner({
+  discounts,
+}: {
+  discounts: Discount[];
+}) {
   if (discounts.length === 0) {
     return null;
   }
 
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
@@ -27,8 +31,8 @@ export default function DiscountBanner({ discounts }: { discounts: Discount[] })
     seconds: 0,
     isExpired: false,
   });
-  const discount = discounts[currentIndex]
-  const saleEndDate = new Date(discount.endDate)
+  const discount = discounts[currentIndex];
+  const saleEndDate = new Date(discount.endDate);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -36,12 +40,20 @@ export default function DiscountBanner({ discounts }: { discounts: Discount[] })
       const difference = saleEndDate.getTime() - now.getTime();
 
       if (difference <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true });
+        setTimeLeft({
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+          isExpired: true,
+        });
         return;
       }
 
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const hours = Math.floor(
+        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+      );
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
@@ -91,15 +103,15 @@ export default function DiscountBanner({ discounts }: { discounts: Discount[] })
                   </span>
                 )}
                 <span className="flex h-8 items-center justify-center p-2">
-                  {timeLeft.hours.toString().padStart(2, "0")}
+                  {timeLeft.hours.toString().padStart(2, '0')}
                   <span className="text-muted-foreground">h</span>
                 </span>
                 <span className="flex h-8 items-center justify-center p-2">
-                  {timeLeft.minutes.toString().padStart(2, "0")}
+                  {timeLeft.minutes.toString().padStart(2, '0')}
                   <span className="text-muted-foreground">m</span>
                 </span>
                 <span className="flex h-8 items-center justify-center p-2">
-                  {timeLeft.seconds.toString().padStart(2, "0")}
+                  {timeLeft.seconds.toString().padStart(2, '0')}
                   <span className="text-muted-foreground">s</span>
                 </span>
               </div>
@@ -113,7 +125,11 @@ export default function DiscountBanner({ discounts }: { discounts: Discount[] })
           variant="ghost"
           size="icon"
           className="text-white hover:text-white/80"
-          onClick={() => setCurrentIndex(prev => (prev < discounts.length - 1 ? prev + 1 : 0))}
+          onClick={() =>
+            setCurrentIndex((prev) =>
+              prev < discounts.length - 1 ? prev + 1 : 0,
+            )
+          }
         >
           <ChevronRight className="h-4 w-4" />
         </Button>

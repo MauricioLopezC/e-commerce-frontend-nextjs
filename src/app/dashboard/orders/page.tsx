@@ -1,26 +1,27 @@
-import OrdersTableDashBoard from "@/components/dashboard/orders/OrdersTableDashboard"
-import OrderSummaryDashboard from "@/components/dashboard/orders/OrderSummaryDashboard"
-import OrdersFilters from "@/components/dashboard/orders/OrdersFilters"
-import OrdersOrderByMenu from "@/components/dashboard/orders/OrdersOrderBy"
-import { PaginationWithLinks } from "@/components/ui/paginations-with-links"
-import { getAllOrders } from "@/lib/actions/order.actions"
-import SerchEmails from "@/components/dashboard/orders/SearchEmails"
+import OrdersTableDashBoard from '@/components/dashboard/orders/OrdersTableDashboard';
+import OrderSummaryDashboard from '@/components/dashboard/orders/OrderSummaryDashboard';
+import OrdersFilters from '@/components/dashboard/orders/OrdersFilters';
+import OrdersOrderByMenu from '@/components/dashboard/orders/OrdersOrderBy';
+import { PaginationWithLinks } from '@/components/ui/paginations-with-links';
+import { getAllOrders } from '@/lib/actions/order.actions';
+import SerchEmails from '@/components/dashboard/orders/SearchEmails';
 
-
-async function OrdersPageDashboard(
-  { searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }
-) {
-  const query = await searchParams
-  const pageSize = Number(query.limit ?? 10)
-  const currentPage = Number(query.page ?? 1)
+async function OrdersPageDashboard({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const query = await searchParams;
+  const pageSize = Number(query.limit ?? 10);
+  const currentPage = Number(query.page ?? 1);
 
   const { ordersData } = await getAllOrders({
     ...query,
     page: currentPage,
     limit: pageSize,
-  })
+  });
 
-  if (!ordersData) return null
+  if (!ordersData) return null;
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <div className="flex flex-col sm:gap-4 sm:py-4 ">
@@ -44,7 +45,7 @@ async function OrdersPageDashboard(
         </main>
       </div>
     </div>
-  )
+  );
 }
 
-export default OrdersPageDashboard
+export default OrdersPageDashboard;

@@ -1,14 +1,14 @@
-'use client'
-import { Image } from "@/interfaces/products/image"
-import { CldImage } from "next-cloudinary"
-import { useState } from "react"
+'use client';
+import { Image } from '@/interfaces/products/image';
+import { CldImage } from 'next-cloudinary';
+import { useState } from 'react';
 
 interface CarouselProps {
-  images: Image[]
+  images: Image[];
 }
 
 function Carousel({ images }: CarouselProps) {
-  const [mainImage, setMainImage] = useState<string>(images[0].imgSrc)
+  const [mainImage, setMainImage] = useState<string>(images[0].imgSrc);
   return (
     <div className="space-y-4">
       {/* Main image */}
@@ -40,7 +40,7 @@ function Carousel({ images }: CarouselProps) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default Carousel
+export default Carousel;

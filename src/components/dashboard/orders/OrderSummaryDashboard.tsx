@@ -1,12 +1,12 @@
-"use client"
+'use client';
 import {
   Copy,
   CreditCard,
   Truck,
   MoreVertical,
   CircleCheckBig,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -14,7 +14,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,31 +22,29 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Separator } from "@/components/ui/separator"
-import { Order } from "@/interfaces/orders"
-import { useOrdersStore } from "@/store/order-page-store"
-import { peso } from "@/lib/constants"
-import { updateOrderStatus } from "@/lib/actions/order.actions"
-import { useToast } from "@/hooks/use-toast"
+} from '@/components/ui/dropdown-menu';
+import { Separator } from '@/components/ui/separator';
+import { Order } from '@/interfaces/orders';
+import { useOrdersStore } from '@/store/order-page-store';
+import { peso } from '@/lib/constants';
+import { updateOrderStatus } from '@/lib/actions/order.actions';
+import { useToast } from '@/hooks/use-toast';
 
 export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
-  const { toast } = useToast()
-  const selectedOrderId = useOrdersStore((state) => state.orderId)
+  const { toast } = useToast();
+  const selectedOrderId = useOrdersStore((state) => state.orderId);
 
-  const order = orders.find((order) => (
-    order.id === selectedOrderId
-  ))
+  const order = orders.find((order) => order.id === selectedOrderId);
 
   if (!order) {
     return (
       <div className="p-8 text-center text-muted-foreground">
         Selecciona una orden para ver detalles
       </div>
-    )
+    );
   }
 
-  const orderItems = order.orderItems
+  const orderItems = order.orderItems;
   return (
     <Card className="overflow-hidden">
       <CardHeader className="flex flex-row items-start bg-muted/50">
@@ -62,7 +60,9 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
               <span className="sr-only">Copy Order ID</span>
             </Button>
           </CardTitle>
-          <CardDescription>{new Date(order.createdAt).toLocaleString('es-AR')}</CardDescription>
+          <CardDescription>
+            {new Date(order.createdAt).toLocaleString('es-AR')}
+          </CardDescription>
         </div>
         <div className="ml-auto flex items-center gap-1">
           <Button size="sm" variant="outline" className="h-8 gap-1">
@@ -85,74 +85,97 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
               <DropdownMenuItem
                 className="gap-1.5"
                 onClick={async () => {
-                  const { order: createdOrder, error } = await updateOrderStatus(order.id, "COMPLETED")
-                  console.log(createdOrder, error)
+                  const { order: createdOrder, error } =
+                    await updateOrderStatus(order.id, 'COMPLETED');
+                  console.log(createdOrder, error);
                   if (createdOrder) {
                     toast({
                       description: (
                         <div>
                           <h2 className="font-semibold text-md">
-                            <span><CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" /></span>
+                            <span>
+                              <CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" />
+                            </span>
                             Estado actualizado a {createdOrder.status}
                           </h2>
                         </div>
                       ),
-                    })
+                    });
                   }
-                }}>
-                {order.status === 'COMPLETED' &&
-                  <span className="size-1.5 rounded-full bg-black" aria-hidden="true"></span>
-                }
+                }}
+              >
+                {order.status === 'COMPLETED' && (
+                  <span
+                    className="size-1.5 rounded-full bg-black"
+                    aria-hidden="true"
+                  ></span>
+                )}
                 COMPLETADO
               </DropdownMenuItem>
 
               <DropdownMenuItem
                 className="gap-1.5"
                 onClick={async () => {
-                  const { order: createdOrder } = await updateOrderStatus(order.id, "IN_PROGRESS")
-                  console.log(createdOrder)
+                  const { order: createdOrder } = await updateOrderStatus(
+                    order.id,
+                    'IN_PROGRESS',
+                  );
+                  console.log(createdOrder);
                   if (createdOrder) {
                     toast({
                       description: (
                         <div>
                           <h2 className="font-semibold text-md">
-                            <span><CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" /></span>
+                            <span>
+                              <CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" />
+                            </span>
                             Estado actualizado a {createdOrder.status}
                           </h2>
                         </div>
                       ),
-                    })
+                    });
                   }
                 }}
               >
-                {order.status === 'IN_PROGRESS' &&
-                  <span className="size-1.5 rounded-full bg-black" aria-hidden="true"></span>
-                }
+                {order.status === 'IN_PROGRESS' && (
+                  <span
+                    className="size-1.5 rounded-full bg-black"
+                    aria-hidden="true"
+                  ></span>
+                )}
                 EN PROGRESO
               </DropdownMenuItem>
 
               <DropdownMenuItem
                 className="gap-1.5"
                 onClick={async () => {
-                  const { order: createdOrder } = await updateOrderStatus(order.id, "CANCELLED")
-                  console.log(createdOrder)
+                  const { order: createdOrder } = await updateOrderStatus(
+                    order.id,
+                    'CANCELLED',
+                  );
+                  console.log(createdOrder);
                   if (createdOrder) {
                     toast({
                       description: (
                         <div>
                           <h2 className="font-semibold text-md">
-                            <span><CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" /></span>
+                            <span>
+                              <CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" />
+                            </span>
                             Estado actualizado a {createdOrder.status}
                           </h2>
                         </div>
                       ),
-                    })
+                    });
                   }
                 }}
               >
-                {order.status === 'CANCELLED' &&
-                  <span className="size-1.5 rounded-full bg-black" aria-hidden="true"></span>
-                }
+                {order.status === 'CANCELLED' && (
+                  <span
+                    className="size-1.5 rounded-full bg-black"
+                    aria-hidden="true"
+                  ></span>
+                )}
                 CANCELADO
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -174,7 +197,7 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
               </li>
             ))}
           </ul>
-          {(order.discounts && order.discounts.length > 0) &&
+          {order.discounts && order.discounts.length > 0 && (
             <>
               <Separator className="my-2" />
               <div className="font-semibold">Descuentos</div>
@@ -182,14 +205,15 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
                 {order.discounts.map((discount, idx) => (
                   <li key={idx} className="flex items-center justify-between">
                     <span className="text-muted-foreground">
-                      {discount.discount.name} x <span>{discount.appliedTimes}</span>
+                      {discount.discount.name} x{' '}
+                      <span>{discount.appliedTimes}</span>
                     </span>
                     <span>{peso.format(discount.discountAmount)}</span>
                   </li>
                 ))}
               </ul>
             </>
-          }
+          )}
 
           <Separator className="my-2" />
           <ul className="grid gap-3">
@@ -198,7 +222,9 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
               <span>{peso.format(order.total)}</span>
             </li>
             <li className="flex items-center justify-between font-semibold">
-              <span className="text-muted-foreground">Importe de descuento</span>
+              <span className="text-muted-foreground">
+                Importe de descuento
+              </span>
               <span>{peso.format(order.discountAmount)}</span>
             </li>
             <li className="flex items-center justify-between font-semibold">
@@ -212,7 +238,9 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
           <div className="grid gap-3">
             <div className="font-semibold">Información de envío</div>
             <address className="grid gap-0.5 not-italic text-muted-foreground">
-              <span>{order.user?.firstName} {order.user?.lastName}</span>
+              <span>
+                {order.user?.firstName} {order.user?.lastName}
+              </span>
               <span>{order.shipping?.address}</span>
               <span>{order.shipping?.city}</span>
             </address>
@@ -224,13 +252,13 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
           <dl className="grid gap-3">
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Cliente</dt>
-              <dd>{order.user?.firstName} {order.user?.lastName}</dd>
+              <dd>
+                {order.user?.firstName} {order.user?.lastName}
+              </dd>
             </div>
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Email</dt>
-              <dd>
-                {order.user?.email}
-              </dd>
+              <dd>{order.user?.email}</dd>
             </div>
           </dl>
         </div>
@@ -250,9 +278,12 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
       </CardContent>
       <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
         <div className="text-xs text-muted-foreground">
-          Actualizado <time dateTime={new Date(order.createdAt).toLocaleDateString()}>{new Date(order.createdAt).toLocaleDateString()}</time>
+          Actualizado{' '}
+          <time dateTime={new Date(order.createdAt).toLocaleDateString()}>
+            {new Date(order.createdAt).toLocaleDateString()}
+          </time>
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }

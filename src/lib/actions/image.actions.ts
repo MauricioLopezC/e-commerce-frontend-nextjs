@@ -1,43 +1,45 @@
-"use server";
-import { cookies } from "next/headers";
-import { BACKEND_URL } from "@/queries/constants";
-import { revalidateTag } from "next/cache";
-import { ErrorResponse } from "@/interfaces/responses";
+'use server';
+import { cookies } from 'next/headers';
+import { BACKEND_URL } from '@/queries/constants';
+import { revalidateTag } from 'next/cache';
+import { ErrorResponse } from '@/interfaces/responses';
 
 interface ImageData {
-  url: string
+  url: string;
 }
 interface UploadImageResponse {
-  imageData?: ImageData
-  error?: ErrorResponse
+  imageData?: ImageData;
+  error?: ErrorResponse;
 }
 
-export async function uploadImage(formData: FormData): Promise<UploadImageResponse> {
-  console.log(formData)
+export async function uploadImage(
+  formData: FormData,
+): Promise<UploadImageResponse> {
+  console.log(formData);
   if (
-    !formData.has("file") ||
-    !formData.has("productId") ||
-    !formData.has("productSkuId")
+    !formData.has('file') ||
+    !formData.has('productId') ||
+    !formData.has('productSkuId')
   ) {
     return {
       error: {
         statusCode: 400,
-        message: "Error: some formData properties are missing",
+        message: 'Error: some formData properties are missing',
       },
     };
   }
 
-  const token = cookies().get("access-token")?.value;
+  const token = cookies().get('access-token')?.value;
   const res = await fetch(`${BACKEND_URL}/images`, {
-    method: "POST",
-    credentials: "include",
+    method: 'POST',
+    credentials: 'include',
     headers: {
       Cookie: `access-token=${token}`,
     },
     body: formData,
   });
   if (res.ok) {
-    revalidateTag('product')
+    revalidateTag('product');
     const imageData = await res.json();
     return { imageData };
   }
@@ -46,20 +48,20 @@ export async function uploadImage(formData: FormData): Promise<UploadImageRespon
 }
 
 export async function deleteImage(imageId: number) {
-  const token = cookies().get("access-token")?.value;
+  const token = cookies().get('access-token')?.value;
   const res = await fetch(`${BACKEND_URL}/images/${imageId}`, {
-    method: "DELETE",
-    credentials: "include",
+    method: 'DELETE',
+    credentials: 'include',
     headers: {
       Cookie: `access-token=${token}`,
     },
   });
 
   if (res.ok) {
-    const data = await res.json()
-    return { data }
+    const data = await res.json();
+    return { data };
   }
 
-  const error = res.json()
-  return { error }
+  const error = res.json();
+  return { error };
 }

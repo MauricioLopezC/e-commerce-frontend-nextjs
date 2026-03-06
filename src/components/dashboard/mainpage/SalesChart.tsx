@@ -1,13 +1,13 @@
-"use client"
+'use client';
 
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { TotalSalesByMonth } from "@/interfaces/statistics"
+} from '@/components/ui/chart';
+import { TotalSalesByMonth } from '@/interfaces/statistics';
 
 // const chartData = [
 //   { month: "January", total_sales: 186 },
@@ -26,17 +26,21 @@ import { TotalSalesByMonth } from "@/interfaces/statistics"
 
 const chartConfig = {
   desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
+    label: 'Desktop',
+    color: 'hsl(var(--chart-1))',
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-function SalesChart({ AllSalesByMonth }: { AllSalesByMonth: TotalSalesByMonth[] }) {
+function SalesChart({
+  AllSalesByMonth,
+}: {
+  AllSalesByMonth: TotalSalesByMonth[];
+}) {
   const chartData = AllSalesByMonth.map((item) => {
-    const date = new Date(item.month)
-    const monthname = date.toLocaleString('es-AR', { month: 'long' })
-    return { month: monthname, total_sales: item.total_sales }
-  })
+    const date = new Date(item.month);
+    const monthname = date.toLocaleString('es-AR', { month: 'long' });
+    return { month: monthname, total_sales: item.total_sales };
+  });
   return (
     <ChartContainer config={chartConfig}>
       <BarChart accessibilityLayer data={chartData}>
@@ -52,9 +56,14 @@ function SalesChart({ AllSalesByMonth }: { AllSalesByMonth: TotalSalesByMonth[] 
           cursor={false}
           content={<ChartTooltipContent hideLabel />}
         />
-        <Bar dataKey="total_sales" fill="var(--color-desktop)" radius={8} name={"Total"} />
+        <Bar
+          dataKey="total_sales"
+          fill="var(--color-desktop)"
+          radius={8}
+          name={'Total'}
+        />
       </BarChart>
     </ChartContainer>
-  )
+  );
 }
-export default SalesChart
+export default SalesChart;

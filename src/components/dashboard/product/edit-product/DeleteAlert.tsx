@@ -7,11 +7,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { deleteProductSku } from "@/lib/actions/product-skus.actions"
-import { Dispatch, SetStateAction } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { TrashIcon } from "lucide-react";
+} from '@/components/ui/alert-dialog';
+import { deleteProductSku } from '@/lib/actions/product-skus.actions';
+import { Dispatch, SetStateAction } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { TrashIcon } from 'lucide-react';
 
 interface DeleteAlertProps {
   productId: number;
@@ -20,10 +20,19 @@ interface DeleteAlertProps {
   setDialogOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-function DeleteAlert({ productId, productSkuId, dialogOpen, setDialogOpen }: DeleteAlertProps) {
-  const { toast } = useToast()
+function DeleteAlert({
+  productId,
+  productSkuId,
+  dialogOpen,
+  setDialogOpen,
+}: DeleteAlertProps) {
+  const { toast } = useToast();
   return (
-    <AlertDialog defaultOpen={false} open={dialogOpen} onOpenChange={setDialogOpen}>
+    <AlertDialog
+      defaultOpen={false}
+      open={dialogOpen}
+      onOpenChange={setDialogOpen}
+    >
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>¿Está seguro de eliminar?</AlertDialogTitle>
@@ -33,24 +42,30 @@ function DeleteAlert({ productId, productSkuId, dialogOpen, setDialogOpen }: Del
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={async () => {
-            const res = await deleteProductSku(productId, productSkuId)
-            console.log(res)
-            toast({
-              description: (
-                <div>
-                  <h2 className="font-semibold text-md">
-                    <span><TrashIcon className="h-4 w-4 mr-2 text-red-500 inline" /></span>
-                    Variante elimindada
-                  </h2>
-                </div>
-              ),
-            })
-          }}>Eliminar</AlertDialogAction>
+          <AlertDialogAction
+            onClick={async () => {
+              const res = await deleteProductSku(productId, productSkuId);
+              console.log(res);
+              toast({
+                description: (
+                  <div>
+                    <h2 className="font-semibold text-md">
+                      <span>
+                        <TrashIcon className="h-4 w-4 mr-2 text-red-500 inline" />
+                      </span>
+                      Variante elimindada
+                    </h2>
+                  </div>
+                ),
+              });
+            }}
+          >
+            Eliminar
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }
 
-export default DeleteAlert
+export default DeleteAlert;

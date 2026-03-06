@@ -1,12 +1,16 @@
-import { calculateDiscounts, getCart, getCartItems } from "@/lib/actions/cart.actions"
-import { peso } from "@/lib/constants"
-import { Card, CardContent } from "@/components/ui/card";
-import TotalList from "@/components/cart-page/total-list";
-import CheckOutFormv2 from "@/components/checkout/CheckOutFormv2";
+import {
+  calculateDiscounts,
+  getCart,
+  getCartItems,
+} from '@/lib/actions/cart.actions';
+import { peso } from '@/lib/constants';
+import { Card, CardContent } from '@/components/ui/card';
+import TotalList from '@/components/cart-page/total-list';
+import CheckOutFormv2 from '@/components/checkout/CheckOutFormv2';
 
 async function CheckOutPage() {
-  const { cartData, error } = await getCart()
-  if (!cartData) return null
+  const { cartData, error } = await getCart();
+  if (!cartData) return null;
   const { cartItems } = await getCartItems();
   if (!cartItems) return null;
   //TODO: get user email for autofill
@@ -27,14 +31,17 @@ async function CheckOutPage() {
           <div className="lg:col-span-1">
             <Card className="sticky top-6 bg-gray-50">
               <CardContent className="p-6">
-                <TotalList cartTotal={cartData.metadata.cartTotal} calcDiscountsData={calcDiscountsData} />
+                <TotalList
+                  cartTotal={cartData.metadata.cartTotal}
+                  calcDiscountsData={calcDiscountsData}
+                />
               </CardContent>
             </Card>
           </div>
         </main>
       </div>
     </div>
-  )
+  );
 }
 
-export default CheckOutPage
+export default CheckOutPage;

@@ -8,12 +8,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import { Dispatch, SetStateAction } from "react";
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Dispatch, SetStateAction } from 'react';
 
 export interface AlertDialogProps {
-  isOpen: boolean
+  isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -32,5 +32,5 @@ export function NoStockAlertDialog({ isOpen, setIsOpen }: AlertDialogProps) {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

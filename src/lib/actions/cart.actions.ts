@@ -1,14 +1,14 @@
-'use server'
-import { cookies } from "next/headers"
-import { getPayload } from "../jwt-decode"
-import { revalidateTag } from "next/cache"
-import { BACKEND_URL } from "@/queries/constants"
-import { Cart, CartItem } from "@/interfaces/cart-item/cart"
-import { ErrorResponse } from "@/interfaces/responses"
+'use server';
+import { cookies } from 'next/headers';
+import { getPayload } from '../jwt-decode';
+import { revalidateTag } from 'next/cache';
+import { BACKEND_URL } from '@/queries/constants';
+import { Cart, CartItem } from '@/interfaces/cart-item/cart';
+import { ErrorResponse } from '@/interfaces/responses';
 
 interface CartData {
-  cart: Cart,
-  metadata: { cartTotal: number }
+  cart: Cart;
+  metadata: { cartTotal: number };
 }
 
 interface CartResponse {
@@ -17,24 +17,24 @@ interface CartResponse {
 }
 
 export async function getCart(): Promise<CartResponse> {
-  const token = cookies().get('access-token')?.value ?? ''
+  const token = cookies().get('access-token')?.value ?? '';
 
   const res = await fetch(`${BACKEND_URL}/me/cart`, {
     method: 'GET',
     credentials: 'include',
     headers: {
-      Cookie: `access-token=${token}`
+      Cookie: `access-token=${token}`,
     },
     next: {
-      tags: ['cart']
-    }
-  })
+      tags: ['cart'],
+    },
+  });
   if (res.ok) {
-    const cartData = await res.json()
-    return { cartData }
+    const cartData = await res.json();
+    return { cartData };
   }
-  const error = await res.json()
-  return { error }
+  const error = await res.json();
+  return { error };
 }
 
 export async function addCartItem(
@@ -42,27 +42,27 @@ export async function addCartItem(
   productSkuId: number,
   quantity: number,
 ) {
-  const token = cookies().get('access-token')?.value ?? ''
+  const token = cookies().get('access-token')?.value ?? '';
   const res = await fetch(`${BACKEND_URL}/me/cart-items`, {
-    method: "POST",
+    method: 'POST',
     credentials: 'include',
     headers: {
-      "Content-Type": "application/json",
-      Cookie: `access-token=${token}`
+      'Content-Type': 'application/json',
+      Cookie: `access-token=${token}`,
     },
     body: JSON.stringify({
       productId,
       productSkuId,
-      quantity
-    })
-  })
-  revalidateTag('cart-items')
+      quantity,
+    }),
+  });
+  revalidateTag('cart-items');
   if (res.ok) {
-    const cartItem = await res.json()
-    return { cartItem }
+    const cartItem = await res.json();
+    return { cartItem };
   }
-  const error = await res.json()
-  return { error }
+  const error = await res.json();
+  return { error };
 }
 
 interface CartItemsResponse {
@@ -71,117 +71,119 @@ interface CartItemsResponse {
 }
 
 export async function getCartItems(): Promise<CartItemsResponse> {
-  const token = cookies().get('access-token')?.value ?? ''
+  const token = cookies().get('access-token')?.value ?? '';
   const res = await fetch(`${BACKEND_URL}/me/cart-items`, {
     credentials: 'include',
-    method: "GET",
+    method: 'GET',
     headers: {
-      Cookie: `access-token=${token}`
+      Cookie: `access-token=${token}`,
     },
     next: {
-      tags: ['cart-items']
-    }
-  })
+      tags: ['cart-items'],
+    },
+  });
   if (res.ok) {
-    const cartItems = await res.json()
-    return { cartItems }
+    const cartItems = await res.json();
+    return { cartItems };
   }
-  const error = await res.json()
-  return { error }
+  const error = await res.json();
+  return { error };
 }
 
 interface OneCartItemResponse {
-  cartItem?: CartItem
-  error?: ErrorResponse
+  cartItem?: CartItem;
+  error?: ErrorResponse;
 }
 
-export async function updateCartItemQuantity(quantity: number, cartItemId: number, cartId: number): Promise<OneCartItemResponse> {
-  const token = cookies().get('access-token')?.value ?? ''
+export async function updateCartItemQuantity(
+  quantity: number,
+  cartItemId: number,
+  cartId: number,
+): Promise<OneCartItemResponse> {
+  const token = cookies().get('access-token')?.value ?? '';
 
   const res = await fetch(`${BACKEND_URL}/me/cart-items/${cartItemId}`, {
     method: 'PATCH',
     credentials: 'include',
     headers: {
-      "Content-Type": "application/json",
-      Cookie: `access-token=${token}`
+      'Content-Type': 'application/json',
+      Cookie: `access-token=${token}`,
     },
     body: JSON.stringify({
       quantity,
     }),
-  })
+  });
   if (res.ok) {
-    revalidateTag('discount-amount')
-    revalidateTag('cart-items')
-    revalidateTag('cart')
-    const cartItem = await res.json()
-    return { cartItem }
+    revalidateTag('discount-amount');
+    revalidateTag('cart-items');
+    revalidateTag('cart');
+    const cartItem = await res.json();
+    return { cartItem };
   }
-  const error = await res.json()
-  return { error }
+  const error = await res.json();
+  return { error };
 }
 
-
-export async function deleteCartItem(cartId: number, cartItemId: number): Promise<OneCartItemResponse> {
-  const token = cookies().get('access-token')?.value ?? ''
+export async function deleteCartItem(
+  cartId: number,
+  cartItemId: number,
+): Promise<OneCartItemResponse> {
+  const token = cookies().get('access-token')?.value ?? '';
 
   const res = await fetch(`${BACKEND_URL}/me/cart-items/${cartItemId}`, {
     method: 'DELETE',
     credentials: 'include',
     headers: {
-      Cookie: `access-token=${token}`
+      Cookie: `access-token=${token}`,
     },
-  })
+  });
   if (res.ok) {
-    revalidateTag('discount-amount')
-    revalidateTag('cart-items')
-    revalidateTag('cart')
-    const cartItem = await res.json()
-    return { cartItem }
+    revalidateTag('discount-amount');
+    revalidateTag('cart-items');
+    revalidateTag('cart');
+    const cartItem = await res.json();
+    return { cartItem };
   }
-  const error = await res.json()
-  return { error }
+  const error = await res.json();
+  return { error };
 }
 
 interface AppliedDiscount {
-  discountId: number
-  discountName: string
-  discountValue: number
-  discountAmount: number
-  appliedTimes: number
+  discountId: number;
+  discountName: string;
+  discountValue: number;
+  discountAmount: number;
+  appliedTimes: number;
 }
 
 export interface CalcDiscountsData {
-  appliedDiscounts: AppliedDiscount[]
-  discountAmount: number
-  finalTotal: number
+  appliedDiscounts: AppliedDiscount[];
+  discountAmount: number;
+  finalTotal: number;
 }
 
 interface CalcDiscountsResponse {
-  calcDiscountsData?: CalcDiscountsData
-  error?: ErrorResponse
+  calcDiscountsData?: CalcDiscountsData;
+  error?: ErrorResponse;
 }
 
-
 export async function calculateDiscounts(): Promise<CalcDiscountsResponse> {
-  const token = cookies().get('access-token')?.value ?? ''
+  const token = cookies().get('access-token')?.value ?? '';
   //
   const res = await fetch(`${BACKEND_URL}/me/cart/total-discount`, {
     credentials: 'include',
-    method: "GET",
+    method: 'GET',
     headers: {
-      Cookie: `access-token=${token}`
+      Cookie: `access-token=${token}`,
     },
     next: {
-      tags: ['discount-amount']
-    }
-  })
+      tags: ['discount-amount'],
+    },
+  });
   if (res.ok) {
-    const calcDiscountsData = await res.json()
-    return { calcDiscountsData }
+    const calcDiscountsData = await res.json();
+    return { calcDiscountsData };
   }
-  const error = await res.json()
-  return { error }
-
+  const error = await res.json();
+  return { error };
 }
-
-

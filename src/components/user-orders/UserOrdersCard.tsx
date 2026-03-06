@@ -1,14 +1,14 @@
-"use client";
-import Link from "next/link";
-import { CheckCircle } from "lucide-react";
+'use client';
+import Link from 'next/link';
+import { CheckCircle } from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Order } from "@/interfaces/orders";
-import { peso } from "@/lib/constants";
-import { CldImage } from "next-cloudinary";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Order } from '@/interfaces/orders';
+import { peso } from '@/lib/constants';
+import { CldImage } from 'next-cloudinary';
 
 function UserOrdersCard({ order }: { order: Order }) {
   if (!order.orderItems) return null;
@@ -22,7 +22,7 @@ function UserOrdersCard({ order }: { order: Order }) {
         <div>
           <div className="text-sm font-medium">Fecha</div>
           <div className="text-sm text-muted-foreground">
-            {new Date(order.createdAt).toLocaleDateString("es-AR")}
+            {new Date(order.createdAt).toLocaleDateString('es-AR')}
           </div>
         </div>
         <div>
@@ -50,9 +50,9 @@ function UserOrdersCard({ order }: { order: Order }) {
                 <div className="aspect-square relative overflow-hidden bg-gray-100 rounded-lg">
                   <CldImage
                     src={
-                      order.product?.images[0].imgSrc || "samples/animals/cat"
+                      order.product?.images[0].imgSrc || 'samples/animals/cat'
                     }
-                    alt={order.product?.name ?? "product image"}
+                    alt={order.product?.name ?? 'product image'}
                     fill
                     className="border object-cover"
                     sizes="(max-width: 768px) 25vw, (max-width: 1200px) 12.5vw, 8vw"
@@ -84,8 +84,8 @@ function UserOrdersCard({ order }: { order: Order }) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <CheckCircle className="h-4 w-4 text-green-500" />
-                      Entregado{" "}
-                      {new Date(order.createdAt).toLocaleDateString("es-AR")}
+                      Entregado{' '}
+                      {new Date(order.createdAt).toLocaleDateString('es-AR')}
                     </div>
                     <div className="flex gap-2">
                       <Button

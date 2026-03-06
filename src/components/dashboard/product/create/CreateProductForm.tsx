@@ -1,30 +1,61 @@
-'use client'
-import { Button } from '@/components/ui/button'
-import { createProduct } from '@/lib/actions/product.actions'
-import { uploadImage } from '@/lib/actions/image.actions'
-import { createProductSku } from '@/lib/actions/product-skus.actions'
-import { useState } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { CircleCheckBig, Loader2, TrashIcon } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { z } from '@/lib/zod/es-zod'
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm } from 'react-hook-form'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
-import { PlusCircleIcon } from '@heroicons/react/24/outline'
-import Link from 'next/link'
-import { useToast } from '@/hooks/use-toast'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { Category } from '@/interfaces/products/categories'
-import { CreateCategoryDialog } from './CreateCategoryDialog'
-import { Sex } from '@/interfaces/products/product'
+'use client';
+import { Button } from '@/components/ui/button';
+import { createProduct } from '@/lib/actions/product.actions';
+import { uploadImage } from '@/lib/actions/image.actions';
+import { createProductSku } from '@/lib/actions/product-skus.actions';
+import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { CircleCheckBig, Loader2, TrashIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { z } from '@/lib/zod/es-zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useFieldArray, useForm } from 'react-hook-form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { PlusCircleIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { useToast } from '@/hooks/use-toast';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Category } from '@/interfaces/products/categories';
+import { CreateCategoryDialog } from './CreateCategoryDialog';
+import { Sex } from '@/interfaces/products/product';
 
 const MAX_FILE_SIZE = 5000000;
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const ACCEPTED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+];
 
 const pVariationsSchema = z.object({
   stock: z.coerce.number().int().min(0),
@@ -32,10 +63,15 @@ const pVariationsSchema = z.object({
   color: z.string().min(2).max(50),
   image: z
     .instanceof(File)
-    .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file?.type), 'Solo se admiten los formatos .jpg, .jpeg, .png y .webp.')
-    .refine((file) => file?.size <= MAX_FILE_SIZE, 'El tamaño máximo de la imagen es 5 MB.')
-})
-
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+      'Solo se admiten los formatos .jpg, .jpeg, .png y .webp.',
+    )
+    .refine(
+      (file) => file?.size <= MAX_FILE_SIZE,
+      'El tamaño máximo de la imagen es 5 MB.',
+    ),
+});
 
 const formSchema = z.object({
   name: z.string().min(2).max(50).toLowerCase(),
@@ -43,16 +79,16 @@ const formSchema = z.object({
   categoryId: z.coerce.number().int().positive(),
   sex: z.nativeEnum(Sex),
   description: z.string().min(2).max(100),
-  variations: z.array(pVariationsSchema).min(1).max(10)
-})
+  variations: z.array(pVariationsSchema).min(1).max(10),
+});
 
 function CreateProductForm({ categories }: { categories: Category[] }) {
-  const [isCreated, setIsCreated] = useState(false)
-  const router = useRouter()
-  const [productId, setProductId] = useState(0)
-  const [isLoading, setIsLoading] = useState(false)
-  const { toast } = useToast()
-  const [descIsOpen, setDescIsOpen] = useState(false)
+  const [isCreated, setIsCreated] = useState(false);
+  const router = useRouter();
+  const [productId, setProductId] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const [descIsOpen, setDescIsOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,88 +96,104 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
       name: '',
       price: 0,
       description: '',
-      variations: [{ stock: 0, color: '', size: '', image: new File(["foo"], "foo.txt") }]
-    }
-  })
+      variations: [
+        { stock: 0, color: '', size: '', image: new File(['foo'], 'foo.txt') },
+      ],
+    },
+  });
 
   const { fields, append, remove } = useFieldArray({
     name: 'variations',
-    control: form.control
-  })
+    control: form.control,
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true)
-    const { variations, ...rest } = values
-    const { product, error } = await createProduct({ ...rest, categories: [rest.categoryId] })
-    console.log(product, error)
+    setIsLoading(true);
+    const { variations, ...rest } = values;
+    const { product, error } = await createProduct({
+      ...rest,
+      categories: [rest.categoryId],
+    });
+    console.log(product, error);
 
     if (!product) {
       toast({
-        variant: "destructive",
-        title: "¡Vaya! Algo salió mal.",
-        description: "Hubo un problema al crear el producto, intento nuevamente mas tarde",
-      })
-      setIsLoading(false)
-      return
+        variant: 'destructive',
+        title: '¡Vaya! Algo salió mal.',
+        description:
+          'Hubo un problema al crear el producto, intento nuevamente mas tarde',
+      });
+      setIsLoading(false);
+      return;
     }
-    const productId = product.id
-    console.log(product)
+    const productId = product.id;
+    console.log(product);
 
     for (let variation of variations) {
-      const { createdProductSku, error: productSkuError } = await createProductSku({
-        size: variation.size,
-        color: variation.color,
-        quantity: variation.stock
-      }, productId)
-      console.log(createdProductSku, productSkuError)
+      const { createdProductSku, error: productSkuError } =
+        await createProductSku(
+          {
+            size: variation.size,
+            color: variation.color,
+            quantity: variation.stock,
+          },
+          productId,
+        );
+      console.log(createdProductSku, productSkuError);
 
       if (!createdProductSku) {
         toast({
-          variant: "destructive",
-          title: "¡Vaya! Algo salió mal.",
-          description: "Hubo un problema al crear la variación, intente nuevamente mas tarde",
-        })
-        continue
+          variant: 'destructive',
+          title: '¡Vaya! Algo salió mal.',
+          description:
+            'Hubo un problema al crear la variación, intente nuevamente mas tarde',
+        });
+        continue;
       }
 
-      const imageData = new FormData()
-      imageData.append('file', variation.image)
-      imageData.append('productId', productId.toString())
-      imageData.append('productSkuId', createdProductSku.id.toString())
-      console.log(imageData)
-      const { imageData: createdImageData, error: imageError } = await uploadImage(imageData)
-      console.log(createdImageData?.url, imageError)
+      const imageData = new FormData();
+      imageData.append('file', variation.image);
+      imageData.append('productId', productId.toString());
+      imageData.append('productSkuId', createdProductSku.id.toString());
+      console.log(imageData);
+      const { imageData: createdImageData, error: imageError } =
+        await uploadImage(imageData);
+      console.log(createdImageData?.url, imageError);
       if (!createdImageData) {
         toast({
-          variant: "destructive",
-          title: "¡Vaya! Algo salió mal.",
-          description: "Hubo un problema al subir la imagen, intente nuevamente mas tarde",
-        })
-        continue
+          variant: 'destructive',
+          title: '¡Vaya! Algo salió mal.',
+          description:
+            'Hubo un problema al subir la imagen, intente nuevamente mas tarde',
+        });
+        continue;
       }
     }
-    setProductId(productId)
-    setIsCreated(true)
-    setIsLoading(false)
+    setProductId(productId);
+    setIsCreated(true);
+    setIsLoading(false);
   }
 
   return (
-    <div className='space-y-2'>
+    <div className="space-y-2">
       <div className="flex items-center gap-2">
         <Button variant="outline" size="sm" asChild>
           <Link href="/dashboard/products">Cancelar</Link>
         </Button>
-        {isLoading ?
+        {isLoading ? (
           <Button disabled>
             <Loader2 className="animate-spin" />
             Subiendo
           </Button>
-          : <Button type='submit' size="sm" form='create-product-form'>Crear Producto</Button>
-        }
+        ) : (
+          <Button type="submit" size="sm" form="create-product-form">
+            Crear Producto
+          </Button>
+        )}
       </div>
       <Form {...form}>
         <form
-          id='create-product-form'
+          id="create-product-form"
           className="space-y-8"
           onSubmit={form.handleSubmit(onSubmit)}
         >
@@ -181,34 +233,46 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
                     )}
                   />
                 </div>
-                <div className='w-full'>
+                <div className="w-full">
                   <FormField
                     control={form.control}
                     name="categoryId"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Categoría</FormLabel>
-                        <div className='flex gap-2'>
-                          <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
+                        <div className="flex gap-2">
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value?.toString()}
+                          >
                             <FormControl>
-                              <SelectTrigger id="categoryId" aria-label="Select category">
+                              <SelectTrigger
+                                id="categoryId"
+                                aria-label="Select category"
+                              >
                                 <SelectValue placeholder="Seleccionar la Categoría de la prenda" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {categories.map(category => (
-                                <SelectItem key={category.id} value={category.id.toString()}>{category.name}</SelectItem>
+                              {categories.map((category) => (
+                                <SelectItem
+                                  key={category.id}
+                                  value={category.id.toString()}
+                                >
+                                  {category.name}
+                                </SelectItem>
                               ))}
                             </SelectContent>
                             {/* button to create new categories */}
-                            <Button size='sm'
+                            <Button
+                              size="sm"
                               onClick={(event) => {
-                                event.preventDefault()
-                                setDescIsOpen(true)
-                              }}>
-                              <PlusCircleIcon className='h-5 w-5' />
+                                event.preventDefault();
+                                setDescIsOpen(true);
+                              }}
+                            >
+                              <PlusCircleIcon className="h-5 w-5" />
                             </Button>
-
                           </Select>
                         </div>
                         <FormMessage />
@@ -223,7 +287,10 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Género</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger id="sex" aria-label="Select sex">
                               <SelectValue placeholder="Seleccionar el género" />
@@ -248,9 +315,7 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
                       <FormItem>
                         <FormLabel>Descripción</FormLabel>
                         <FormControl>
-                          <Textarea {...field}
-                            className="min-h-32"
-                          />
+                          <Textarea {...field} className="min-h-32" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -266,7 +331,7 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
               <CardTitle>Variaciones</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table className='space-y-8'>
+              <Table className="space-y-8">
                 <TableBody>
                   {fields.map((field, idx) => (
                     <TableRow key={field.id}>
@@ -319,17 +384,22 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
                         <FormField
                           control={form.control}
                           name={`variations.${idx}.image`}
-                          render={({ field: { value, onChange, ...fieldProps } }) => (
+                          render={({
+                            field: { value, onChange, ...fieldProps },
+                          }) => (
                             <FormItem>
                               <FormLabel>Imágenes</FormLabel>
                               <FormControl>
                                 <Input
                                   {...fieldProps}
                                   placeholder="img"
-                                  type='file'
+                                  type="file"
                                   accept="image/*"
                                   onChange={(event) => {
-                                    onChange(event.target.files && event.target.files[0])
+                                    onChange(
+                                      event.target.files &&
+                                        event.target.files[0],
+                                    );
                                   }}
                                 />
                               </FormControl>
@@ -339,14 +409,20 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
                         />
                       </TableCell>
                       <TableCell>
-                        {idx > 0 &&
-                          <Button variant='outline' size='icon' onClick={() => {
-                            console.log(`borrando la variacion con index ${idx}`)
-                            remove(idx)
-                          }}>
-                            <TrashIcon className='text-red-500 h-4 w-4' />
+                        {idx > 0 && (
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => {
+                              console.log(
+                                `borrando la variacion con index ${idx}`,
+                              );
+                              remove(idx);
+                            }}
+                          >
+                            <TrashIcon className="text-red-500 h-4 w-4" />
                           </Button>
-                        }
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -359,7 +435,12 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
                 variant="ghost"
                 className="gap-1"
                 onClick={() => {
-                  append({ stock: 0, size: '', color: '', image: new File(["foo"], "foo.txt") })
+                  append({
+                    stock: 0,
+                    size: '',
+                    color: '',
+                    image: new File(['foo'], 'foo.txt'),
+                  });
                 }}
               >
                 <PlusCircleIcon className="h-5 w-5" />
@@ -370,29 +451,34 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
         </form>
       </Form>
 
-      <Dialog open={isCreated} >
-        <DialogContent className="sm:max-w-[425px]" >
+      <Dialog open={isCreated}>
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>
-              <div className='flex space-x-1 items-center'>
-                <CircleCheckBig className='w-5 h-5 text-green-500' />
+              <div className="flex space-x-1 items-center">
+                <CircleCheckBig className="w-5 h-5 text-green-500" />
                 <p>Producto creado correctamente</p>
               </div>
             </DialogTitle>
             <DialogDescription>
-              Producto creado, puede ir a la sección de editar producto si así lo desea
+              Producto creado, puede ir a la sección de editar producto si así
+              lo desea
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button onClick={() => {
-              router.push(`/dashboard/products/edit/${productId}`)
-            }}>Ver</Button>
+            <Button
+              onClick={() => {
+                router.push(`/dashboard/products/edit/${productId}`);
+              }}
+            >
+              Ver
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
       <CreateCategoryDialog isOpen={descIsOpen} setIsOpen={setDescIsOpen} />
     </div>
-  )
+  );
 }
 
-export default CreateProductForm
+export default CreateProductForm;

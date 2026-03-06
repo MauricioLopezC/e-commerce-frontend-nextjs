@@ -1,5 +1,5 @@
-'use client'
-import {Badge} from "@/components/ui/badge"
+'use client';
+import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardContent,
@@ -7,7 +7,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -15,20 +15,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from '@/components/ui/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {Discount} from "@/interfaces/discounts"
-import {peso} from "@/lib/constants"
-import {Button} from "@/components/ui/button"
-import {MoreHorizontal, Pencil, Trash2} from "lucide-react"
-import Link from "next/link"
-import {useRouter} from "next/navigation"
+} from '@/components/ui/dropdown-menu';
+import { Discount } from '@/interfaces/discounts';
+import { peso } from '@/lib/constants';
+import { Button } from '@/components/ui/button';
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,18 +37,18 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
-} from "@/components/ui/alert-dialog"
-import {useState} from "react"
-import {deleteDiscount} from "@/lib/actions/discounts.actions"
-import {useToast} from "@/hooks/use-toast"
-import {CheckCircleIcon} from "@heroicons/react/24/solid"
-import {XMarkIcon} from "@heroicons/react/24/outline"
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { useState } from 'react';
+import { deleteDiscount } from '@/lib/actions/discounts.actions';
+import { useToast } from '@/hooks/use-toast';
+import { CheckCircleIcon } from '@heroicons/react/24/solid';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
-function DiscountsTable({discounts}: { discounts: Discount[] }) {
+function DiscountsTable({ discounts }: { discounts: Discount[] }) {
   const [confirmData, setConfirmData] = useState<Discount | null>(null);
-  const router = useRouter()
-  const {toast} = useToast()
+  const router = useRouter();
+  const { toast } = useToast();
 
   function openConfirm(discount: Discount) {
     setConfirmData(discount);
@@ -62,66 +62,92 @@ function DiscountsTable({discounts}: { discounts: Discount[] }) {
   async function handleConfirm() {
     if (confirmData) {
       //server action
-      const {discount, error} = await deleteDiscount(confirmData.id)
-      console.log(discount, error)
+      const { discount, error } = await deleteDiscount(confirmData.id);
+      console.log(discount, error);
       if (discount) {
         toast({
           description: (
             <div>
               <h2 className="font-semibold text-md">
-                <span><CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline"/></span>
+                <span>
+                  <CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" />
+                </span>
                 Descuento eliminado
               </h2>
             </div>
           ),
-        })
-        return
+        });
+        return;
       }
 
       toast({
         description: (
           <div>
             <h2 className="font-semibold text-md">
-              <span><XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline"/></span>
+              <span>
+                <XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline" />
+              </span>
               Error al eliminar
             </h2>
           </div>
         ),
-      })
+      });
     }
 
     closeConfirm();
   }
 
-
   return (
     <Card>
       <CardHeader>
         <CardTitle>Descuentos</CardTitle>
-        <CardDescription>Se listan todos los descuentos automaticos de tu tienda</CardDescription>
+        <CardDescription>
+          Se listan todos los descuentos automaticos de tu tienda
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="py-3 px-4 font-semibold text-gray-900">Nombre</TableHead>
-              <TableHead className="hidden md:table-cell py-3 px-4 font-semibold text-gray-900">Descuento</TableHead>
-              <TableHead className="hidden md:table-cell py-3 px-4 font-semibold text-gray-900">Vencimiento</TableHead>
-              <TableHead className="hidden md:table-cell py-3 px-4 font-semibold text-gray-900">Usos</TableHead>
-              <TableHead className="hidden md:table-cell py-3 px-4 font-semibold text-gray-900">Estado</TableHead>
-              <TableHead className="py-3 px-4 font-semibold text-gray-900">Opciones</TableHead>
+              <TableHead className="py-3 px-4 font-semibold text-gray-900">
+                Nombre
+              </TableHead>
+              <TableHead className="hidden md:table-cell py-3 px-4 font-semibold text-gray-900">
+                Descuento
+              </TableHead>
+              <TableHead className="hidden md:table-cell py-3 px-4 font-semibold text-gray-900">
+                Vencimiento
+              </TableHead>
+              <TableHead className="hidden md:table-cell py-3 px-4 font-semibold text-gray-900">
+                Usos
+              </TableHead>
+              <TableHead className="hidden md:table-cell py-3 px-4 font-semibold text-gray-900">
+                Estado
+              </TableHead>
+              <TableHead className="py-3 px-4 font-semibold text-gray-900">
+                Opciones
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {discounts.map((discount, index) => (
-              <TableRow key={discount.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+              <TableRow
+                key={discount.id}
+                className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+              >
                 <TableCell className="py-3 px-4">
-                  <div className="font-medium text-gray-900">{discount.name}</div>
-                  <div className="text-sm text-gray-500">{discount.description}</div>
+                  <div className="font-medium text-gray-900">
+                    {discount.name}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {discount.description}
+                  </div>
                 </TableCell>
                 <TableCell className="hidden md:table-cell py-3 px-4">
                   <span className="font-medium">
-                    {discount.discountType === 'PERCENTAGE' ? `${discount.value}%` : `$${discount.value}`}
+                    {discount.discountType === 'PERCENTAGE'
+                      ? `${discount.value}%`
+                      : `$${discount.value}`}
                   </span>
                   <span className="text-sm text-gray-500 block">
                     Min. orden: {peso.format(discount.orderThreshold ?? 0)}
@@ -133,12 +159,14 @@ function DiscountsTable({discounts}: { discounts: Discount[] }) {
                 <TableCell className="hidden md:table-cell py-3 px-4">
                   <div className="flex items-center">
                     <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
-                      {discount.maxUses &&
-                          <div
-                              className="bg-blue-600 rounded-full h-2"
-                              style={{width: `${(discount.currentUses / discount.maxUses) * 100}%`}}
-                          ></div>
-                      }
+                      {discount.maxUses && (
+                        <div
+                          className="bg-blue-600 rounded-full h-2"
+                          style={{
+                            width: `${(discount.currentUses / discount.maxUses) * 100}%`,
+                          }}
+                        ></div>
+                      )}
                     </div>
                     <span className="text-sm text-gray-600">
                       {discount.currentUses}/ {discount.maxUses ?? 'ilimitado'}
@@ -146,19 +174,15 @@ function DiscountsTable({discounts}: { discounts: Discount[] }) {
                   </div>
                 </TableCell>
                 <TableCell className="hidden md:table-cell py-3 px-4">
-                  <Badge variant={discount.isActive ? "success" : "secondary"}>
+                  <Badge variant={discount.isActive ? 'success' : 'secondary'}>
                     {discount.isActive ? 'Activo' : 'Inactivo'}
                   </Badge>
                 </TableCell>
                 <TableCell className="py-3 px-4">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button
-                        aria-haspopup="true"
-                        size="icon"
-                        variant="ghost"
-                      >
-                        <MoreHorizontal className="h-4 w-4"/>
+                      <Button aria-haspopup="true" size="icon" variant="ghost">
+                        <MoreHorizontal className="h-4 w-4" />
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </DropdownMenuTrigger>
@@ -166,19 +190,23 @@ function DiscountsTable({discounts}: { discounts: Discount[] }) {
                       <DropdownMenuLabel>Opciones</DropdownMenuLabel>
                       <DropdownMenuItem
                         onClick={() => {
-                          router.push(`/dashboard/promotions/discounts/edit/${discount.id}`)
-                        }}>
+                          router.push(
+                            `/dashboard/promotions/discounts/edit/${discount.id}`,
+                          );
+                        }}
+                      >
                         Editar
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={async (e) => {
-                        e.stopPropagation();
-                        openConfirm(discount)
-                      }}>
+                      <DropdownMenuItem
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          openConfirm(discount);
+                        }}
+                      >
                         Eliminar
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-
                 </TableCell>
               </TableRow>
             ))}
@@ -190,15 +218,19 @@ function DiscountsTable({discounts}: { discounts: Discount[] }) {
           <AlertDialog open={true} onOpenChange={closeConfirm}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>¿Estás completamente seguro?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  ¿Estás completamente seguro?
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  Esta acción no se puede deshacer. Eliminará permanentemente al descuento.
+                  Esta acción no se puede deshacer. Eliminará permanentemente al
+                  descuento.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel onClick={closeConfirm}>Cancelar</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleConfirm}>
+                <AlertDialogCancel onClick={closeConfirm}>
+                  Cancelar
+                </AlertDialogCancel>
+                <AlertDialogAction onClick={handleConfirm}>
                   Continuar
                 </AlertDialogAction>
               </AlertDialogFooter>
@@ -207,7 +239,7 @@ function DiscountsTable({discounts}: { discounts: Discount[] }) {
         )}
       </CardFooter>
     </Card>
-  )
+  );
 }
 
-export default DiscountsTable
+export default DiscountsTable;

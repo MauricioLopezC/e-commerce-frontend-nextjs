@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 function UserPage() {
-  return (
-    <div>User</div>
-  )
+  return <div>User</div>;
 }
 
-export default UserPage
+export default UserPage;

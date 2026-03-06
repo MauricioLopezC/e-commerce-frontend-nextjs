@@ -1,12 +1,12 @@
-import FeaturesList from "@/components/home/Features";
-import Link from "next/link";
-import ProductCard from "@/components/ProductCard";
-import { Product } from "@/interfaces/products/product";
-import CoverImageV2 from "@/components/home/CoverImageV2";
-import { getAllProducts } from "@/lib/actions/product.actions";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { getAllDiscounts } from "@/lib/actions/discounts.actions";
-import DiscountBanner from "@/components/banners/discountBanner";
+import FeaturesList from '@/components/home/Features';
+import Link from 'next/link';
+import ProductCard from '@/components/ProductCard';
+import { Product } from '@/interfaces/products/product';
+import CoverImageV2 from '@/components/home/CoverImageV2';
+import { getAllProducts } from '@/lib/actions/product.actions';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { getAllDiscounts } from '@/lib/actions/discounts.actions';
+import DiscountBanner from '@/components/banners/discountBanner';
 
 async function Home() {
   //Change CldImage components for img component in products grids,
@@ -18,16 +18,14 @@ async function Home() {
     limit: 5,
   });
   const { productsData: bestSellersData } = await getAllProducts({
-    orderBy: "-unitsOnOrder",
+    orderBy: '-unitsOnOrder',
     limit: 5,
   });
 
-  const { discountsData, error } = await getAllDiscounts({ isActive: true })
+  const { discountsData, error } = await getAllDiscounts({ isActive: true });
   return (
     <main>
-      {discountsData &&
-        <DiscountBanner discounts={discountsData?.discounts} />
-      }
+      {discountsData && <DiscountBanner discounts={discountsData?.discounts} />}
       <div className="relative w-full bg-[#333232] h-[60vh] md:h-[80vh] xl:h[100vh]">
         {/* <CoverImage /> */}
         <div className="absolute inset-0">

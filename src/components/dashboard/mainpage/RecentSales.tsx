@@ -1,17 +1,11 @@
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Order } from "@/interfaces/orders"
-import { peso } from "@/lib/constants"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Order } from '@/interfaces/orders';
+import { peso } from '@/lib/constants';
 
 function RecentSalesCard({ orders }: { orders: Order[] }) {
   return (
-    <Card >
+    <Card>
       <CardHeader>
         <CardTitle>Ventas Recientes</CardTitle>
       </CardHeader>
@@ -21,7 +15,8 @@ function RecentSalesCard({ orders }: { orders: Order[] }) {
             <div className="flex items-center gap-4" key={idx}>
               <Avatar className="hidden h-9 w-9 sm:flex">
                 <AvatarFallback>
-                  {order.user?.firstName.slice(0, 1)}{order.user?.lastName.slice(0, 1)}
+                  {order.user?.firstName.slice(0, 1)}
+                  {order.user?.lastName.slice(0, 1)}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-1 flex-wrap items-center justify-between">
@@ -33,15 +28,16 @@ function RecentSalesCard({ orders }: { orders: Order[] }) {
                     {order.user?.email}
                   </p>
                 </div>
-                <div className="font-medium text-ellipsis">+{peso.format(order.total)}</div>
+                <div className="font-medium text-ellipsis">
+                  +{peso.format(order.total)}
+                </div>
               </div>
             </div>
           ))}
         </div>
       </CardContent>
     </Card>
-
-  )
+  );
 }
 
-export default RecentSalesCard
+export default RecentSalesCard;

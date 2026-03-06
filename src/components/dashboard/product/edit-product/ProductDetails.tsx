@@ -1,17 +1,29 @@
-'use client'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { useToast } from '@/hooks/use-toast'
-import { Product, Sex } from '@/interfaces/products/product'
-import { updateProduct } from '@/lib/actions/product.actions'
-import { CheckCircleIcon } from 'lucide-react'
-import { useState } from 'react'
-import { z } from '@/lib/zod/es-zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+'use client';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { Product, Sex } from '@/interfaces/products/product';
+import { updateProduct } from '@/lib/actions/product.actions';
+import { CheckCircleIcon } from 'lucide-react';
+import { useState } from 'react';
+import { z } from '@/lib/zod/es-zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
@@ -19,9 +31,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Category } from '@/interfaces/products/categories'
-import { CreateCategoryDialog } from '../create/CreateCategoryDialog'
+} from '@/components/ui/form';
+import { Category } from '@/interfaces/products/categories';
+import { CreateCategoryDialog } from '../create/CreateCategoryDialog';
 
 const formSchema = z.object({
   name: z.string().min(2).max(50).toLowerCase(),
@@ -29,14 +41,17 @@ const formSchema = z.object({
   categoryId: z.coerce.number().int().positive(),
   sex: z.string().min(2).max(100),
   description: z.string().min(2).max(100),
-})
+});
 
-
-function ProductDetails({ product }: { product: Product, categories: Category[] }) {
-  const [isChanged, setIsChanged] = useState(false)
-  const { toast } = useToast()
-  const [descIsOpen, setDescIsOpen] = useState(false)
-
+function ProductDetails({
+  product,
+}: {
+  product: Product;
+  categories: Category[];
+}) {
+  const [isChanged, setIsChanged] = useState(false);
+  const { toast } = useToast();
+  const [descIsOpen, setDescIsOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,29 +61,32 @@ function ProductDetails({ product }: { product: Product, categories: Category[] 
       categoryId: product.categories[0]?.id ?? 0,
       sex: product.sex,
       description: product.description,
-    }
-  })
+    },
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    const { product: updatedProduct } = await updateProduct(product.id, values)
+    console.log(values);
+    const { product: updatedProduct } = await updateProduct(product.id, values);
     if (updatedProduct) {
       toast({
         description: (
           <div>
             <h2 className="font-semibold text-md">
-              <span><CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" /></span>
+              <span>
+                <CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" />
+              </span>
               Producto actualizado
             </h2>
           </div>
         ),
-      })
+      });
     } else {
       toast({
-        variant: "destructive",
-        title: "¡Vaya! Algo salió mal.",
-        description: "Hubo un problema al crear el producto, intente nuevamente mas tarde",
-      })
+        variant: 'destructive',
+        title: '¡Vaya! Algo salió mal.',
+        description:
+          'Hubo un problema al crear el producto, intente nuevamente mas tarde',
+      });
     }
   }
 
@@ -80,11 +98,11 @@ function ProductDetails({ product }: { product: Product, categories: Category[] 
       <CardContent>
         <Form {...form}>
           <form
-            id='product-form'
-            className='space-y-2'
+            id="product-form"
+            className="space-y-2"
             onSubmit={form.handleSubmit(onSubmit)}
             onChange={() => {
-              setIsChanged(true)
+              setIsChanged(true);
             }}
           >
             <div className="grid gap-6">
@@ -125,7 +143,10 @@ function ProductDetails({ product }: { product: Product, categories: Category[] 
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Sexo</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger id="sex" aria-label="Select sex">
                             <SelectValue placeholder="Seleccionar sexo de la prenda" />
@@ -150,9 +171,7 @@ function ProductDetails({ product }: { product: Product, categories: Category[] 
                     <FormItem>
                       <FormLabel>Descripción</FormLabel>
                       <FormControl>
-                        <Textarea {...field}
-                          className="min-h-32"
-                        />
+                        <Textarea {...field} className="min-h-32" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -164,20 +183,20 @@ function ProductDetails({ product }: { product: Product, categories: Category[] 
         </Form>
       </CardContent>
       <CardFooter>
-        {!isChanged &&
+        {!isChanged && (
           <Button size="sm" form="product-form" disabled>
             Guardar
           </Button>
-        }
-        {isChanged &&
+        )}
+        {isChanged && (
           <Button size="sm" type="submit" form="product-form">
             Guardar
           </Button>
-        }
+        )}
         <CreateCategoryDialog isOpen={descIsOpen} setIsOpen={setDescIsOpen} />
       </CardFooter>
     </Card>
-  )
+  );
 }
 
-export default ProductDetails
+export default ProductDetails;

@@ -7,12 +7,15 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { AlertDialogProps } from "./NoStockAlert";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/alert-dialog';
+import { AlertDialogProps } from './NoStockAlert';
+import { useRouter } from 'next/navigation';
 
-export function NotLoggedInAlertDialog({ isOpen, setIsOpen }: AlertDialogProps) {
-  const router = useRouter()
+export function NotLoggedInAlertDialog({
+  isOpen,
+  setIsOpen,
+}: AlertDialogProps) {
+  const router = useRouter();
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent>
@@ -23,14 +26,16 @@ export function NotLoggedInAlertDialog({ isOpen, setIsOpen }: AlertDialogProps) 
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogAction onClick={() => {
-            router.push('/auth/login')
-          }}>
+          <AlertDialogAction
+            onClick={() => {
+              router.push('/auth/login');
+            }}
+          >
             Iniciar Sesion
           </AlertDialogAction>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

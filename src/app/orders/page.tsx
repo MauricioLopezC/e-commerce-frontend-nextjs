@@ -1,9 +1,9 @@
-import UserOrdersCard from "@/components/user-orders/UserOrdersCard"
-import { getUserOrders } from "@/lib/actions/order.actions"
+import UserOrdersCard from '@/components/user-orders/UserOrdersCard';
+import { getUserOrders } from '@/lib/actions/order.actions';
 
 async function OrdersPage() {
-  const { ordersData } = await getUserOrders()
-  if (!ordersData) return null
+  const { ordersData } = await getUserOrders();
+  if (!ordersData) return null;
 
   return (
     <main className="container mx-auto py-8 px-4">
@@ -19,8 +19,7 @@ async function OrdersPage() {
         </div>
       </div>
     </main>
-  )
+  );
 }
 
-
-export default OrdersPage
+export default OrdersPage;

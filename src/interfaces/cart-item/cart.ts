@@ -1,10 +1,10 @@
-import { Product, ProductSku } from "../products/product";
+import { Product, ProductSku } from '../products/product';
 
 export interface Cart {
   id: number;
   userId: number;
   updatedAt: Date;
-  cartItems: CartItem[]
+  cartItems: CartItem[];
 }
 
 export interface CartItem {

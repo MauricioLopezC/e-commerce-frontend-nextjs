@@ -1,6 +1,6 @@
-'use client'
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+'use client';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
   FormControl,
@@ -8,22 +8,32 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/hooks/use-toast";
-import { ApplicableTo, DiscountType } from "@/interfaces/discounts";
-import { createDiscount } from "@/lib/actions/discounts.actions";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
+import { ApplicableTo, DiscountType } from '@/interfaces/discounts';
+import { createDiscount } from '@/lib/actions/discounts.actions';
+import { cn } from '@/lib/utils';
 import { z } from '@/lib/zod/es-zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from "date-fns";
+import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import {CalendarIcon, CheckCircleIcon} from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { CalendarIcon, CheckCircleIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -34,12 +44,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import MultipleSelector, { Option } from "@/components/shadcn-expansions/multiselect";
-import { Product } from "@/interfaces/products/product";
-import { Category } from "@/interfaces/products/categories";
-import { searchByName } from "@/lib/actions/search.actions";
-
+} from '@/components/ui/dialog';
+import MultipleSelector, {
+  Option,
+} from '@/components/shadcn-expansions/multiselect';
+import { Product } from '@/interfaces/products/product';
+import { Category } from '@/interfaces/products/categories';
+import { searchByName } from '@/lib/actions/search.actions';
 
 const categoryOptionSchema = z.object({
   label: z.string(),
@@ -53,33 +64,51 @@ const productOptionSchema = z.object({
   disable: z.boolean().optional(),
 });
 
-const formSchema = z.object({
-  name: z.string().min(1).max(100),
-  description: z.string().min(1).max(200),
-  discountType: z.nativeEnum(DiscountType),
-  value: z.coerce.number().positive().step(0.01, "Solo se admiten 2 decimales"),
-  startDate: z.date({ coerce: true }),
-  endDate: z.date({ coerce: true }),
-  applicableTo: z.nativeEnum(ApplicableTo),
-  products: z.array(productOptionSchema),
-  categories: z.array(categoryOptionSchema),
-  orderThreshold: z.coerce.number().min(0).step(0.01, "Solo se admiten 2 decimales"),
-  maxUses: z.coerce.number().int().positive().optional(),
-  isActive: z.boolean(),
-})
-  .refine((schema) => {
-    return (schema.startDate < schema.endDate)
-  }, {
-    path: ['endDate'],
-    message: 'La fecha de vencimiento debe ser posterior a la fecha de inicio'
+const formSchema = z
+  .object({
+    name: z.string().min(1).max(100),
+    description: z.string().min(1).max(200),
+    discountType: z.nativeEnum(DiscountType),
+    value: z.coerce
+      .number()
+      .positive()
+      .step(0.01, 'Solo se admiten 2 decimales'),
+    startDate: z.date({ coerce: true }),
+    endDate: z.date({ coerce: true }),
+    applicableTo: z.nativeEnum(ApplicableTo),
+    products: z.array(productOptionSchema),
+    categories: z.array(categoryOptionSchema),
+    orderThreshold: z.coerce
+      .number()
+      .min(0)
+      .step(0.01, 'Solo se admiten 2 decimales'),
+    maxUses: z.coerce.number().int().positive().optional(),
+    isActive: z.boolean(),
   })
-  .refine((schema) => {
-    if (schema.discountType === DiscountType.PERCENTAGE && schema.value >= 100) return false
-    return true
-  }, {
-    path: ['value'],
-    message: 'Solo se admite porcentaje hasta el 100%'
-  })
+  .refine(
+    (schema) => {
+      return schema.startDate < schema.endDate;
+    },
+    {
+      path: ['endDate'],
+      message:
+        'La fecha de vencimiento debe ser posterior a la fecha de inicio',
+    },
+  )
+  .refine(
+    (schema) => {
+      if (
+        schema.discountType === DiscountType.PERCENTAGE &&
+        schema.value >= 100
+      )
+        return false;
+      return true;
+    },
+    {
+      path: ['value'],
+      message: 'Solo se admite porcentaje hasta el 100%',
+    },
+  );
 
 interface CreateDiscountFormProps {
   products: Product[];
@@ -87,13 +116,15 @@ interface CreateDiscountFormProps {
 }
 
 function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
-  const router = useRouter()
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [createdDiscountId, setCreatedDiscountId] = useState<number | null>(null)
+  const router = useRouter();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [createdDiscountId, setCreatedDiscountId] = useState<number | null>(
+    null,
+  );
   const [isTriggered, setIsTriggered] = useState(false);
-  const { toast } = useToast()
+  const { toast } = useToast();
 
-  const now = new Date()
+  const now = new Date();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -109,41 +140,41 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
       orderThreshold: 0,
       maxUses: undefined,
       isActive: true,
-    }
-  })
+    },
+  });
 
-  const applicableTo = form.watch("applicableTo")
+  const applicableTo = form.watch('applicableTo');
 
-  const productOptions: Option[] = products.map(product => (
-    {
-      label: product.name,
-      value: product.id.toString(),
-    }
-  ))
+  const productOptions: Option[] = products.map((product) => ({
+    label: product.name,
+    value: product.id.toString(),
+  }));
 
-  const categoryOptions: Option[] = categories.map(category => (
-    {
-      label: category.name,
-      value: category.id.toString(),
-    }
-  ))
+  const categoryOptions: Option[] = categories.map((category) => ({
+    label: category.name,
+    value: category.id.toString(),
+  }));
 
   async function onSubmit(value: z.infer<typeof formSchema>) {
-    console.log(value)
-    const productsIds = value.products.map(item => Number(item.value))
-    const categoryIds = value.categories.map(item => Number(item.value))
-    const createDiscountData = { ...value, products: productsIds, categories: categoryIds }
+    console.log(value);
+    const productsIds = value.products.map((item) => Number(item.value));
+    const categoryIds = value.categories.map((item) => Number(item.value));
+    const createDiscountData = {
+      ...value,
+      products: productsIds,
+      categories: categoryIds,
+    };
 
-    const { discount, error } = await createDiscount(createDiscountData)
+    const { discount, error } = await createDiscount(createDiscountData);
     if (discount) {
-      setCreatedDiscountId(discount.id)
-      setDialogOpen(true)
+      setCreatedDiscountId(discount.id);
+      setDialogOpen(true);
     }
     if (error) {
-      console.log(error)
+      console.log(error);
       toast({
-        title: "Error al crear el descuento"
-      })
+        title: 'Error al crear el descuento',
+      });
     }
   }
 
@@ -159,7 +190,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                 <FormItem>
                   <FormLabel>Nombre</FormLabel>
                   <FormControl>
-                    <Input className='col-span-3' {...field} />
+                    <Input className="col-span-3" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -173,7 +204,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                 <FormItem>
                   <FormLabel>Descripción</FormLabel>
                   <FormControl>
-                    <Input className='col-span-3' {...field} />
+                    <Input className="col-span-3" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -186,15 +217,22 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Tipo de descuento</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona el tipo" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value={DiscountType.PERCENTAGE}>Porcentaje</SelectItem>
-                      <SelectItem value={DiscountType.FIXED}>Monto fijo</SelectItem>
+                      <SelectItem value={DiscountType.PERCENTAGE}>
+                        Porcentaje
+                      </SelectItem>
+                      <SelectItem value={DiscountType.FIXED}>
+                        Monto fijo
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -209,7 +247,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                 <FormItem>
                   <FormLabel>Valor</FormLabel>
                   <FormControl>
-                    <Input className='col-span-3' {...field} />
+                    <Input className="col-span-3" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -226,14 +264,14 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant={"outline"}
+                          variant={'outline'}
                           className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
+                            'w-[240px] pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground',
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP", { locale: es })
+                            format(field.value, 'PPP', { locale: es })
                           ) : (
                             <span>Pick a date</span>
                           )}
@@ -246,9 +284,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date < new Date("1900-01-01")
-                        }
+                        disabled={(date) => date < new Date('1900-01-01')}
                         initialFocus
                       />
                     </PopoverContent>
@@ -268,14 +304,14 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant={"outline"}
+                          variant={'outline'}
                           className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
+                            'w-[240px] pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground',
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP", { locale: es })
+                            format(field.value, 'PPP', { locale: es })
                           ) : (
                             <span>Pick a date</span>
                           )}
@@ -288,9 +324,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date < new Date()
-                        }
+                        disabled={(date) => date < new Date()}
                         initialFocus
                       />
                     </PopoverContent>
@@ -306,16 +340,25 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Aplicable a</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona el tipo" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value={ApplicableTo.PRODUCT}>Producto</SelectItem>
-                      <SelectItem value={ApplicableTo.CATEGORY}>Categoría</SelectItem>
-                      <SelectItem value={ApplicableTo.GENERAL}>General</SelectItem>
+                      <SelectItem value={ApplicableTo.PRODUCT}>
+                        Producto
+                      </SelectItem>
+                      <SelectItem value={ApplicableTo.CATEGORY}>
+                        Categoría
+                      </SelectItem>
+                      <SelectItem value={ApplicableTo.GENERAL}>
+                        General
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -323,7 +366,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
               )}
             />
 
-            {applicableTo === ApplicableTo.PRODUCT &&
+            {applicableTo === ApplicableTo.PRODUCT && (
               <FormField
                 control={form.control}
                 name="products"
@@ -341,21 +384,20 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                           </p>
                         }
                         loadingIndicator={
-                          <p className="py-2 text-center text-lg leading-10 text-muted-foreground">Buscando...</p>
+                          <p className="py-2 text-center text-lg leading-10 text-muted-foreground">
+                            Buscando...
+                          </p>
                         }
                         onSearch={async (value) => {
-                          setIsTriggered(true)
-                          const { products, error } = await searchByName(value)
+                          setIsTriggered(true);
+                          const { products, error } = await searchByName(value);
                           if (error || !products) {
-                            return []
-
+                            return [];
                           }
-                          const options: Option[] = products.map((product) => (
-                            {
-                              label: product.name,
-                              value: product.id.toString()
-                            }
-                          ))
+                          const options: Option[] = products.map((product) => ({
+                            label: product.name,
+                            value: product.id.toString(),
+                          }));
                           return options;
                         }}
                       />
@@ -364,10 +406,10 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                   </FormItem>
                 )}
               />
-            }
+            )}
 
             {/* TODO: implement onSearch categories */}
-            {applicableTo === ApplicableTo.CATEGORY &&
+            {applicableTo === ApplicableTo.CATEGORY && (
               <FormField
                 control={form.control}
                 name="categories"
@@ -390,7 +432,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                   </FormItem>
                 )}
               />
-            }
+            )}
 
             <FormField
               control={form.control}
@@ -399,7 +441,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                 <FormItem>
                   <FormLabel>Monto mínimo</FormLabel>
                   <FormControl>
-                    <Input className='col-span-3' {...field} />
+                    <Input className="col-span-3" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -413,7 +455,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                 <FormItem>
                   <FormLabel>Usos Máximos</FormLabel>
                   <FormControl>
-                    <Input className='col-span-3' {...field} />
+                    <Input className="col-span-3" {...field} />
                   </FormControl>
                   <Button
                     type="button"
@@ -434,9 +476,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel >
-                      Esta Activo
-                    </FormLabel>
+                    <FormLabel>Esta Activo</FormLabel>
                   </div>
                   <FormControl>
                     <Switch
@@ -454,9 +494,10 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-              <DialogTitle>Descuento creado correctamente!</DialogTitle>
+            <DialogTitle>Descuento creado correctamente!</DialogTitle>
             <DialogDescription>
-              Ahora puede dirigirse al apartado de edición para conectar productos o categorías si así lo desea
+              Ahora puede dirigirse al apartado de edición para conectar
+              productos o categorías si así lo desea
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -465,14 +506,20 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                 Hecho
               </Button>
             </DialogClose>
-            <Button onClick={() => {
-              router.push(`/dashboard/promotions/discounts/edit/${createdDiscountId}`)
-            }}>Editar</Button>
+            <Button
+              onClick={() => {
+                router.push(
+                  `/dashboard/promotions/discounts/edit/${createdDiscountId}`,
+                );
+              }}
+            >
+              Editar
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }
 
-export default CreateDiscountForm
+export default CreateDiscountForm;

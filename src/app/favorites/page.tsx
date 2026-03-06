@@ -1,41 +1,55 @@
-import ProductCard from "@/components/ProductCard"
-import { getFavorites } from "@/lib/actions/favorites.actions"
-import { AdjustmentsHorizontalIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
-import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
-import { HeartOff } from "lucide-react"
-import { PaginationWithLinks } from "@/components/ui/paginations-with-links"
+import ProductCard from '@/components/ProductCard';
+import { getFavorites } from '@/lib/actions/favorites.actions';
+import {
+  AdjustmentsHorizontalIcon,
+  ChevronDownIcon,
+} from '@heroicons/react/24/outline';
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  Transition,
+} from '@headlessui/react';
+import { HeartOff } from 'lucide-react';
+import { PaginationWithLinks } from '@/components/ui/paginations-with-links';
 
 export const metadata = {
-  title: 'Favorites page'
-}
+  title: 'Favorites page',
+};
 
 async function FavoritesPage(
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>,
 ) {
+  const filters = await searchParams;
+  const pageSize = Number(filters.limit ?? 9);
+  const currentPage = Number(filters.page ?? 1);
 
-  const filters = await searchParams
-  const pageSize = Number(filters.limit ?? 9)
-  const currentPage = Number(filters.page ?? 1)
-
-  const { favoritesData } = await getFavorites({ page: currentPage, limit: pageSize })
-  console.log(favoritesData)
-  if (!favoritesData) return null
+  const { favoritesData } = await getFavorites({
+    page: currentPage,
+    limit: pageSize,
+  });
+  console.log(favoritesData);
+  if (!favoritesData) return null;
 
   return (
     <section className="mt-6 ">
-      <h1 className="font-bold text-xl flex justify-center items-center">FAVORITOS</h1>
+      <h1 className="font-bold text-xl flex justify-center items-center">
+        FAVORITOS
+      </h1>
 
       {/* products section */}
-      {favoritesData.favorites.length === 0 &&
+      {favoritesData.favorites.length === 0 && (
         <div className="w-fit mx-auto mt-10 mb-5 h-screen">
           <div className="flex flex-col space-y-3 items-center">
             <HeartOff className="w-10 h-10" />
-            <h1 className="font-bold text-lg">Aún no tienes ningún producto favorito</h1>
+            <h1 className="font-bold text-lg">
+              Aún no tienes ningún producto favorito
+            </h1>
           </div>
         </div>
-
-      }
-      {favoritesData.favorites.length !== 0 &&
+      )}
+      {favoritesData.favorites.length !== 0 && (
         <div className="w-fit mx-auto mt-10 mb-5">
           <div className="flex justify-between">
             <FiltersMenu />
@@ -47,7 +61,13 @@ async function FavoritesPage(
 
           <div className=" grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-8 gap-x-8">
             {favoritesData.favorites.map((favorite) => (
-              <ProductCard id={favorite.product.id} title={favorite.product.name} price={favorite.product.price} imgSrc={favorite.product.images[0]?.imgSrc} key={favorite.id} />
+              <ProductCard
+                id={favorite.product.id}
+                title={favorite.product.name}
+                price={favorite.product.price}
+                imgSrc={favorite.product.images[0]?.imgSrc}
+                key={favorite.id}
+              />
             ))}
           </div>
 
@@ -58,14 +78,11 @@ async function FavoritesPage(
               totalCount={favoritesData.metadata._count}
             />
           </div>
-
         </div>
-      }
+      )}
     </section>
-  )
-
+  );
 }
-
 
 function FiltersMenu() {
   return (
@@ -107,7 +124,7 @@ function FiltersMenu() {
         </Transition>
       </Menu>
     </div>
-  )
+  );
 }
 
-export default FavoritesPage
+export default FavoritesPage;

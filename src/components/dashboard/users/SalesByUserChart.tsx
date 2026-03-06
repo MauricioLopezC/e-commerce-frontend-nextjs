@@ -1,7 +1,7 @@
-"use client"
+'use client';
 
-import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { TrendingUp } from 'lucide-react';
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
 import {
   Card,
@@ -10,18 +10,18 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card';
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from '@/components/ui/chart';
 
 const chartConfig = {
   desktop: {
-    label: "TotalGastado",
-    color: "hsl(var(--chart-1))",
+    label: 'TotalGastado',
+    color: 'hsl(var(--chart-1))',
   },
 } satisfies ChartConfig;
 
@@ -35,7 +35,9 @@ export function SalesByUserChart({ chartData }: { chartData: ChartData[] }) {
     <Card>
       <CardHeader>
         <CardTitle>Compras por cliente</CardTitle>
-        <CardDescription>Total del valor de las compras por cliente</CardDescription>
+        <CardDescription>
+          Total del valor de las compras por cliente
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -52,7 +54,12 @@ export function SalesByUserChart({ chartData }: { chartData: ChartData[] }) {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="totalSpent" fill="var(--color-desktop)" radius={8} name="Total" />
+            <Bar
+              dataKey="totalSpent"
+              fill="var(--color-desktop)"
+              radius={8}
+              name="Total"
+            />
           </BarChart>
         </ChartContainer>
       </CardContent>
@@ -65,5 +72,5 @@ export function SalesByUserChart({ chartData }: { chartData: ChartData[] }) {
       {/*   </div> */}
       {/* </CardFooter> */}
     </Card>
-  )
+  );
 }

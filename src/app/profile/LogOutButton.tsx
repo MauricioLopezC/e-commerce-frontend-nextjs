@@ -1,5 +1,5 @@
-'use client'
-import { logOut } from "@/lib/actions/auth.actions";
+'use client';
+import { logOut } from '@/lib/actions/auth.actions';
 
 function LogOutButton() {
   return (
@@ -7,13 +7,13 @@ function LogOutButton() {
       <button
         className="px-6 py-2 bg-black text-white rounded-md"
         onClick={async () => {
-          await logOut()
+          await logOut();
         }}
       >
         CERRAR SESION
       </button>
     </div>
-  )
+  );
 }
 
-export default LogOutButton
+export default LogOutButton;

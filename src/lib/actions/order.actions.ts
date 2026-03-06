@@ -1,14 +1,14 @@
-"use server";
-import {cookies} from "next/headers";
-import {BACKEND_URL} from "@/queries/constants";
-import {getPayload} from "../jwt-decode";
-import {Order} from "@/interfaces/orders";
-import {revalidatePath, revalidateTag} from "next/cache";
-import {ErrorResponse} from "@/interfaces/responses";
+'use server';
+import { cookies } from 'next/headers';
+import { BACKEND_URL } from '@/queries/constants';
+import { getPayload } from '../jwt-decode';
+import { Order } from '@/interfaces/orders';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { ErrorResponse } from '@/interfaces/responses';
 
 export interface OrdersData {
   orders: Order[];
-  metadata: { _sum: { total: number, finalTotal: number }; _count: number };
+  metadata: { _sum: { total: number; finalTotal: number }; _count: number };
 }
 
 interface OrdersResponse {
@@ -29,9 +29,9 @@ interface GetOrdersOptions {
 }
 
 export async function getAllOrders(
-  options: GetOrdersOptions
+  options: GetOrdersOptions,
 ): Promise<OrdersResponse> {
-  const token = cookies().get("access-token")?.value ?? '';
+  const token = cookies().get('access-token')?.value ?? '';
 
   const queryParams = new URLSearchParams();
   let key: keyof GetOrdersOptions;
@@ -43,14 +43,14 @@ export async function getAllOrders(
   }
 
   const res = await fetch(`${BACKEND_URL}/orders?${queryParams.toString()}`, {
-    method: "GET",
-    credentials: "include",
+    method: 'GET',
+    credentials: 'include',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Cookie: `access-token=${token}`,
     },
     next: {
-      tags: ["orders"],
+      tags: ['orders'],
     },
   });
   if (res.ok) {
@@ -65,16 +65,18 @@ export async function getAllOrders(
 }
 
 interface CreateOrderDto {
-  email: string
-  country: string
-  city: string
-  postalCode: string
-  address: string
-  provider: string
+  email: string;
+  country: string;
+  city: string;
+  postalCode: string;
+  address: string;
+  provider: string;
 }
 
-export async function createOrder(data: CreateOrderDto): Promise<OneOrderResponse> {
-  const token = cookies().get("access-token")?.value ?? '';
+export async function createOrder(
+  data: CreateOrderDto,
+): Promise<OneOrderResponse> {
+  const token = cookies().get('access-token')?.value ?? '';
 
   const shipping = {
     country: data.country,
@@ -83,14 +85,14 @@ export async function createOrder(data: CreateOrderDto): Promise<OneOrderRespons
     address: data.address,
   };
 
-  const payment = {provider: data.provider};
-  const email = data.email
+  const payment = { provider: data.provider };
+  const email = data.email;
 
   const res = await fetch(`${BACKEND_URL}/me/orders`, {
-    method: "POST",
-    credentials: "include",
+    method: 'POST',
+    credentials: 'include',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Cookie: `access-token=${token}`,
     },
     body: JSON.stringify({
@@ -99,8 +101,8 @@ export async function createOrder(data: CreateOrderDto): Promise<OneOrderRespons
       payment,
     }),
   });
-  revalidatePath("/products/[productId]", "page");
-  revalidatePath("dashboard/products");
+  revalidatePath('/products/[productId]', 'page');
+  revalidatePath('dashboard/products');
 
   if (res.ok) {
     const order = await res.json();
@@ -114,44 +116,43 @@ export async function createOrder(data: CreateOrderDto): Promise<OneOrderRespons
 }
 
 export async function getUserOrders(): Promise<OrdersResponse> {
-  const token = cookies().get("access-token")?.value ?? '';
+  const token = cookies().get('access-token')?.value ?? '';
 
   const res = await fetch(`${BACKEND_URL}/me/orders`, {
-    method: "GET",
-    credentials: "include",
+    method: 'GET',
+    credentials: 'include',
     headers: {
       Cookie: `access-token=${token}`,
     },
   });
   if (res.ok) {
     const ordersData = await res.json();
-    return {ordersData};
+    return { ordersData };
   }
   const error = await res.json();
-  return {error};
+  return { error };
 }
 
 export async function updateOrderStatus(
   orderId: number,
-  status: string
+  status: string,
 ): Promise<OneOrderResponse> {
   console.log(orderId, status);
-  const token = cookies().get("access-token")?.value;
+  const token = cookies().get('access-token')?.value;
   const res = await fetch(`${BACKEND_URL}/orders/${orderId}`, {
-    method: "PATCH",
-    credentials: "include",
+    method: 'PATCH',
+    credentials: 'include',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Cookie: `access-token=${token}`,
     },
-    body: JSON.stringify({status: status}),
+    body: JSON.stringify({ status: status }),
   });
-  revalidateTag("orders");
+  revalidateTag('orders');
   if (res.ok) {
     const order = await res.json();
-    return {order};
+    return { order };
   }
   const error = await res.json();
-  return {error};
+  return { error };
 }
-

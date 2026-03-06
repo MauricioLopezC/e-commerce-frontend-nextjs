@@ -1,4 +1,9 @@
-import { ArrowPathIcon, GlobeAmericasIcon, ReceiptPercentIcon, TruckIcon } from '@heroicons/react/24/outline'
+import {
+  ArrowPathIcon,
+  GlobeAmericasIcon,
+  ReceiptPercentIcon,
+  TruckIcon,
+} from '@heroicons/react/24/outline';
 
 function FeaturesList() {
   return (
@@ -43,7 +48,7 @@ function FeaturesList() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default FeaturesList
+export default FeaturesList;

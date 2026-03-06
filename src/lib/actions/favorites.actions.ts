@@ -1,10 +1,10 @@
-'use server'
-import { cookies } from "next/headers"
-import { BACKEND_URL } from "@/queries/constants"
-import { getPayload } from "../jwt-decode"
-import { Favorite } from "@/interfaces/favorites"
-import { revalidatePath } from "next/cache"
-import { ErrorResponse } from "@/interfaces/responses";
+'use server';
+import { cookies } from 'next/headers';
+import { BACKEND_URL } from '@/queries/constants';
+import { getPayload } from '../jwt-decode';
+import { Favorite } from '@/interfaces/favorites';
+import { revalidatePath } from 'next/cache';
+import { ErrorResponse } from '@/interfaces/responses';
 
 interface FavoritesData {
   favorites: Favorite[];
@@ -13,7 +13,7 @@ interface FavoritesData {
 
 interface FavoritesResponse {
   favoritesData?: FavoritesData;
-  error?: ErrorResponse
+  error?: ErrorResponse;
 }
 
 interface GetFavoritesOptions {
@@ -22,93 +22,97 @@ interface GetFavoritesOptions {
   productId?: number;
 }
 
-export async function getFavorites(options: GetFavoritesOptions): Promise<FavoritesResponse> {
-  const token = cookies().get('access-token')?.value ?? ''
+export async function getFavorites(
+  options: GetFavoritesOptions,
+): Promise<FavoritesResponse> {
+  const token = cookies().get('access-token')?.value ?? '';
 
-  const queryParams = new URLSearchParams()
-  let key: keyof GetFavoritesOptions
+  const queryParams = new URLSearchParams();
+  let key: keyof GetFavoritesOptions;
   for (key in options) {
-    const value = options[key]
+    const value = options[key];
     if (value) {
-      queryParams.set(key, value.toString())
+      queryParams.set(key, value.toString());
     }
   }
 
-  const res = await fetch(`${BACKEND_URL}/me/favorites?${queryParams.toString()}`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      Cookie: `access-token=${token}`
-    }
-  })
+  const res = await fetch(
+    `${BACKEND_URL}/me/favorites?${queryParams.toString()}`,
+    {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        Cookie: `access-token=${token}`,
+      },
+    },
+  );
 
   if (res.ok) {
-    const favoritesData = await res.json()
+    const favoritesData = await res.json();
     return {
-      favoritesData
-    }
+      favoritesData,
+    };
   }
 
-  const error = await res.json()
+  const error = await res.json();
   return {
-    error
-  }
+    error,
+  };
 }
-
 
 interface CreateOrDeleteFavoriteResponse {
   favorite?: Favorite;
-  error?: ErrorResponse
+  error?: ErrorResponse;
 }
 
-export async function addFavorite(productId: number): Promise<CreateOrDeleteFavoriteResponse> {
-  const token = cookies().get('access-token')?.value ?? ''
+export async function addFavorite(
+  productId: number,
+): Promise<CreateOrDeleteFavoriteResponse> {
+  const token = cookies().get('access-token')?.value ?? '';
 
   const res = await fetch(`${BACKEND_URL}/me/favorites`, {
     method: 'POST',
     credentials: 'include',
     headers: {
-      "Content-Type": "application/json",
-      Cookie: `access-token=${token}`
+      'Content-Type': 'application/json',
+      Cookie: `access-token=${token}`,
     },
-    body: JSON.stringify({ productId })
-  })
+    body: JSON.stringify({ productId }),
+  });
 
-  revalidatePath('/favorites')
+  revalidatePath('/favorites');
   if (res.ok) {
-    const data = await res.json()
+    const data = await res.json();
     return {
-      favorite: data
-    }
+      favorite: data,
+    };
   }
 
-  const error = await res.json()
+  const error = await res.json();
   return {
-    error
-  }
+    error,
+  };
 }
 
 export async function deleteFavorite(favoriteId: number) {
-  const token = cookies().get('access-token')?.value ?? ''
+  const token = cookies().get('access-token')?.value ?? '';
 
   const res = await fetch(`${BACKEND_URL}/me/favorites/${favoriteId}`, {
     method: 'DELETE',
     credentials: 'include',
     headers: {
-      Cookie: `access-token=${token}`
+      Cookie: `access-token=${token}`,
     },
-  })
-  revalidatePath('/favorites')
+  });
+  revalidatePath('/favorites');
   if (res.ok) {
-    const favorite = await res.json()
+    const favorite = await res.json();
     return {
-      favorite
-    }
+      favorite,
+    };
   }
-  const error = res.json()
+  const error = res.json();
   return {
-    error
-  }
+    error,
+  };
 }
-
-

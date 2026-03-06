@@ -1,5 +1,5 @@
-'use client'
-import { z } from '@/lib/zod/es-zod'
+'use client';
+import { z } from '@/lib/zod/es-zod';
 import {
   Form,
   FormControl,
@@ -7,24 +7,24 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Card, CardHeader, CardContent, CardTitle } from '../ui/card'
-import { Input } from '../ui/input'
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { Calendar, CreditCard, Lock } from 'lucide-react'
-import { Button } from '../ui/button'
-import { createOrder } from '@/lib/actions/order.actions'
-import { useRouter } from 'next/navigation'
+} from '@/components/ui/form';
+import { Card, CardHeader, CardContent, CardTitle } from '../ui/card';
+import { Input } from '../ui/input';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { Calendar, CreditCard, Lock } from 'lucide-react';
+import { Button } from '../ui/button';
+import { createOrder } from '@/lib/actions/order.actions';
+import { useRouter } from 'next/navigation';
 
 enum PaymentProvider {
-  PAYPAL = "PAYPAL",
-  VISA = "VISA",
-  MASTERCARD = "MASTERCARD",
-  APPLE_PAY = "APPLE_PAY",
-  OTHER = "OTHER",
+  PAYPAL = 'PAYPAL',
+  VISA = 'VISA',
+  MASTERCARD = 'MASTERCARD',
+  APPLE_PAY = 'APPLE_PAY',
+  OTHER = 'OTHER',
 }
 
 const formSchema = z.object({
@@ -37,7 +37,7 @@ const formSchema = z.object({
   lastName: z.string().min(1),
   country: z.string().min(1),
   city: z.string().min(1),
-  postalCode: z.string().min(1,),
+  postalCode: z.string().min(1),
   address: z.string().min(1),
 
   // Payment Method
@@ -45,36 +45,38 @@ const formSchema = z.object({
 
   // Card Details
   cardNumber: z.string().min(16).max(19),
-  expiryDate: z.string().regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "Formato inválido (MM/AA)"),
+  expiryDate: z
+    .string()
+    .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, 'Formato inválido (MM/AA)'),
   cvv: z.string().min(3).max(4),
-})
+});
 
 function CheckOutFormv2() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      phone: "",
-      email: "mauroagustin.lopez.456@gmail.com",
-      firstName: "",
-      lastName: "",
-      country: "Argentina",
-      city: "salta",
-      postalCode: "4400",
-      address: "",
+      phone: '',
+      email: 'mauroagustin.lopez.456@gmail.com',
+      firstName: '',
+      lastName: '',
+      country: 'Argentina',
+      city: 'salta',
+      postalCode: '4400',
+      address: '',
       payment: PaymentProvider.VISA,
-      cardNumber: "4242 4242 4242 4242",
-      expiryDate: "02/27",
-      cvv: "",
+      cardNumber: '4242 4242 4242 4242',
+      expiryDate: '02/27',
+      cvv: '',
     },
-  })
+  });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setIsSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    console.log(data)
+    setIsSubmitting(true);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    console.log(data);
 
     const { order } = await createOrder({
       email: data.email,
@@ -82,37 +84,36 @@ function CheckOutFormv2() {
       city: data.city,
       postalCode: data.postalCode,
       address: data.address,
-      provider: data.payment
-    })
+      provider: data.payment,
+    });
     if (order) {
-      setIsSubmitting(false)
-      router.push('/checkout/confirm')
+      setIsSubmitting(false);
+      router.push('/checkout/confirm');
     }
-
-  }
+  };
 
   const formatCardNumber = (value: string) => {
-    const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "")
-    const matches = v.match(/\d{4,16}/g)
-    const match = (matches && matches[0]) || ""
-    const parts = []
+    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+    const matches = v.match(/\d{4,16}/g);
+    const match = (matches && matches[0]) || '';
+    const parts = [];
     for (let i = 0, len = match.length; i < len; i += 4) {
-      parts.push(match.substring(i, i + 4))
+      parts.push(match.substring(i, i + 4));
     }
     if (parts.length) {
-      return parts.join(" ")
+      return parts.join(' ');
     } else {
-      return v
+      return v;
     }
-  }
+  };
 
   const formatExpiryDate = (value: string) => {
-    const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "")
+    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
     if (v.length >= 2) {
-      return v.substring(0, 2) + "/" + v.substring(2, 4)
+      return v.substring(0, 2) + '/' + v.substring(2, 4);
     }
-    return v
-  }
+    return v;
+  };
 
   return (
     <Form {...form}>
@@ -120,7 +121,9 @@ function CheckOutFormv2() {
         {/* Personal Information */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-semibold">INFORMACIÓN PERSONAL</CardTitle>
+            <CardTitle className="text-lg font-semibold">
+              INFORMACIÓN PERSONAL
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
@@ -130,7 +133,11 @@ function CheckOutFormv2() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input placeholder="Número de teléfono" className="h-12" {...field} />
+                      <Input
+                        placeholder="Número de teléfono"
+                        className="h-12"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -155,7 +162,9 @@ function CheckOutFormv2() {
         {/* Shipping Information */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-semibold">INFORMACIÓN DE ENVÍO</CardTitle>
+            <CardTitle className="text-lg font-semibold">
+              INFORMACIÓN DE ENVÍO
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
@@ -177,7 +186,11 @@ function CheckOutFormv2() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input placeholder="Apellido" className="h-12" {...field} />
+                      <Input
+                        placeholder="Apellido"
+                        className="h-12"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -215,7 +228,11 @@ function CheckOutFormv2() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input placeholder="Código Postal" className="h-12" {...field} />
+                      <Input
+                        placeholder="Código Postal"
+                        className="h-12"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -228,7 +245,11 @@ function CheckOutFormv2() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="Dirección" className="h-12" {...field} />
+                    <Input
+                      placeholder="Dirección"
+                      className="h-12"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -240,7 +261,9 @@ function CheckOutFormv2() {
         {/* Payment Method */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-semibold">MÉTODO DE PAGO</CardTitle>
+            <CardTitle className="text-lg font-semibold">
+              MÉTODO DE PAGO
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <FormField
@@ -249,28 +272,56 @@ function CheckOutFormv2() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="space-y-3">
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="space-y-3"
+                    >
                       <div className="flex items-center space-x-2">
-                        <RadioGroupItem value={PaymentProvider.VISA} id="visa" />
-                        <FormLabel htmlFor="visa" className="font-medium cursor-pointer">
+                        <RadioGroupItem
+                          value={PaymentProvider.VISA}
+                          id="visa"
+                        />
+                        <FormLabel
+                          htmlFor="visa"
+                          className="font-medium cursor-pointer"
+                        >
                           VISA
                         </FormLabel>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <RadioGroupItem value={PaymentProvider.MASTERCARD} id="mastercard" />
-                        <FormLabel htmlFor="mastercard" className="font-medium cursor-pointer">
+                        <RadioGroupItem
+                          value={PaymentProvider.MASTERCARD}
+                          id="mastercard"
+                        />
+                        <FormLabel
+                          htmlFor="mastercard"
+                          className="font-medium cursor-pointer"
+                        >
                           MASTERCARD
                         </FormLabel>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <RadioGroupItem value={PaymentProvider.APPLE_PAY} id="apple_pay" />
-                        <FormLabel htmlFor="apple_pay" className="font-medium cursor-pointer">
+                        <RadioGroupItem
+                          value={PaymentProvider.APPLE_PAY}
+                          id="apple_pay"
+                        />
+                        <FormLabel
+                          htmlFor="apple_pay"
+                          className="font-medium cursor-pointer"
+                        >
                           APPLE_PAY
                         </FormLabel>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <RadioGroupItem value={PaymentProvider.PAYPAL} id="paypal" />
-                        <FormLabel htmlFor="paypal" className="font-medium cursor-pointer">
+                        <RadioGroupItem
+                          value={PaymentProvider.PAYPAL}
+                          id="paypal"
+                        />
+                        <FormLabel
+                          htmlFor="paypal"
+                          className="font-medium cursor-pointer"
+                        >
                           PAYPAL
                         </FormLabel>
                       </div>
@@ -286,7 +337,9 @@ function CheckOutFormv2() {
         {/* Card Details */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg font-semibold">DETALLES DE TARJETA</CardTitle>
+            <CardTitle className="text-lg font-semibold">
+              DETALLES DE TARJETA
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <FormField
@@ -302,8 +355,8 @@ function CheckOutFormv2() {
                         className="h-12 pl-10"
                         {...field}
                         onChange={(e) => {
-                          const formatted = formatCardNumber(e.target.value)
-                          field.onChange(formatted)
+                          const formatted = formatCardNumber(e.target.value);
+                          field.onChange(formatted);
                         }}
                         maxLength={19}
                       />
@@ -327,8 +380,8 @@ function CheckOutFormv2() {
                           className="h-12 pl-10"
                           {...field}
                           onChange={(e) => {
-                            const formatted = formatExpiryDate(e.target.value)
-                            field.onChange(formatted)
+                            const formatted = formatExpiryDate(e.target.value);
+                            field.onChange(formatted);
                           }}
                           maxLength={5}
                         />
@@ -369,11 +422,11 @@ function CheckOutFormv2() {
           className="w-full h-14 bg-gray-800 hover:bg-gray-900 text-white text-lg font-semibold"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "PROCESANDO..." : "PAGAR"}
+          {isSubmitting ? 'PROCESANDO...' : 'PAGAR'}
         </Button>
       </form>
     </Form>
-  )
+  );
 }
 
-export default CheckOutFormv2
+export default CheckOutFormv2;

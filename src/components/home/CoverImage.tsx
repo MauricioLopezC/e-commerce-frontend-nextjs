@@ -1,10 +1,10 @@
-'use client'
-import { CldImage } from "next-cloudinary"
+'use client';
+import { CldImage } from 'next-cloudinary';
 
 function CoverImage() {
   return (
     <CldImage
-      src='e-commerce/svhli2rcuzbevgkgym1f'
+      src="e-commerce/svhli2rcuzbevgkgym1f"
       height="1920"
       width="1080"
       //className="w-full max-h-[70vh] object-cover rounded-md"
@@ -13,7 +13,7 @@ function CoverImage() {
       alt="cover image"
       priority
     />
-  )
+  );
 }
 
-export default CoverImage
+export default CoverImage;

@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 
 interface OrderState {
   orderId: number | null;
@@ -7,8 +7,9 @@ interface OrderState {
 
 export const useOrdersStore = create<OrderState>()((set) => ({
   orderId: null,
-  updateSelectedOrderId: (newSelectedId: number) => set({ orderId: newSelectedId }),
-}))
+  updateSelectedOrderId: (newSelectedId: number) =>
+    set({ orderId: newSelectedId }),
+}));
 
 interface OrderPaginationState {
   page: number;
@@ -22,6 +23,4 @@ export const useOrderPagination = create<OrderPaginationState>()((set) => ({
   updatePage: (newPage: number) => set({ page: newPage }),
   nextPage: () => set((state) => ({ page: state.page + 1 })),
   previousPage: () => set((state) => ({ page: state.page - 1 })),
-}))
-
-
+}));

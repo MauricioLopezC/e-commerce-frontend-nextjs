@@ -5,7 +5,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from '@/components/ui/breadcrumb';
 
 function ProductPageBreadCrumbs({ productName }: { productName: string }) {
   return (
@@ -24,8 +24,7 @@ function ProductPageBreadCrumbs({ productName }: { productName: string }) {
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
-
-  )
+  );
 }
 
-export default ProductPageBreadCrumbs
+export default ProductPageBreadCrumbs;

@@ -1,4 +1,4 @@
-import { Product, ProductSku } from '@/interfaces/products/product'
+import { Product, ProductSku } from '@/interfaces/products/product';
 import { User } from './users';
 import { Discount } from './discounts';
 
@@ -20,12 +20,12 @@ export interface Order {
 }
 
 interface DiscountsData {
-  discountId: number
-  orderId: number
-  appliedTimes: number
-  discountAmount: number
-  assignedAt: Date
-  discount: Discount
+  discountId: number;
+  orderId: number;
+  appliedTimes: number;
+  discountAmount: number;
+  assignedAt: Date;
+  discount: Discount;
 }
 
 export interface OrderItem {
