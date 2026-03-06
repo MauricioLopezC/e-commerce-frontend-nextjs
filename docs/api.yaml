@@ -1,0 +1,2540 @@
+openapi: 3.0.0
+paths:
+  /:
+    get:
+      operationId: AppController_getHello
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
+      tags:
+        - App
+  /products:
+    post:
+      operationId: ProductsController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseDto'
+      tags:
+        - Products
+    get:
+      operationId: ProductsController_findAll
+      parameters:
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 20
+            default: 10
+            type: number
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 1
+            type: number
+        - name: category
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: name
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: sex
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - MALE
+              - FEMALE
+              - UNISEX
+        - name: orderBy
+          required: false
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+      tags:
+        - Products
+  /products/{id}:
+    get:
+      operationId: ProductsController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseDto'
+      tags:
+        - Products
+    patch:
+      operationId: ProductsController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseDto'
+      tags:
+        - Products
+    delete:
+      operationId: ProductsController_remove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseDto'
+      tags:
+        - Products
+  /products/{id}/categories:
+    post:
+      operationId: ProductsController_connectCategories
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectCategoriesDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseDto'
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseDto'
+      tags:
+        - Products
+    delete:
+      operationId: ProductsController_disconnectCategories
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectCategoriesDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseDto'
+      tags:
+        - Products
+    put:
+      operationId: ProductsController_replaceCategories
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectCategoriesDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseDto'
+      tags:
+        - Products
+  /products/{productId}/product-skus:
+    post:
+      operationId: ProductSkusController_create
+      parameters:
+        - name: productId
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductSkusDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductSkuResponseDto'
+      tags:
+        - ProductSkus
+    get:
+      operationId: ProductSkusController_findAll
+      parameters:
+        - name: productId
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductSkuResponseDto'
+      tags:
+        - ProductSkus
+  /products/{productId}/product-skus/{id}:
+    get:
+      operationId: ProductSkusController_findOne
+      parameters:
+        - name: productId
+          required: true
+          in: path
+          schema:
+            type: number
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductSkuResponseDto'
+      tags:
+        - ProductSkus
+    patch:
+      operationId: ProductSkusController_update
+      parameters:
+        - name: productId
+          required: true
+          in: path
+          schema:
+            type: number
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductSkusDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductSkuResponseDto'
+      tags:
+        - ProductSkus
+    delete:
+      operationId: ProductSkusController_remove
+      parameters:
+        - name: productId
+          required: true
+          in: path
+          schema:
+            type: number
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductSkuResponseDto'
+      tags:
+        - ProductSkus
+  /products/{productId}/product-skus/batch:
+    post:
+      operationId: ProductSkusController_batchCreate
+      parameters:
+        - name: productId
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBatchProductSkusDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductSkuBatchUpdateResponse'
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - ProductSkus
+  /images:
+    post:
+      operationId: ImagesController_createAndUpload
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateImageDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResponseDto'
+        '201':
+          description: ''
+      tags:
+        - Images
+  /images/batch:
+    post:
+      operationId: ImagesController_batchCreateAndUpload
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ImageResponseDto'
+        '201':
+          description: ''
+      tags:
+        - Images
+  /images/{id}:
+    delete:
+      operationId: ImagesController_deleteAndDestroy
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteImageResponseDto'
+      tags:
+        - Images
+  /categories:
+    post:
+      operationId: CategoriesController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponseDto'
+      tags:
+        - Categories
+    get:
+      operationId: CategoriesController_findAll
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryResponseDto'
+      tags:
+        - Categories
+  /categories/{id}:
+    get:
+      operationId: CategoriesController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponseDto'
+      tags:
+        - Categories
+    patch:
+      operationId: CategoriesController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCategoryDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponseDto'
+      tags:
+        - Categories
+    delete:
+      operationId: CategoriesController_remove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponseDto'
+      tags:
+        - Categories
+  /users:
+    post:
+      operationId: UsersController_createUser
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+      tags:
+        - Users
+    get:
+      operationId: UsersController_findAllUsers
+      parameters:
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 20
+            default: 10
+            type: number
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 1
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersListResponseDto'
+      tags:
+        - Users
+  /users/{id}:
+    get:
+      operationId: UsersController_findOneUser
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+      tags:
+        - Users
+    patch:
+      operationId: UsersController_updateUser
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+      tags:
+        - Users
+    delete:
+      operationId: UsersController_deleteUser
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+      tags:
+        - Users
+  /users/{id}/ban:
+    patch:
+      operationId: UsersController_banUser
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+      tags:
+        - Users
+  /users/{id}/unban:
+    patch:
+      operationId: UsersController_unBanUser
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+      tags:
+        - Users
+  /auth/register:
+    post:
+      operationId: AuthController_register
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - Auth
+  /auth/login:
+    post:
+      operationId: AuthController_login
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Auth
+  /auth/logout:
+    post:
+      operationId: AuthController_logout
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Auth
+  /auth/profile:
+    get:
+      operationId: AuthController_getProfile
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - Auth
+  /me/cart:
+    get:
+      operationId: CartController_findCart
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartWithMetadataResponse'
+      tags:
+        - Cart
+  /me/cart/total-discount:
+    get:
+      operationId: CartController_calculateDiscounts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - Cart
+  /promotions/discounts:
+    post:
+      operationId: DiscountsController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDiscountDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscountResponseDto'
+      tags:
+        - Discounts
+    get:
+      operationId: DiscountsController_findAll
+      parameters:
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 20
+            default: 10
+            type: number
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 1
+            type: number
+        - name: isActive
+          required: false
+          in: query
+          schema:
+            type: boolean
+        - name: discountType
+          required: false
+          in: query
+          schema:
+            $ref: '#/components/schemas/Object'
+        - name: applicableTo
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - PRODUCT
+              - CATEGORY
+              - GENERAL
+        - name: orderBy
+          required: false
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscountsListResponseDto'
+      tags:
+        - Discounts
+  /promotions/discounts/{id}:
+    get:
+      operationId: DiscountsController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscountResponseDto'
+      tags:
+        - Discounts
+    patch:
+      operationId: DiscountsController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDiscountDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscountResponseDto'
+      tags:
+        - Discounts
+    delete:
+      operationId: DiscountsController_delete
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscountResponseDto'
+      tags:
+        - Discounts
+  /search/products:
+    get:
+      operationId: SearchController_searchProduct
+      parameters:
+        - name: productName
+          required: true
+          in: query
+          schema:
+            maxLength: 100
+            type: string
+        - name: limit
+          required: true
+          in: query
+          schema:
+            minimum: 1
+            maximum: 20
+            default: 10
+            type: number
+        - name: page
+          required: true
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 1
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponseDto'
+      tags:
+        - Search
+  /search/products/test:
+    get:
+      operationId: SearchController_searchText
+      parameters:
+        - name: productName
+          required: true
+          in: query
+          schema:
+            maxLength: 100
+            type: string
+        - name: limit
+          required: true
+          in: query
+          schema:
+            minimum: 1
+            maximum: 20
+            default: 10
+            type: number
+        - name: page
+          required: true
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 1
+            type: number
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Search
+  /me/cart-items:
+    post:
+      operationId: CartItemsController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCartItemDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartItemResponseDto'
+      tags:
+        - CartItems
+    get:
+      operationId: CartItemsController_findAll
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CartItemResponseDto'
+      tags:
+        - CartItems
+  /me/cart-items/{id}:
+    get:
+      operationId: CartItemsController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartItemResponseDto'
+      tags:
+        - CartItems
+    patch:
+      operationId: CartItemsController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCartItemDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartItemResponseDto'
+      tags:
+        - CartItems
+    delete:
+      operationId: CartItemsController_remove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartItemResponseDto'
+      tags:
+        - CartItems
+  /users/{userId}/favorites:
+    get:
+      operationId: UsersFavoritesController_findAll
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 20
+            default: 10
+            type: number
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 1
+            type: number
+        - name: productId
+          required: false
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+      tags:
+        - UsersFavorites
+  /users/{userId}/favorites/{id}:
+    get:
+      operationId: UsersFavoritesController_findOne
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: number
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+      tags:
+        - UsersFavorites
+    patch:
+      operationId: UsersFavoritesController_update
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: number
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFavoriteDto'
+      responses:
+        '200':
+          description: ''
+      tags:
+        - UsersFavorites
+    delete:
+      operationId: UsersFavoritesController_remove
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: number
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+      tags:
+        - UsersFavorites
+  /me/favorites:
+    post:
+      operationId: MeFavoritesController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFavoriteDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - MeFavorites
+    get:
+      operationId: MeFavoritesController_findAllByUserId
+      parameters:
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 20
+            default: 10
+            type: number
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 1
+            type: number
+        - name: productId
+          required: false
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoritesListResponseDto'
+      tags:
+        - MeFavorites
+  /me/favorites/{id}:
+    get:
+      operationId: MeFavoritesController_findOneByUserId
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - MeFavorites
+    patch:
+      operationId: MeFavoritesController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFavoriteDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - MeFavorites
+    delete:
+      operationId: MeFavoritesController_remove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - MeFavorites
+  /mails:
+    post:
+      operationId: MailsController_sendEmail
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Mails
+  /me/orders:
+    post:
+      operationId: MeOrdersController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponseDto'
+      tags:
+        - MeOrders
+    get:
+      operationId: MeOrdersController_findAll
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderListResponse'
+      tags:
+        - MeOrders
+  /me/orders/{id}:
+    get:
+      operationId: MeOrdersController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponseDto'
+      tags:
+        - MeOrders
+  /orders:
+    get:
+      operationId: AdminOrdersController_findAll
+      parameters:
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 20
+            default: 10
+            type: number
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 1
+            type: number
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - IN_PROGRESS
+              - COMPLETED
+              - CANCELLED
+              - FAILED
+        - name: email
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: startDate
+          required: false
+          in: query
+          schema:
+            format: date-time
+            type: string
+        - name: endDate
+          required: false
+          in: query
+          schema:
+            format: date-time
+            type: string
+        - name: orderBy
+          required: false
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderListResponse'
+      tags:
+        - AdminOrders
+  /orders/{id}:
+    get:
+      operationId: AdminOrdersController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponseDto'
+      tags:
+        - AdminOrders
+    patch:
+      operationId: AdminOrdersController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponseDto'
+      tags:
+        - AdminOrders
+  /users/{userId}/orders:
+    get:
+      operationId: AdminUserOrdersController_findAll
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderListResponse'
+      tags:
+        - AdminUserOrders
+  /users/{userId}/orders/{id}:
+    get:
+      operationId: AdminUserOrdersController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponseDto'
+      tags:
+        - AdminUserOrders
+    delete:
+      operationId: AdminUserOrdersController_delete
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponseDto'
+      tags:
+        - AdminUserOrders
+  /statistics/sales/monthly:
+    get:
+      operationId: StatisticsController_getTotalSalesByMonth
+      parameters:
+        - name: startDate
+          required: true
+          in: query
+          schema:
+            format: date-time
+            type: string
+        - name: endDate
+          required: true
+          in: query
+          schema:
+            format: date-time
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TotalSalesByMonth'
+      tags:
+        - Statistics
+  /statistics/sales/by-user:
+    get:
+      operationId: StatisticsController_salesByUser
+      parameters:
+        - name: startDate
+          required: true
+          in: query
+          schema:
+            format: date-time
+            type: string
+        - name: endDate
+          required: true
+          in: query
+          schema:
+            format: date-time
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+      tags:
+        - Statistics
+  /statistics/sales/by-category:
+    get:
+      operationId: StatisticsController_salesByCategory
+      parameters:
+        - name: startDate
+          required: true
+          in: query
+          schema:
+            format: date-time
+            type: string
+        - name: endDate
+          required: true
+          in: query
+          schema:
+            format: date-time
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SaleByCategory'
+      tags:
+        - Statistics
+  /statistics/sales/by-product:
+    get:
+      operationId: StatisticsController_salesByProduct
+      parameters:
+        - name: startDate
+          required: true
+          in: query
+          schema:
+            format: date-time
+            type: string
+        - name: endDate
+          required: true
+          in: query
+          schema:
+            format: date-time
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SaleByProduct'
+      tags:
+        - Statistics
+info:
+  title: E-commerce api
+  description: Api of the Martina clothing store
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    CreateProductDto:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+          minimum: 1
+        description:
+          type: string
+        categories:
+          type: array
+          items:
+            type: number
+            minimum: 0
+        sex:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - UNISEX
+      required:
+        - name
+        - price
+        - description
+        - categories
+        - sex
+    Image:
+      type: object
+      properties: {}
+    ProductSkuResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        productId:
+          type: number
+        size:
+          type: string
+        color:
+          type: string
+        quantity:
+          type: number
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+      required:
+        - id
+        - productId
+        - size
+        - color
+        - quantity
+        - createdAt
+        - updatedAt
+    CategoryResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - name
+        - description
+        - createdAt
+        - updatedAt
+    ProductResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        price:
+          type: number
+        description:
+          type: string
+        sex:
+          enum:
+            - MALE
+            - FEMALE
+            - UNISEX
+          type: string
+        unitsOnOrder:
+          type: number
+        totalCollected:
+          type: number
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        productSkus:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductSkuResponseDto'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryResponseDto'
+      required:
+        - id
+        - name
+        - price
+        - description
+        - sex
+        - unitsOnOrder
+        - totalCollected
+        - images
+        - createdAt
+        - updatedAt
+        - categories
+    Metadata:
+      type: object
+      properties:
+        _count:
+          type: number
+      required:
+        - _count
+    ProductListResponse:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductResponseDto'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      required:
+        - products
+        - metadata
+    UpdateProductDto:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+          minimum: 1
+        description:
+          type: string
+        sex:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - UNISEX
+      required:
+        - name
+        - price
+        - description
+        - sex
+    ConnectCategoriesDto:
+      type: object
+      properties:
+        categoryIds:
+          type: array
+          items:
+            type: number
+            minimum: 0
+      required:
+        - categoryIds
+    CreateProductSkusDto:
+      type: object
+      properties:
+        size:
+          type: string
+        color:
+          type: string
+        quantity:
+          type: number
+      required:
+        - size
+        - color
+        - quantity
+    UpdateProductSkusDto:
+      type: object
+      properties:
+        size:
+          type: string
+        color:
+          type: string
+        quantity:
+          type: number
+      required:
+        - size
+        - color
+        - quantity
+    CreateBatchProductSkusDto:
+      type: object
+      properties:
+        productSkus:
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateProductSkusDto'
+      required:
+        - productSkus
+    ProductSkuBatchUpdateResponse:
+      type: object
+      properties:
+        count:
+          type: number
+      required:
+        - count
+    CreateImageDto:
+      type: object
+      properties:
+        productId:
+          type: number
+        productSkuId:
+          type: number
+      required:
+        - productId
+        - productSkuId
+    ImageResponseDto:
+      type: object
+      properties:
+        url:
+          type: string
+      required:
+        - url
+    DeleteImageResponseDto:
+      type: object
+      properties:
+        ok:
+          type: string
+      required:
+        - ok
+    CreateCategoryDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 30
+        description:
+          type: string
+          maxLength: 200
+      required:
+        - name
+        - description
+    UpdateCategoryDto:
+      type: object
+      properties: {}
+    CreateUserDto:
+      type: object
+      properties:
+        firstName:
+          type: string
+          maxLength: 100
+        lastName:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+    UserResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        verifiedEmail:
+          type: boolean
+        role:
+          type: string
+        isBanned:
+          type: boolean
+        profileImage:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        totalSpent:
+          type: number
+        totalOrders:
+          type: number
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - verifiedEmail
+        - role
+        - isBanned
+        - profileImage
+        - createdAt
+        - updatedAt
+    UsersListResponseDto:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserResponseDto'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      required:
+        - users
+        - metadata
+    UpdateUserDto:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+      required:
+        - firstName
+        - lastName
+        - email
+    LoginDto:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+        - email
+        - password
+    CartItemResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        cartId:
+          type: number
+        productId:
+          type: number
+        productSkuId:
+          type: number
+        quantity:
+          type: number
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        product:
+          $ref: '#/components/schemas/ProductResponseDto'
+        productSku:
+          $ref: '#/components/schemas/ProductSkuResponseDto'
+      required:
+        - id
+        - cartId
+        - productId
+        - productSkuId
+        - quantity
+        - createdAt
+        - updatedAt
+        - product
+        - productSku
+    CartResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        userId:
+          type: number
+        updatedAt:
+          format: date-time
+          type: string
+        cartItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItemResponseDto'
+      required:
+        - id
+        - userId
+        - updatedAt
+        - cartItems
+    CartWithMetadataResponse:
+      type: object
+      properties:
+        cart:
+          $ref: '#/components/schemas/CartResponseDto'
+        metadata:
+          type: object
+          properties:
+            cartTotal:
+              type: number
+          required:
+            - cartTotal
+      required:
+        - cart
+        - metadata
+    CreateDiscountDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 200
+        discountType:
+          type: string
+          enum:
+            - PERCENTAGE
+            - FIXED
+        value:
+          type: number
+          minimum: 1
+        startDate:
+          format: date-time
+          type: string
+        endDate:
+          format: date-time
+          type: string
+        applicableTo:
+          type: string
+          enum:
+            - PRODUCT
+            - CATEGORY
+            - GENERAL
+        orderThreshold:
+          type: number
+          default: 0
+          minimum: 0
+        maxUses:
+          type: number
+          minimum: 1
+        isActive:
+          type: boolean
+          default: true
+        products:
+          type: array
+          items:
+            type: number
+            minimum: 1
+        categories:
+          type: array
+          items:
+            type: number
+            minimum: 1
+      required:
+        - name
+        - description
+        - discountType
+        - value
+        - startDate
+        - endDate
+        - applicableTo
+        - orderThreshold
+        - maxUses
+        - isActive
+        - products
+        - categories
+    DiscountResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        discountType:
+          enum:
+            - PERCENTAGE
+            - FIXED
+          type: string
+        value:
+          type: number
+        startDate:
+          format: date-time
+          type: string
+        endDate:
+          format: date-time
+          type: string
+        applicableTo:
+          enum:
+            - PRODUCT
+            - CATEGORY
+            - GENERAL
+          type: string
+        orderThreshold:
+          type: number
+        maxUses:
+          type: number
+        currentUses:
+          type: number
+        isActive:
+          type: boolean
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductResponseDto'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryResponseDto'
+      required:
+        - id
+        - name
+        - discountType
+        - value
+        - startDate
+        - endDate
+        - applicableTo
+        - currentUses
+        - isActive
+        - createdAt
+        - updatedAt
+        - products
+        - categories
+    Object:
+      type: object
+      properties: {}
+    DiscountsListResponseDto:
+      type: object
+      properties:
+        discounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscountResponseDto'
+        metadata:
+          type: object
+          properties:
+            _count:
+              type: number
+          required:
+            - _count
+      required:
+        - discounts
+        - metadata
+    UpdateDiscountDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 200
+        discountType:
+          type: string
+          enum:
+            - PERCENTAGE
+            - FIXED
+        value:
+          type: number
+          minimum: 1
+        startDate:
+          format: date-time
+          type: string
+        endDate:
+          format: date-time
+          type: string
+        applicableTo:
+          type: string
+          enum:
+            - PRODUCT
+            - CATEGORY
+            - GENERAL
+        orderThreshold:
+          type: number
+          minimum: 0
+        maxUses:
+          type: number
+          minimum: 1
+        isActive:
+          type: boolean
+          default: true
+        products:
+          type: array
+          items:
+            type: number
+            minimum: 1
+        categories:
+          type: array
+          items:
+            type: number
+            minimum: 1
+      required:
+        - name
+        - description
+        - discountType
+        - value
+        - startDate
+        - endDate
+        - applicableTo
+        - orderThreshold
+        - maxUses
+        - isActive
+        - products
+        - categories
+    SearchResponseDto:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductResponseDto'
+        metadata:
+          type: object
+          properties:
+            _count:
+              type: number
+          required:
+            - _count
+      required:
+        - products
+        - metadata
+    CreateCartItemDto:
+      type: object
+      properties:
+        productId:
+          type: number
+        productSkuId:
+          type: number
+        quantity:
+          type: number
+          minimum: 1
+      required:
+        - productId
+        - productSkuId
+        - quantity
+    UpdateCartItemDto:
+      type: object
+      properties:
+        quantity:
+          type: number
+          minimum: 1
+      required:
+        - quantity
+    UpdateFavoriteDto:
+      type: object
+      properties:
+        productId:
+          type: number
+        userId:
+          type: number
+      required:
+        - productId
+        - userId
+    CreateFavoriteDto:
+      type: object
+      properties:
+        productId:
+          type: number
+      required:
+        - productId
+    FavoritesListResponseDto:
+      type: object
+      properties:
+        favorites:
+          type: array
+          items:
+            type: object
+        metadata:
+          type: object
+          properties:
+            _count:
+              type: number
+          required:
+            - _count
+      required:
+        - favorites
+        - metadata
+    CreateShippingDto:
+      type: object
+      properties:
+        country:
+          type: string
+        city:
+          type: string
+        postalCode:
+          type: string
+        address:
+          type: string
+      required:
+        - country
+        - city
+        - postalCode
+        - address
+    CreatePaymentDto:
+      type: object
+      properties:
+        provider:
+          type: string
+          enum:
+            - PAYPAL
+            - VISA
+            - MASTERCARD
+            - APPLE_PAY
+            - OTHER
+      required:
+        - provider
+    CreateOrderDto:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        shipping:
+          $ref: '#/components/schemas/CreateShippingDto'
+        payment:
+          $ref: '#/components/schemas/CreatePaymentDto'
+      required:
+        - email
+        - shipping
+        - payment
+    OrderItemResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        orderId:
+          type: number
+        productId:
+          type: number
+        productSkuId:
+          type: number
+        quantity:
+          type: number
+        price:
+          type: number
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        product:
+          $ref: '#/components/schemas/ProductResponseDto'
+        productSku:
+          $ref: '#/components/schemas/ProductSkuResponseDto'
+      required:
+        - id
+        - orderId
+        - productId
+        - productSkuId
+        - quantity
+        - price
+        - createdAt
+        - updatedAt
+    PaymentResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        orderId:
+          type: number
+        provider:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - orderId
+        - provider
+        - createdAt
+        - updatedAt
+    ShippingResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        orderId:
+          type: number
+        country:
+          type: string
+        city:
+          type: string
+        postalCode:
+          type: string
+        address:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - orderId
+        - country
+        - city
+        - postalCode
+        - address
+        - createdAt
+        - updatedAt
+    DiscountsData:
+      type: object
+      properties:
+        discountId:
+          type: number
+        orderId:
+          type: number
+        appliedTimes:
+          type: number
+        discountAmount:
+          type: number
+        assignedAt:
+          format: date-time
+          type: string
+        discount:
+          $ref: '#/components/schemas/DiscountResponseDto'
+      required:
+        - discountId
+        - orderId
+        - appliedTimes
+        - discountAmount
+        - assignedAt
+        - discount
+    OrderResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        userId:
+          type: number
+        status:
+          type: string
+        total:
+          type: number
+        discountAmount:
+          type: number
+        finalTotal:
+          type: number
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        orderItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItemResponseDto'
+        payment:
+          $ref: '#/components/schemas/PaymentResponseDto'
+        shipping:
+          $ref: '#/components/schemas/ShippingResponseDto'
+        user:
+          $ref: '#/components/schemas/UserResponseDto'
+        discounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscountsData'
+      required:
+        - id
+        - userId
+        - status
+        - total
+        - discountAmount
+        - finalTotal
+        - createdAt
+        - updatedAt
+    OrderListResponse:
+      type: object
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderResponseDto'
+        metadata:
+          type: object
+          properties:
+            _count:
+              type: number
+            _sum:
+              type: object
+              properties:
+                total:
+                  type: number
+                finalTotal:
+                  type: number
+              selfRequired: false
+          required:
+            - _count
+            - _sum
+      required:
+        - orders
+        - metadata
+    UpdateOrderDto:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - IN_PROGRESS
+            - COMPLETED
+            - CANCELLED
+            - FAILED
+      required:
+        - status
+    TotalSalesByMonth:
+      type: object
+      properties:
+        month:
+          format: date-time
+          type: string
+        total_sales:
+          type: number
+      required:
+        - month
+        - total_sales
+    SaleByCategory:
+      type: object
+      properties:
+        id:
+          type: number
+        categoryName:
+          type: string
+        total:
+          type: number
+      required:
+        - id
+        - categoryName
+        - total
+    SaleByProduct:
+      type: object
+      properties:
+        name:
+          type: string
+        total:
+          type: number
+      required:
+        - name
+        - total
