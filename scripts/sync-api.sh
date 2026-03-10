@@ -16,6 +16,6 @@ echo "⬇️ Descargando OpenAPI spec..."
 curl -f -Ss $API_URL -o $SPEC_FILE
 
 echo "⚙️ Generando types..."
-npx openapi-typescript $SPEC_FILE -o $TYPES_FILE
+npx openapi-typescript --enum $SPEC_FILE -o $TYPES_FILE
 
 echo "✅ Types generados en $TYPES_FILE"
