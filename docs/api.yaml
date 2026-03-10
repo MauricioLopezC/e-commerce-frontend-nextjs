@@ -1,18 +1,5 @@
 openapi: 3.0.0
 paths:
-  /:
-    get:
-      operationId: AppController_getHello
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: string
-      tags:
-        - App
   /products:
     post:
       operationId: ProductsController_create
@@ -30,6 +17,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Products
     get:
@@ -84,6 +83,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductListResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Products
   /products/{id}:
@@ -102,6 +113,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Products
     patch:
@@ -125,6 +148,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Products
     delete:
@@ -142,6 +177,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Products
   /products/{id}/categories:
@@ -172,6 +219,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Products
     delete:
@@ -195,6 +254,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Products
     put:
@@ -218,6 +289,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Products
   /products/{productId}/product-skus:
@@ -242,6 +325,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductSkuResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - ProductSkus
     get:
@@ -261,6 +356,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductSkuResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - ProductSkus
   /products/{productId}/product-skus/{id}:
@@ -284,6 +391,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductSkuResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - ProductSkus
     patch:
@@ -312,6 +431,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductSkuResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - ProductSkus
     delete:
@@ -334,6 +465,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductSkuResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - ProductSkus
   /products/{productId}/product-skus/batch:
@@ -352,18 +495,24 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateBatchProductSkusDto'
       responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProductSkuBatchUpdateResponse'
         '201':
           description: ''
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/ProductSkuBatchUpdateResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - ProductSkus
   /images:
@@ -385,6 +534,18 @@ paths:
                 $ref: '#/components/schemas/ImageResponseDto'
         '201':
           description: ''
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Images
   /images/batch:
@@ -402,6 +563,18 @@ paths:
                   $ref: '#/components/schemas/ImageResponseDto'
         '201':
           description: ''
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Images
   /images/{id}:
@@ -420,6 +593,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeleteImageResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Images
   /categories:
@@ -439,6 +624,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CategoryResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Categories
     get:
@@ -453,6 +650,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CategoryResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Categories
   /categories/{id}:
@@ -471,6 +680,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CategoryResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Categories
     patch:
@@ -494,6 +715,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CategoryResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Categories
     delete:
@@ -511,6 +744,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CategoryResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Categories
   /users:
@@ -530,6 +775,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Users
     get:
@@ -558,6 +815,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UsersListResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Users
   /users/{id}:
@@ -576,6 +845,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Users
     patch:
@@ -599,6 +880,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Users
     delete:
@@ -616,6 +909,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Users
   /users/{id}/ban:
@@ -634,6 +939,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Users
   /users/{id}/unban:
@@ -652,6 +969,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Users
   /auth/register:
@@ -670,7 +999,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/UserResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Auth
   /auth/login:
@@ -686,6 +1027,22 @@ paths:
       responses:
         '201':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Auth
   /auth/logout:
@@ -695,6 +1052,22 @@ paths:
       responses:
         '201':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Auth
   /auth/profile:
@@ -708,6 +1081,18 @@ paths:
             application/json:
               schema:
                 type: object
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Auth
   /me/cart:
@@ -721,6 +1106,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CartWithMetadataResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Cart
   /me/cart/total-discount:
@@ -733,7 +1130,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/CalculateDiscountsResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Cart
   /promotions/discounts:
@@ -753,6 +1162,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DiscountResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Discounts
     get:
@@ -783,7 +1204,10 @@ paths:
           required: false
           in: query
           schema:
-            $ref: '#/components/schemas/Object'
+            type: string
+            enum:
+              - PERCENTAGE
+              - FIXED
         - name: applicableTo
           required: false
           in: query
@@ -807,6 +1231,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DiscountsListResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Discounts
   /promotions/discounts/{id}:
@@ -825,6 +1261,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DiscountResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Discounts
     patch:
@@ -848,6 +1296,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DiscountResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Discounts
     delete:
@@ -865,6 +1325,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DiscountResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Discounts
   /search/products:
@@ -900,6 +1372,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Search
   /search/products/test:
@@ -931,6 +1415,18 @@ paths:
       responses:
         '200':
           description: ''
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Search
   /me/cart-items:
@@ -950,6 +1446,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CartItemResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - CartItems
     get:
@@ -964,6 +1472,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CartItemResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - CartItems
   /me/cart-items/{id}:
@@ -982,6 +1502,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CartItemResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - CartItems
     patch:
@@ -1005,6 +1537,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CartItemResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - CartItems
     delete:
@@ -1022,11 +1566,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CartItemResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - CartItems
   /users/{userId}/favorites:
     get:
-      operationId: UsersFavoritesController_findAll
+      operationId: FavoritesController_findAll
       parameters:
         - name: userId
           required: true
@@ -1057,11 +1613,27 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoritesListResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
-        - UsersFavorites
+        - Favorites
   /users/{userId}/favorites/{id}:
     get:
-      operationId: UsersFavoritesController_findOne
+      operationId: FavoritesController_findOne
       parameters:
         - name: userId
           required: true
@@ -1076,10 +1648,26 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
-        - UsersFavorites
+        - Favorites
     patch:
-      operationId: UsersFavoritesController_update
+      operationId: FavoritesController_update
       parameters:
         - name: userId
           required: true
@@ -1100,10 +1688,26 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
-        - UsersFavorites
+        - Favorites
     delete:
-      operationId: UsersFavoritesController_remove
+      operationId: FavoritesController_remove
       parameters:
         - name: userId
           required: true
@@ -1118,8 +1722,24 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
-        - UsersFavorites
+        - Favorites
   /me/favorites:
     post:
       operationId: MeFavoritesController_create
@@ -1136,7 +1756,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/FavoriteResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - MeFavorites
     get:
@@ -1170,6 +1802,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FavoritesListResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - MeFavorites
   /me/favorites/{id}:
@@ -1187,7 +1831,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/FavoriteResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - MeFavorites
     patch:
@@ -1210,7 +1866,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/FavoriteResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - MeFavorites
     delete:
@@ -1227,7 +1895,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/FavoriteResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - MeFavorites
   /mails:
@@ -1237,6 +1917,18 @@ paths:
       responses:
         '201':
           description: ''
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Mails
   /me/orders:
@@ -1256,6 +1948,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrderResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - MeOrders
     get:
@@ -1268,6 +1972,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrderListResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - MeOrders
   /me/orders/{id}:
@@ -1286,6 +2002,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrderResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - MeOrders
   /orders:
@@ -1349,6 +2077,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrderListResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - AdminOrders
   /orders/{id}:
@@ -1367,6 +2107,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrderResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - AdminOrders
     patch:
@@ -1390,6 +2142,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrderResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - AdminOrders
   /users/{userId}/orders:
@@ -1408,6 +2172,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrderListResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - AdminUserOrders
   /users/{userId}/orders/{id}:
@@ -1426,6 +2202,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrderResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - AdminUserOrders
     delete:
@@ -1443,6 +2231,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrderResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - AdminUserOrders
   /statistics/sales/monthly:
@@ -1470,6 +2270,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TotalSalesByMonth'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Statistics
   /statistics/sales/by-user:
@@ -1497,6 +2309,18 @@ paths:
                 type: array
                 items:
                   type: object
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Statistics
   /statistics/sales/by-category:
@@ -1524,6 +2348,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SaleByCategory'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Statistics
   /statistics/sales/by-product:
@@ -1551,6 +2387,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SaleByProduct'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Statistics
 info:
@@ -1562,6 +2410,22 @@ tags: []
 servers: []
 components:
   schemas:
+    ErrorResponseDto:
+      type: object
+      properties:
+        error:
+          type: string
+        statusCode:
+          type: number
+        message:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+      required:
+        - statusCode
+        - message
     CreateProductDto:
       type: object
       properties:
@@ -1591,7 +2455,20 @@ components:
         - sex
     Image:
       type: object
-      properties: {}
+      properties:
+        id:
+          type: number
+        imgSrc:
+          type: string
+        productId:
+          type: number
+        productSkuId:
+          type: number
+      required:
+        - id
+        - imgSrc
+        - productId
+        - productSkuId
     ProductSkuResponseDto:
       type: object
       properties:
@@ -1782,7 +2659,7 @@ components:
             $ref: '#/components/schemas/CreateProductSkusDto'
       required:
         - productSkus
-    ProductSkuBatchUpdateResponse:
+    ProductSkuBatchUpdateResponseDto:
       type: object
       properties:
         count:
@@ -1827,7 +2704,13 @@ components:
         - description
     UpdateCategoryDto:
       type: object
-      properties: {}
+      properties:
+        name:
+          type: string
+          maxLength: 30
+        description:
+          type: string
+          maxLength: 200
     CreateUserDto:
       type: object
       properties:
@@ -1924,6 +2807,13 @@ components:
       required:
         - email
         - password
+    LoginResponseDto:
+      type: object
+      properties:
+        access_token:
+          type: string
+      required:
+        - access_token
     CartItemResponseDto:
       type: object
       properties:
@@ -1991,6 +2881,40 @@ components:
       required:
         - cart
         - metadata
+    AppliedDiscountResponseDto:
+      type: object
+      properties:
+        discountId:
+          type: number
+        discountName:
+          type: string
+        discountValue:
+          type: number
+        discountAmount:
+          type: number
+        appliedTimes:
+          type: number
+      required:
+        - discountId
+        - discountName
+        - discountValue
+        - discountAmount
+        - appliedTimes
+    CalculateDiscountsResponseDto:
+      type: object
+      properties:
+        discountAmount:
+          type: number
+        finalTotal:
+          type: number
+        appliedDiscounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppliedDiscountResponseDto'
+      required:
+        - discountAmount
+        - finalTotal
+        - appliedDiscounts
     CreateDiscountDto:
       type: object
       properties:
@@ -2117,9 +3041,6 @@ components:
         - updatedAt
         - products
         - categories
-    Object:
-      type: object
-      properties: {}
     DiscountsListResponseDto:
       type: object
       properties:
@@ -2237,6 +3158,42 @@ components:
           minimum: 1
       required:
         - quantity
+    FavoriteResponseDto:
+      type: object
+      properties:
+        id:
+          type: number
+        productId:
+          type: number
+        userId:
+          type: number
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        product:
+          $ref: '#/components/schemas/ProductResponseDto'
+      required:
+        - id
+        - productId
+        - userId
+        - createdAt
+        - updatedAt
+        - product
+    FavoritesListResponseDto:
+      type: object
+      properties:
+        favorites:
+          type: array
+          items:
+            $ref: '#/components/schemas/FavoriteResponseDto'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      required:
+        - favorites
+        - metadata
     UpdateFavoriteDto:
       type: object
       properties:
@@ -2254,23 +3211,6 @@ components:
           type: number
       required:
         - productId
-    FavoritesListResponseDto:
-      type: object
-      properties:
-        favorites:
-          type: array
-          items:
-            type: object
-        metadata:
-          type: object
-          properties:
-            _count:
-              type: number
-          required:
-            - _count
-      required:
-        - favorites
-        - metadata
     CreateShippingDto:
       type: object
       properties:

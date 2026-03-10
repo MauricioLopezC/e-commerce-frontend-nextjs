@@ -4,22 +4,6 @@
  */
 
 export interface paths {
-    "/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["AppController_getHello"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/products": {
         parameters: {
             query?: never;
@@ -459,7 +443,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["UsersFavoritesController_findAll"];
+        get: operations["FavoritesController_findAll"];
         put?: never;
         post?: never;
         delete?: never;
@@ -475,13 +459,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["UsersFavoritesController_findOne"];
+        get: operations["FavoritesController_findOne"];
         put?: never;
         post?: never;
-        delete: operations["UsersFavoritesController_remove"];
+        delete: operations["FavoritesController_remove"];
         options?: never;
         head?: never;
-        patch: operations["UsersFavoritesController_update"];
+        patch: operations["FavoritesController_update"];
         trace?: never;
     };
     "/me/favorites": {
@@ -696,15 +680,25 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        ErrorResponseDto: {
+            error?: string;
+            statusCode: number;
+            message: string | string[];
+        };
         CreateProductDto: {
             name: string;
             price: number;
             description: string;
             categories: number[];
             /** @enum {string} */
-            sex: "MALE" | "FEMALE" | "UNISEX";
+            sex: CreateProductDtoSex;
         };
-        Image: Record<string, never>;
+        Image: {
+            id: number;
+            imgSrc: string;
+            productId: number;
+            productSkuId: number;
+        };
         ProductSkuResponseDto: {
             id: number;
             productId: number;
@@ -732,7 +726,7 @@ export interface components {
             price: number;
             description: string;
             /** @enum {string} */
-            sex: "MALE" | "FEMALE" | "UNISEX";
+            sex: ProductResponseDtoSex;
             unitsOnOrder: number;
             totalCollected: number;
             images: components["schemas"]["Image"][];
@@ -755,7 +749,7 @@ export interface components {
             price: number;
             description: string;
             /** @enum {string} */
-            sex: "MALE" | "FEMALE" | "UNISEX";
+            sex: UpdateProductDtoSex;
         };
         ConnectCategoriesDto: {
             categoryIds: number[];
@@ -773,7 +767,7 @@ export interface components {
         CreateBatchProductSkusDto: {
             productSkus: components["schemas"]["CreateProductSkusDto"][];
         };
-        ProductSkuBatchUpdateResponse: {
+        ProductSkuBatchUpdateResponseDto: {
             count: number;
         };
         CreateImageDto: {
@@ -790,7 +784,10 @@ export interface components {
             name: string;
             description: string;
         };
-        UpdateCategoryDto: Record<string, never>;
+        UpdateCategoryDto: {
+            name?: string;
+            description?: string;
+        };
         CreateUserDto: {
             firstName: string;
             lastName: string;
@@ -829,6 +826,9 @@ export interface components {
             email: string;
             password: string;
         };
+        LoginResponseDto: {
+            access_token: string;
+        };
         CartItemResponseDto: {
             id: number;
             cartId: number;
@@ -855,18 +855,30 @@ export interface components {
                 cartTotal: number;
             };
         };
+        AppliedDiscountResponseDto: {
+            discountId: number;
+            discountName: string;
+            discountValue: number;
+            discountAmount: number;
+            appliedTimes: number;
+        };
+        CalculateDiscountsResponseDto: {
+            discountAmount: number;
+            finalTotal: number;
+            appliedDiscounts: components["schemas"]["AppliedDiscountResponseDto"][];
+        };
         CreateDiscountDto: {
             name: string;
             description: string;
             /** @enum {string} */
-            discountType: "PERCENTAGE" | "FIXED";
+            discountType: CreateDiscountDtoDiscountType;
             value: number;
             /** Format: date-time */
             startDate: string;
             /** Format: date-time */
             endDate: string;
             /** @enum {string} */
-            applicableTo: "PRODUCT" | "CATEGORY" | "GENERAL";
+            applicableTo: CreateDiscountDtoApplicableTo;
             /** @default 0 */
             orderThreshold: number;
             maxUses: number;
@@ -880,14 +892,14 @@ export interface components {
             name: string;
             description?: string;
             /** @enum {string} */
-            discountType: "PERCENTAGE" | "FIXED";
+            discountType: DiscountResponseDtoDiscountType;
             value: number;
             /** Format: date-time */
             startDate: string;
             /** Format: date-time */
             endDate: string;
             /** @enum {string} */
-            applicableTo: "PRODUCT" | "CATEGORY" | "GENERAL";
+            applicableTo: DiscountResponseDtoApplicableTo;
             orderThreshold?: number;
             maxUses?: number;
             currentUses: number;
@@ -899,7 +911,6 @@ export interface components {
             products: components["schemas"]["ProductResponseDto"][];
             categories: components["schemas"]["CategoryResponseDto"][];
         };
-        Object: Record<string, never>;
         DiscountsListResponseDto: {
             discounts: components["schemas"]["DiscountResponseDto"][];
             metadata: {
@@ -910,14 +921,14 @@ export interface components {
             name: string;
             description: string;
             /** @enum {string} */
-            discountType: "PERCENTAGE" | "FIXED";
+            discountType: UpdateDiscountDtoDiscountType;
             value: number;
             /** Format: date-time */
             startDate: string;
             /** Format: date-time */
             endDate: string;
             /** @enum {string} */
-            applicableTo: "PRODUCT" | "CATEGORY" | "GENERAL";
+            applicableTo: UpdateDiscountDtoApplicableTo;
             orderThreshold: number;
             maxUses: number;
             /** @default true */
@@ -939,18 +950,26 @@ export interface components {
         UpdateCartItemDto: {
             quantity: number;
         };
+        FavoriteResponseDto: {
+            id: number;
+            productId: number;
+            userId: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            product: components["schemas"]["ProductResponseDto"];
+        };
+        FavoritesListResponseDto: {
+            favorites: components["schemas"]["FavoriteResponseDto"][];
+            metadata: components["schemas"]["Metadata"];
+        };
         UpdateFavoriteDto: {
             productId: number;
             userId: number;
         };
         CreateFavoriteDto: {
             productId: number;
-        };
-        FavoritesListResponseDto: {
-            favorites: Record<string, never>[];
-            metadata: {
-                _count: number;
-            };
         };
         CreateShippingDto: {
             country: string;
@@ -960,7 +979,7 @@ export interface components {
         };
         CreatePaymentDto: {
             /** @enum {string} */
-            provider: "PAYPAL" | "VISA" | "MASTERCARD" | "APPLE_PAY" | "OTHER";
+            provider: CreatePaymentDtoProvider;
         };
         CreateOrderDto: {
             /** Format: email */
@@ -1041,7 +1060,7 @@ export interface components {
         };
         UpdateOrderDto: {
             /** @enum {string} */
-            status: "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "FAILED";
+            status: UpdateOrderDtoStatus;
         };
         TotalSalesByMonth: {
             /** Format: date-time */
@@ -1066,25 +1085,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    AppController_getHello: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": string;
-                };
-            };
-        };
-    };
     ProductsController_findAll: {
         parameters: {
             query?: {
@@ -1092,7 +1092,7 @@ export interface operations {
                 page?: number;
                 category?: string;
                 name?: string;
-                sex?: "MALE" | "FEMALE" | "UNISEX";
+                sex?: PathsProductsGetParametersQuerySex;
                 orderBy?: string[];
             };
             header?: never;
@@ -1107,6 +1107,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProductListResponse"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1132,6 +1150,24 @@ export interface operations {
                     "application/json": components["schemas"]["ProductResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     ProductsController_findOne: {
@@ -1153,6 +1189,24 @@ export interface operations {
                     "application/json": components["schemas"]["ProductResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     ProductsController_remove: {
@@ -1172,6 +1226,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProductResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1199,6 +1271,24 @@ export interface operations {
                     "application/json": components["schemas"]["ProductResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     ProductsController_replaceCategories: {
@@ -1222,6 +1312,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProductResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1257,6 +1365,24 @@ export interface operations {
                     "application/json": components["schemas"]["ProductResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     ProductsController_disconnectCategories: {
@@ -1282,6 +1408,24 @@ export interface operations {
                     "application/json": components["schemas"]["ProductResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     ProductSkusController_findAll: {
@@ -1301,6 +1445,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProductSkuResponseDto"][];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1328,6 +1490,24 @@ export interface operations {
                     "application/json": components["schemas"]["ProductSkuResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     ProductSkusController_findOne: {
@@ -1350,6 +1530,24 @@ export interface operations {
                     "application/json": components["schemas"]["ProductSkuResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     ProductSkusController_remove: {
@@ -1370,6 +1568,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProductSkuResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1398,6 +1614,24 @@ export interface operations {
                     "application/json": components["schemas"]["ProductSkuResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     ProductSkusController_batchCreate: {
@@ -1415,20 +1649,30 @@ export interface operations {
             };
         };
         responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductSkuBatchUpdateResponse"];
-                };
-            };
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["ProductSkuBatchUpdateResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1460,6 +1704,24 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     ImagesController_batchCreateAndUpload: {
@@ -1485,6 +1747,24 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     ImagesController_deleteAndDestroy: {
@@ -1506,6 +1786,24 @@ export interface operations {
                     "application/json": components["schemas"]["DeleteImageResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     CategoriesController_findAll: {
@@ -1523,6 +1821,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CategoryResponseDto"][];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1548,6 +1864,24 @@ export interface operations {
                     "application/json": components["schemas"]["CategoryResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     CategoriesController_findOne: {
@@ -1569,6 +1903,24 @@ export interface operations {
                     "application/json": components["schemas"]["CategoryResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     CategoriesController_remove: {
@@ -1588,6 +1940,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CategoryResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1615,6 +1985,24 @@ export interface operations {
                     "application/json": components["schemas"]["CategoryResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     UsersController_findAllUsers: {
@@ -1635,6 +2023,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UsersListResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1660,6 +2066,24 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     UsersController_findOneUser: {
@@ -1681,6 +2105,24 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     UsersController_deleteUser: {
@@ -1700,6 +2142,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1727,6 +2187,24 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     UsersController_banUser: {
@@ -1746,6 +2224,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1769,6 +2265,24 @@ export interface operations {
                     "application/json": components["schemas"]["UserResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     AuthController_register: {
@@ -1789,7 +2303,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1811,7 +2343,27 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["LoginResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
             };
         };
     };
@@ -1828,7 +2380,27 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["LoginResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
             };
         };
     };
@@ -1847,6 +2419,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": Record<string, never>;
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1868,6 +2458,24 @@ export interface operations {
                     "application/json": components["schemas"]["CartWithMetadataResponse"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     CartController_calculateDiscounts: {
@@ -1884,7 +2492,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["CalculateDiscountsResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1895,8 +2521,8 @@ export interface operations {
                 limit?: number;
                 page?: number;
                 isActive?: boolean;
-                discountType?: components["schemas"]["Object"];
-                applicableTo?: "PRODUCT" | "CATEGORY" | "GENERAL";
+                discountType?: PathsPromotionsDiscountsGetParametersQueryDiscountType;
+                applicableTo?: PathsPromotionsDiscountsGetParametersQueryApplicableTo;
                 orderBy?: string[];
             };
             header?: never;
@@ -1911,6 +2537,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DiscountsListResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -1936,6 +2580,24 @@ export interface operations {
                     "application/json": components["schemas"]["DiscountResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     DiscountsController_findOne: {
@@ -1957,6 +2619,24 @@ export interface operations {
                     "application/json": components["schemas"]["DiscountResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     DiscountsController_delete: {
@@ -1976,6 +2656,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DiscountResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -2003,6 +2701,24 @@ export interface operations {
                     "application/json": components["schemas"]["DiscountResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     SearchController_searchProduct: {
@@ -2026,6 +2742,24 @@ export interface operations {
                     "application/json": components["schemas"]["SearchResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     SearchController_searchText: {
@@ -2047,6 +2781,24 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     CartItemsController_findAll: {
@@ -2064,6 +2816,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CartItemResponseDto"][];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -2089,6 +2859,24 @@ export interface operations {
                     "application/json": components["schemas"]["CartItemResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     CartItemsController_findOne: {
@@ -2110,6 +2898,24 @@ export interface operations {
                     "application/json": components["schemas"]["CartItemResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     CartItemsController_remove: {
@@ -2129,6 +2935,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CartItemResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -2156,9 +2980,27 @@ export interface operations {
                     "application/json": components["schemas"]["CartItemResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
-    UsersFavoritesController_findAll: {
+    FavoritesController_findAll: {
         parameters: {
             query?: {
                 limit?: number;
@@ -2177,11 +3019,31 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["FavoritesListResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
             };
         };
     };
-    UsersFavoritesController_findOne: {
+    FavoritesController_findOne: {
         parameters: {
             query?: never;
             header?: never;
@@ -2197,11 +3059,31 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["FavoriteResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
             };
         };
     };
-    UsersFavoritesController_remove: {
+    FavoritesController_remove: {
         parameters: {
             query?: never;
             header?: never;
@@ -2217,11 +3099,31 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["FavoriteResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
             };
         };
     };
-    UsersFavoritesController_update: {
+    FavoritesController_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -2241,7 +3143,27 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["FavoriteResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
             };
         };
     };
@@ -2266,6 +3188,24 @@ export interface operations {
                     "application/json": components["schemas"]["FavoritesListResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     MeFavoritesController_create: {
@@ -2286,7 +3226,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["FavoriteResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -2307,7 +3265,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["FavoriteResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -2328,7 +3304,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["FavoriteResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -2353,7 +3347,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": Record<string, never>;
+                    "application/json": components["schemas"]["FavoriteResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -2373,6 +3385,24 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     MeOrdersController_findAll: {
@@ -2390,6 +3420,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OrderListResponse"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -2415,6 +3463,24 @@ export interface operations {
                     "application/json": components["schemas"]["OrderResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     MeOrdersController_findOne: {
@@ -2436,6 +3502,24 @@ export interface operations {
                     "application/json": components["schemas"]["OrderResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     AdminOrdersController_findAll: {
@@ -2443,7 +3527,7 @@ export interface operations {
             query?: {
                 limit?: number;
                 page?: number;
-                status?: "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "FAILED";
+                status?: PathsOrdersGetParametersQueryStatus;
                 email?: string;
                 startDate?: string;
                 endDate?: string;
@@ -2461,6 +3545,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OrderListResponse"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -2482,6 +3584,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OrderResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -2509,6 +3629,24 @@ export interface operations {
                     "application/json": components["schemas"]["OrderResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     AdminUserOrdersController_findAll: {
@@ -2528,6 +3666,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OrderListResponse"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -2551,6 +3707,24 @@ export interface operations {
                     "application/json": components["schemas"]["OrderResponseDto"];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     AdminUserOrdersController_delete: {
@@ -2570,6 +3744,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OrderResponseDto"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -2594,6 +3786,24 @@ export interface operations {
                     "application/json": components["schemas"]["TotalSalesByMonth"][];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     StatisticsController_salesByUser: {
@@ -2614,6 +3824,24 @@ export interface operations {
                 };
                 content: {
                     "application/json": Record<string, never>[];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
         };
@@ -2638,6 +3866,24 @@ export interface operations {
                     "application/json": components["schemas"]["SaleByCategory"][];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     StatisticsController_salesByProduct: {
@@ -2660,6 +3906,99 @@ export interface operations {
                     "application/json": components["schemas"]["SaleByProduct"][];
                 };
             };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Default error response */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
+}
+export enum PathsProductsGetParametersQuerySex {
+    MALE = "MALE",
+    FEMALE = "FEMALE",
+    UNISEX = "UNISEX"
+}
+export enum PathsPromotionsDiscountsGetParametersQueryDiscountType {
+    PERCENTAGE = "PERCENTAGE",
+    FIXED = "FIXED"
+}
+export enum PathsPromotionsDiscountsGetParametersQueryApplicableTo {
+    PRODUCT = "PRODUCT",
+    CATEGORY = "CATEGORY",
+    GENERAL = "GENERAL"
+}
+export enum PathsOrdersGetParametersQueryStatus {
+    IN_PROGRESS = "IN_PROGRESS",
+    COMPLETED = "COMPLETED",
+    CANCELLED = "CANCELLED",
+    FAILED = "FAILED"
+}
+export enum CreateProductDtoSex {
+    MALE = "MALE",
+    FEMALE = "FEMALE",
+    UNISEX = "UNISEX"
+}
+export enum ProductResponseDtoSex {
+    MALE = "MALE",
+    FEMALE = "FEMALE",
+    UNISEX = "UNISEX"
+}
+export enum UpdateProductDtoSex {
+    MALE = "MALE",
+    FEMALE = "FEMALE",
+    UNISEX = "UNISEX"
+}
+export enum CreateDiscountDtoDiscountType {
+    PERCENTAGE = "PERCENTAGE",
+    FIXED = "FIXED"
+}
+export enum CreateDiscountDtoApplicableTo {
+    PRODUCT = "PRODUCT",
+    CATEGORY = "CATEGORY",
+    GENERAL = "GENERAL"
+}
+export enum DiscountResponseDtoDiscountType {
+    PERCENTAGE = "PERCENTAGE",
+    FIXED = "FIXED"
+}
+export enum DiscountResponseDtoApplicableTo {
+    PRODUCT = "PRODUCT",
+    CATEGORY = "CATEGORY",
+    GENERAL = "GENERAL"
+}
+export enum UpdateDiscountDtoDiscountType {
+    PERCENTAGE = "PERCENTAGE",
+    FIXED = "FIXED"
+}
+export enum UpdateDiscountDtoApplicableTo {
+    PRODUCT = "PRODUCT",
+    CATEGORY = "CATEGORY",
+    GENERAL = "GENERAL"
+}
+export enum CreatePaymentDtoProvider {
+    PAYPAL = "PAYPAL",
+    VISA = "VISA",
+    MASTERCARD = "MASTERCARD",
+    APPLE_PAY = "APPLE_PAY",
+    OTHER = "OTHER"
+}
+export enum UpdateOrderDtoStatus {
+    IN_PROGRESS = "IN_PROGRESS",
+    COMPLETED = "COMPLETED",
+    CANCELLED = "CANCELLED",
+    FAILED = "FAILED"
 }
