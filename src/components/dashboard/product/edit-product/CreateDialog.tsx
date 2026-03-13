@@ -44,9 +44,8 @@ function CreateDialog({ productId }: { productId: number }) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    const { createdProductSku } = await createProductSku(values, productId);
-    if (createdProductSku) {
+    const { data } = await createProductSku(productId, values);
+    if (data) {
       toast({
         description: (
           <div>

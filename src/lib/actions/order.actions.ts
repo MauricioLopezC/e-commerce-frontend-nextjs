@@ -1,158 +1,56 @@
 'use server';
-import { cookies } from 'next/headers';
-import { BACKEND_URL } from '@/queries/constants';
-import { getPayload } from '../jwt-decode';
-import { Order } from '@/interfaces/orders';
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { ErrorResponse } from '@/interfaces/responses';
+import { components, paths } from '../api/generated/schema';
+import { api } from '../api/client';
 
-export interface OrdersData {
-  orders: Order[];
-  metadata: { _sum: { total: number; finalTotal: number }; _count: number };
-}
+type QueryParams = paths['/orders']['get']['parameters']['query'];
 
-interface OrdersResponse {
-  ordersData?: OrdersData;
-  error?: ErrorResponse;
-}
-
-interface OneOrderResponse {
-  order?: Order;
-  error?: ErrorResponse;
-}
-
-interface GetOrdersOptions {
-  limit?: number;
-  page?: number;
-  orderBy?: string;
-  status?: string;
-}
-
-export async function getAllOrders(
-  options: GetOrdersOptions,
-): Promise<OrdersResponse> {
-  const token = cookies().get('access-token')?.value ?? '';
-
-  const queryParams = new URLSearchParams();
-  let key: keyof GetOrdersOptions;
-  for (key in options) {
-    const value = options[key];
-    if (value) {
-      queryParams.set(key, value.toString());
-    }
-  }
-
-  const res = await fetch(`${BACKEND_URL}/orders?${queryParams.toString()}`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: `access-token=${token}`,
+export async function getAllOrders(params: QueryParams) {
+  const { data, error } = await api.GET('/orders', {
+    params: {
+      query: params,
     },
     next: {
       tags: ['orders'],
     },
   });
-  if (res.ok) {
-    const ordersData = await res.json();
-    return {
-      ordersData,
-    };
-  }
-  return {
-    error: await res.json(),
-  };
+
+  return { data, error };
 }
 
-interface CreateOrderDto {
-  email: string;
-  country: string;
-  city: string;
-  postalCode: string;
-  address: string;
-  provider: string;
-}
+type CreateOrderDto2 = components['schemas']['CreateOrderDto'];
 
-export async function createOrder(
-  data: CreateOrderDto,
-): Promise<OneOrderResponse> {
-  const token = cookies().get('access-token')?.value ?? '';
-
-  const shipping = {
-    country: data.country,
-    city: data.city,
-    postalCode: data.postalCode,
-    address: data.address,
-  };
-
-  const payment = { provider: data.provider };
-  const email = data.email;
-
-  const res = await fetch(`${BACKEND_URL}/me/orders`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: `access-token=${token}`,
-    },
-    body: JSON.stringify({
-      email,
-      shipping,
-      payment,
-    }),
+export async function createOrder2(body: CreateOrderDto2) {
+  const { data, error, response } = await api.POST('/me/orders', {
+    body,
   });
-  revalidatePath('/products/[productId]', 'page');
-  revalidatePath('dashboard/products');
-
-  if (res.ok) {
-    const order = await res.json();
-    return {
-      order,
-    };
+  if (response.ok) {
+    revalidateTag('orders');
+    revalidatePath('/products/[productId]', 'page');
+    revalidatePath('dashboard/products');
   }
-  return {
-    error: await res.json(),
-  };
+  return { data, error };
 }
 
-export async function getUserOrders(): Promise<OrdersResponse> {
-  const token = cookies().get('access-token')?.value ?? '';
-
-  const res = await fetch(`${BACKEND_URL}/me/orders`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      Cookie: `access-token=${token}`,
-    },
-  });
-  if (res.ok) {
-    const ordersData = await res.json();
-    return { ordersData };
-  }
-  const error = await res.json();
-  return { error };
+export async function getMyOrders() {
+  const { data, error } = await api.GET('/me/orders');
+  return { data, error };
 }
 
-export async function updateOrderStatus(
+type UpdateOrderDto = components['schemas']['UpdateOrderDto'];
+
+export async function updateOrderStatus2(
   orderId: number,
-  status: string,
-): Promise<OneOrderResponse> {
-  console.log(orderId, status);
-  const token = cookies().get('access-token')?.value;
-  const res = await fetch(`${BACKEND_URL}/orders/${orderId}`, {
-    method: 'PATCH',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: `access-token=${token}`,
+  body: UpdateOrderDto,
+) {
+  const { data, error, response } = await api.PATCH('/orders/{id}', {
+    params: {
+      path: { id: orderId },
     },
-    body: JSON.stringify({ status: status }),
+    body,
   });
-  revalidateTag('orders');
-  if (res.ok) {
-    const order = await res.json();
-    return { order };
+  if (response.ok) {
+    revalidateTag('orders');
   }
-  const error = await res.json();
-  return { error };
+  return { data, error };
 }

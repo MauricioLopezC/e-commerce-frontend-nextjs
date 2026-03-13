@@ -1,21 +1,14 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { OrdersData } from '@/lib/actions/order.actions';
-import { UsersData } from '@/lib/actions/user.actions';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { components } from '@/lib/api/generated/schema';
 import { peso } from '@/lib/constants';
-import { Activity, CreditCard, DollarSign, Users } from 'lucide-react';
+import { CreditCard, DollarSign, Users } from 'lucide-react';
 
 function SmallCards({
   ordersData,
   usersData,
 }: {
-  ordersData: OrdersData;
-  usersData: UsersData;
+  ordersData: components['schemas']['OrderListResponse'];
+  usersData: components['schemas']['UsersListResponseDto'];
 }) {
   return (
     <>
@@ -28,7 +21,7 @@ function SmallCards({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {peso.format(ordersData.metadata._sum.total)}
+            {peso.format(ordersData.metadata._sum.total ?? 0)}
           </div>
           {/* <p className="text-xs text-muted-foreground"> */}
           {/*   +20.1% from last month */}

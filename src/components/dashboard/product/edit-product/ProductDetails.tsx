@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Product, Sex } from '@/interfaces/products/product';
+import { Category, Product, Sex } from '@/interfaces/product';
 import { updateProduct } from '@/lib/actions/product.actions';
 import { CheckCircleIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -32,8 +32,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Category } from '@/interfaces/products/categories';
 import { CreateCategoryDialog } from '../create/CreateCategoryDialog';
+import { UpdateProductDtoSex } from '@/lib/api/generated/schema';
 
 const formSchema = z.object({
   name: z.string().min(2).max(50).toLowerCase(),
@@ -65,8 +65,10 @@ function ProductDetails({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    const { product: updatedProduct } = await updateProduct(product.id, values);
+    const { data: updatedProduct } = await updateProduct(product.id, {
+      ...values,
+      sex: values.sex as unknown as UpdateProductDtoSex,
+    });
     if (updatedProduct) {
       toast({
         description: (

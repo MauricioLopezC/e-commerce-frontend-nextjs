@@ -1,7 +1,7 @@
 import FeaturesList from '@/components/home/Features';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
-import { Product } from '@/interfaces/products/product';
+import { Product } from '@/interfaces/product';
 import CoverImageV2 from '@/components/home/CoverImageV2';
 import { getAllProducts } from '@/lib/actions/product.actions';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
@@ -13,16 +13,16 @@ async function Home() {
   //and places with many images because vercel charges on you for that optimization
   //use CldImage only in few necessary places
   //for example when Cloudinary awesome transformations are needed
-  const { productsData: newProducts } = await getAllProducts({
-    orderBy: 'createdAt',
+  const { data: newProducts } = await getAllProducts({
+    orderBy: ['createdAt'],
     limit: 5,
   });
-  const { productsData: bestSellersData } = await getAllProducts({
-    orderBy: '-unitsOnOrder',
+  const { data: bestSellersData } = await getAllProducts({
+    orderBy: ['-unitsOnOrder'],
     limit: 5,
   });
 
-  const { discountsData, error } = await getAllDiscounts({ isActive: true });
+  const { data: discountsData } = await getAllDiscounts({ isActive: true });
   return (
     <main>
       {discountsData && <DiscountBanner discounts={discountsData?.discounts} />}

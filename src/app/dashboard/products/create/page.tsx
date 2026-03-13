@@ -2,7 +2,7 @@ import CreateProductForm from '@/components/dashboard/product/create/CreateProdu
 import { getAllCategories } from '@/lib/actions/category.actions';
 
 async function CreateProductPage() {
-  const { categories } = await getAllCategories();
+  const { data: categories } = await getAllCategories();
   if (!categories) return null;
 
   return (

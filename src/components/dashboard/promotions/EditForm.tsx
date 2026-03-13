@@ -38,9 +38,13 @@ import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import MultipleSelector, {
   Option,
 } from '@/components/shadcn-expansions/multiselect';
-import { Product } from '@/interfaces/products/product';
-import { Category } from '@/interfaces/products/categories';
+import { Category, Product } from '@/interfaces/product';
 import { searchByName } from '@/lib/actions/search.actions';
+import {
+  components,
+  UpdateDiscountDtoApplicableTo,
+  UpdateDiscountDtoDiscountType,
+} from '@/lib/api/generated/schema';
 
 const categoryOptionSchema = z.object({
   label: z.string(),
@@ -125,8 +129,8 @@ function EditDiscountForm({ discount, products, categories }: EditFormProps) {
       description: discount.description ?? undefined,
       discountType: discount.discountType,
       value: discount.value,
-      startDate: discount.startDate,
-      endDate: discount.endDate,
+      startDate: new Date(discount.startDate),
+      endDate: new Date(discount.endDate),
       applicableTo: discount.applicableTo,
       products: productsDefaultValue,
       categories: categoriesDefaultValue,
@@ -151,15 +155,27 @@ function EditDiscountForm({ discount, products, categories }: EditFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const productsIds = values.products.map((item) => Number(item.value));
     const categoryIds = values.categories.map((item) => Number(item.value));
-    const createDiscountData = {
-      ...values,
+    const updateDiscountData: components['schemas']['UpdateDiscountDto'] = {
+      name: values.name,
+      description: values.description ?? '',
+      discountType:
+        values.discountType as unknown as UpdateDiscountDtoDiscountType,
+      value: values.value,
+      startDate: values.startDate.toISOString(),
+      endDate: values.endDate.toISOString(),
+      applicableTo:
+        values.applicableTo as unknown as UpdateDiscountDtoApplicableTo,
+      orderThreshold: values.orderThreshold ?? 0,
+      maxUses: values.maxUses ?? 0,
+      isActive: values.isActive,
       products: productsIds,
       categories: categoryIds,
     };
-    console.log(createDiscountData);
-    const { discount: updatedDiscount, error } = await updateDiscount(
+
+    console.log(updateDiscountData);
+    const { data: updatedDiscount, error } = await updateDiscount(
       discount.id,
-      createDiscountData,
+      updateDiscountData,
     );
     if (updatedDiscount) {
       toast({
@@ -403,14 +419,17 @@ function EditDiscountForm({ discount, products, categories }: EditFormProps) {
                         </p>
                       }
                       onSearch={async (value) => {
-                        const { products, error } = await searchByName(value);
-                        if (error || !products) {
+                        const { data: productsData, error } =
+                          await searchByName(value);
+                        if (error || !productsData) {
                           return [];
                         }
-                        const options: Option[] = products.map((product) => ({
-                          label: product.name,
-                          value: product.id.toString(),
-                        }));
+                        const options: Option[] = productsData.products.map(
+                          (product) => ({
+                            label: product.name,
+                            value: product.id.toString(),
+                          }),
+                        );
                         return options;
                       }}
                     />

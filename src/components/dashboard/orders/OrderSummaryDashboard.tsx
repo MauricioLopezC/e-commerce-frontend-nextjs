@@ -27,8 +27,9 @@ import { Separator } from '@/components/ui/separator';
 import { Order } from '@/interfaces/orders';
 import { useOrdersStore } from '@/store/order-page-store';
 import { peso } from '@/lib/constants';
-import { updateOrderStatus } from '@/lib/actions/order.actions';
+import { updateOrderStatus2 } from '@/lib/actions/order.actions';
 import { useToast } from '@/hooks/use-toast';
+import { UpdateOrderDtoStatus } from '@/lib/api/generated/schema.d';
 
 export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
   const { toast } = useToast();
@@ -85,10 +86,11 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
               <DropdownMenuItem
                 className="gap-1.5"
                 onClick={async () => {
-                  const { order: createdOrder, error } =
-                    await updateOrderStatus(order.id, 'COMPLETED');
-                  console.log(createdOrder, error);
-                  if (createdOrder) {
+                  const { data, error } = await updateOrderStatus2(order.id, {
+                    status: UpdateOrderDtoStatus.COMPLETED,
+                  });
+                  console.log(data, error);
+                  if (data) {
                     toast({
                       description: (
                         <div>
@@ -96,7 +98,7 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
                             <span>
                               <CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" />
                             </span>
-                            Estado actualizado a {createdOrder.status}
+                            Estado actualizado a {data.status}
                           </h2>
                         </div>
                       ),
@@ -116,12 +118,11 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
               <DropdownMenuItem
                 className="gap-1.5"
                 onClick={async () => {
-                  const { order: createdOrder } = await updateOrderStatus(
-                    order.id,
-                    'IN_PROGRESS',
-                  );
-                  console.log(createdOrder);
-                  if (createdOrder) {
+                  const { data } = await updateOrderStatus2(order.id, {
+                    status: UpdateOrderDtoStatus.IN_PROGRESS,
+                  });
+                  console.log(data);
+                  if (data) {
                     toast({
                       description: (
                         <div>
@@ -129,7 +130,7 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
                             <span>
                               <CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" />
                             </span>
-                            Estado actualizado a {createdOrder.status}
+                            Estado actualizado a {data.status}
                           </h2>
                         </div>
                       ),
@@ -149,12 +150,11 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
               <DropdownMenuItem
                 className="gap-1.5"
                 onClick={async () => {
-                  const { order: createdOrder } = await updateOrderStatus(
-                    order.id,
-                    'CANCELLED',
-                  );
-                  console.log(createdOrder);
-                  if (createdOrder) {
+                  const { data } = await updateOrderStatus2(order.id, {
+                    status: UpdateOrderDtoStatus.CANCELLED,
+                  });
+
+                  if (data) {
                     toast({
                       description: (
                         <div>
@@ -162,7 +162,7 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
                             <span>
                               <CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" />
                             </span>
-                            Estado actualizado a {createdOrder.status}
+                            Estado actualizado a {data.status}
                           </h2>
                         </div>
                       ),

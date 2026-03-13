@@ -11,7 +11,7 @@ async function UsersPage({
   const pageSize = Number(filters.limit ?? 9);
   const currentPage = Number(filters.page ?? 1);
 
-  const { usersData } = await getUsers({
+  const { data: usersData } = await getUsers({
     page: currentPage,
     limit: pageSize,
   });

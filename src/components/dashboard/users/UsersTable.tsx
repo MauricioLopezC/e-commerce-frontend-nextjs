@@ -146,7 +146,7 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
                                 action: 'block',
                                 user,
                                 onConfirm: async () => {
-                                  const { user: bannedUser, error } =
+                                  const { data: bannedUser, error } =
                                     await banUser(user.id);
                                   if (bannedUser) {
                                     toast({
@@ -190,7 +190,7 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
                                 action: 'unblock',
                                 user,
                                 onConfirm: async () => {
-                                  const { user: unbannedUser, error } =
+                                  const { data: unbannedUser, error } =
                                     await unBanUser(user.id);
                                   if (unbannedUser) {
                                     toast({
@@ -234,7 +234,7 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
                               action: 'delete',
                               user,
                               onConfirm: async () => {
-                                const { user: deletedUser, error } =
+                                const { data: deletedUser, error } =
                                   await deleteUser(user.id);
                                 if (deletedUser) {
                                   toast({

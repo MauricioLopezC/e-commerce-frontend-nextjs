@@ -16,8 +16,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { Calendar, CreditCard, Lock } from 'lucide-react';
 import { Button } from '../ui/button';
-import { createOrder } from '@/lib/actions/order.actions';
+import { createOrder2 } from '@/lib/actions/order.actions';
 import { useRouter } from 'next/navigation';
+import { CreatePaymentDtoProvider } from '@/lib/api/generated/schema';
 
 enum PaymentProvider {
   PAYPAL = 'PAYPAL',
@@ -78,13 +79,21 @@ function CheckOutFormv2() {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     console.log(data);
 
-    const { order } = await createOrder({
-      email: data.email,
+    const shipping = {
       country: data.country,
       city: data.city,
       postalCode: data.postalCode,
       address: data.address,
-      provider: data.payment,
+    };
+
+    const payment = {
+      provider: data.payment as unknown as CreatePaymentDtoProvider,
+    };
+
+    const { data: order } = await createOrder2({
+      email: data.email,
+      shipping,
+      payment,
     });
     if (order) {
       setIsSubmitting(false);

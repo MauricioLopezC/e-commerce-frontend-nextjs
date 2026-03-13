@@ -1690,19 +1690,13 @@ export interface operations {
             };
         };
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["ImageResponseDto"];
                 };
-            };
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
             /** @description Internal server error */
             500: {
@@ -1733,19 +1727,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["ImageResponseDto"][];
                 };
-            };
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
             /** @description Internal server error */
             500: {
@@ -2725,8 +2713,8 @@ export interface operations {
         parameters: {
             query: {
                 productName: string;
-                limit: number;
-                page: number;
+                limit?: number;
+                page?: number;
             };
             header?: never;
             path?: never;
@@ -2766,8 +2754,8 @@ export interface operations {
         parameters: {
             query: {
                 productName: string;
-                limit: number;
-                page: number;
+                limit?: number;
+                page?: number;
             };
             header?: never;
             path?: never;

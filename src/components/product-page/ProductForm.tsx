@@ -1,7 +1,7 @@
 'use client';
 import { HeartIcon, TrashIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { ProductSku } from '@/interfaces/products/product';
+import { ProductSku } from '@/interfaces/product';
 import { RadioGroup, RadioGroupItem } from '@/components/origin-ui/radio-group';
 import { NoStockAlertDialog } from './NoStockAlert';
 import { NotLoggedInAlertDialog } from './NotLoggedInAltert';
@@ -11,7 +11,7 @@ import { addCartItem } from '@/lib/actions/cart.actions';
 import {
   addFavorite,
   deleteFavorite,
-  getFavorites,
+  getFavorites2,
 } from '@/lib/actions/favorites.actions';
 import { checkSession } from '@/lib/actions/navbar.actions';
 import { Favorite } from '@/interfaces/favorites';
@@ -52,7 +52,8 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
     const checkFavorite = async () => {
       const session = await checkSession();
       if (session) {
-        const { favoritesData } = await getFavorites({ productId });
+        //TODO: use findOne
+        const { data: favoritesData } = await getFavorites2({ productId });
         console.log(favoritesData);
         const favoriteFound = favoritesData?.favorites[0];
         if (favoriteFound) {
@@ -69,7 +70,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
     const isFavoriteValue = !isFavorite;
     setIsFavorite(!isFavorite);
     if (isFavoriteValue) {
-      const { favorite, error } = await addFavorite(productId);
+      const { data: favorite, error } = await addFavorite(productId);
       console.log(favorite, error);
       if (favorite) {
         setFavorite(favorite);
@@ -91,7 +92,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       }
     }
     if (!isFavoriteValue && favorite) {
-      const { favorite: deletedFavorite } = await deleteFavorite(favorite.id);
+      const { data: deletedFavorite } = await deleteFavorite(favorite.id);
       if (deletedFavorite) {
         setFavorite(null);
         toast({
@@ -117,7 +118,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       setIsOpenNS(true);
       return;
     }
-    const { cartItem, error } = await addCartItem(
+    const { data: cartItem, error } = await addCartItem(
       productId,
       selectedPSku.id,
       quantity,

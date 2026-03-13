@@ -1,5 +1,5 @@
 import ProductCard from '@/components/ProductCard';
-import { getFavorites } from '@/lib/actions/favorites.actions';
+import { getFavorites2 } from '@/lib/actions/favorites.actions';
 import {
   AdjustmentsHorizontalIcon,
   ChevronDownIcon,
@@ -25,7 +25,7 @@ async function FavoritesPage(
   const pageSize = Number(filters.limit ?? 9);
   const currentPage = Number(filters.page ?? 1);
 
-  const { favoritesData } = await getFavorites({
+  const { data: favoritesData } = await getFavorites2({
     page: currentPage,
     limit: pageSize,
   });

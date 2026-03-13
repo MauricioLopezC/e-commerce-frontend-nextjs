@@ -14,10 +14,11 @@ async function EditProductPage({ params }: { params: { productId: string } }) {
 
   if (!productId) return null;
 
-  const { product } = await getProduct(productId);
-  const { productSkus } = await getAllProductsSkus(productId);
+  const { data: product } = await getProduct(productId);
+  console.log('SKUS ==>', product?.productSkus);
+  const { data: productSkus } = await getAllProductsSkus(productId);
   if (!product || !productSkus) return null;
-  const { categories } = await getAllCategories();
+  const { data: categories } = await getAllCategories();
   if (!categories) return null;
 
   return (

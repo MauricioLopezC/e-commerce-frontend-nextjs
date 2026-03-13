@@ -14,9 +14,9 @@ async function EditDiscountPage({
   const discountId = Number(params.discountId);
   if (!discountId) return NotFoundPage();
 
-  const { discount } = await getOneDiscount(discountId);
-  const { productsData } = await getAllProducts({ limit: 20 });
-  const { categories } = await getAllCategories();
+  const { data: discount } = await getOneDiscount(discountId);
+  const { data: productsData } = await getAllProducts({ limit: 20 });
+  const { data: categories } = await getAllCategories();
 
   if (!discount) return NotFoundPage();
   if (!categories) return null;

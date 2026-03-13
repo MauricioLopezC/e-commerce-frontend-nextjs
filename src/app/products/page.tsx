@@ -33,7 +33,7 @@ async function ProductsPage({ searchParams }: ProductsPageProps) {
   const pageSize = Number(filters.limit ?? 9);
   const currentPage = Number(filters.page ?? 1);
 
-  const { productsData, error } = await getAllProducts({
+  const { data: productsData, error } = await getAllProducts({
     ...filters,
     limit: pageSize,
     page: currentPage,

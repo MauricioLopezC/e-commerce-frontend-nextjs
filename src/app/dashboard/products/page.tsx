@@ -14,7 +14,8 @@ async function ProductDashboard({ searchParams }: ProductsPageProps) {
   const pageSize = Number(filters.limit ?? 10);
   const currentPage = Number(filters.page ?? 1);
 
-  const { productsData } = await getAllProducts(filters);
+  const { data: productsData, error } = await getAllProducts(filters);
+  console.log(productsData, error);
   if (!productsData) return null;
 
   return (

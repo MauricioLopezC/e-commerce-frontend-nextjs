@@ -1,14 +1,3 @@
-export interface User {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  verifiedEmail: boolean;
-  role: string;
-  isBanned: boolean;
-  profileImage: string;
-  createdAt: Date;
-  updatedAt: Date;
-  totalSpent?: number;
-  totalOrders?: number;
-}
+import { components } from '@/lib/api/generated/schema';
+
+export type User = components['schemas']['UserResponseDto'];

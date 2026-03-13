@@ -1,4 +1,3 @@
-import RecentSalesCard from '@/components/dashboard/mainpage/RecentSales';
 import SmallCards from '@/components/dashboard/mainpage/SmallCards';
 import { getAllOrders } from '@/lib/actions/order.actions';
 import { getUsers } from '@/lib/actions/user.actions';
@@ -22,13 +21,13 @@ import { SalesByProductChart } from '@/components/dashboard/mainpage/SalesByProd
 import { SalesByCategoryChartPieDonut } from '@/components/dashboard/mainpage/SalesByCategoryDonutChart';
 
 async function DashBoard() {
-  const { productsData } = await getAllProducts({
-    orderBy: '-unitsOnOrder',
+  const { data: productsData } = await getAllProducts({
+    orderBy: ['-unitsOnOrder'],
     limit: 5,
   });
   if (!productsData) return null;
-  const { ordersData } = await getAllOrders({});
-  const { usersData } = await getUsers({});
+  const { data: ordersData } = await getAllOrders({});
+  const { data: usersData } = await getUsers({});
   const endDate = new Date();
   const startDate = new Date();
   startDate.setFullYear(endDate.getFullYear() - 1);

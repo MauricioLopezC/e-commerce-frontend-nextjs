@@ -13,8 +13,8 @@ import { getAllProducts } from '@/lib/actions/product.actions';
 import CreateDiscountForm from '@/components/dashboard/promotions/create/CreateDiscountForm';
 
 async function CreateDiscountPage() {
-  const { categories } = await getAllCategories();
-  const { productsData } = await getAllProducts({});
+  const { data: categories } = await getAllCategories();
+  const { data: productsData } = await getAllProducts({});
 
   if (!categories) return null;
   if (!productsData) return null;
@@ -30,9 +30,11 @@ async function CreateDiscountPage() {
             </Button>
           </Link>
           <div className="hidden items-center gap-2 md:ml-auto md:flex">
-            <Button variant="outline" size="sm">
-              Cancelar
-            </Button>
+            <Link href={'/dashboard/promotions'}>
+              <Button variant="outline" size="sm">
+                Cancelar
+              </Button>
+            </Link>
             <Button type="submit" form="create-discount" size="sm">
               Guardar descuento
             </Button>

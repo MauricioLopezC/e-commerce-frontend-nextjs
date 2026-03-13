@@ -8,7 +8,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import { SalesByCategory } from '@/interfaces/statistics';
+import { SaleByCategory } from '@/interfaces/statistics';
 
 export const description = 'A donut chart';
 
@@ -21,7 +21,7 @@ const colores = [
 ];
 
 interface SalesByCategoryChartProps {
-  salesByCategory: SalesByCategory[];
+  salesByCategory: SaleByCategory[];
 }
 
 interface ChartData {

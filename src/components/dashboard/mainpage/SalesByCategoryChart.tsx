@@ -7,7 +7,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import { SalesByCategory } from '@/interfaces/statistics';
+import { SaleByCategory } from '@/interfaces/statistics';
 
 const chartConfig = {
   desktop: {
@@ -17,7 +17,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 interface SalesByCategoryChartProps {
-  salesByCategory: SalesByCategory[];
+  salesByCategory: SaleByCategory[];
 }
 
 interface ChartData {

@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ProductSku } from '@/interfaces/products/product';
+import { ProductSku } from '@/interfaces/product';
 import { Pencil, Trash2 } from 'lucide-react';
 import EditDialog from './EditDialog';
 import CreateDialog from './CreateDialog';

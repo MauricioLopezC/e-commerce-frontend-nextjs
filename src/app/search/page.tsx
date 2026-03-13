@@ -1,6 +1,6 @@
 import ProductCard from '@/components/ProductCard';
 import { searchByName } from '@/lib/actions/search.actions';
-import { ChevronDownIcon, HeartOff } from 'lucide-react';
+import { ChevronDownIcon } from 'lucide-react';
 import {
   Menu,
   MenuButton,
@@ -22,8 +22,8 @@ async function SearchPage({
   const productName = (await searchParams).productName;
   if (!productName) return null;
 
-  const { products } = await searchByName(productName);
-  if (!products) return null;
+  const { data: productsData } = await searchByName(productName);
+  if (!productsData) return null;
   return (
     <section className="mt-6 ">
       <h1 className="font-bold text-xl flex justify-center items-center">
@@ -31,7 +31,7 @@ async function SearchPage({
       </h1>
 
       {/* products section */}
-      {products.length === 0 && (
+      {productsData.products.length === 0 && (
         <div className="w-fit mx-auto mt-10 mb-5 h-screen">
           <div className="flex flex-col space-y-3 items-center">
             <img className="h-8 w-8" src="emoji-neutral-526-svgrepo-com.svg" />
@@ -39,7 +39,7 @@ async function SearchPage({
           </div>
         </div>
       )}
-      {products.length !== 0 && (
+      {productsData.products.length !== 0 && (
         <div className="w-fit mx-auto mt-10 mb-5">
           <div className="flex justify-between">
             <FiltersMenu />
@@ -50,7 +50,7 @@ async function SearchPage({
           </div>
 
           <div className=" grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-8 gap-x-8">
-            {products.map((product) => (
+            {productsData.products.map((product) => (
               <ProductCard
                 id={product.id}
                 title={product.name}

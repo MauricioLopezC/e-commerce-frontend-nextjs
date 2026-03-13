@@ -8,7 +8,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import { SalesByProduct } from '@/interfaces/statistics';
+import { SaleByProduct } from '@/interfaces/statistics';
 
 export const description = 'A bar chart with a custom label';
 
@@ -32,7 +32,7 @@ interface ChartData {
 }
 
 interface SalesByProductChartProps {
-  salesByProduct: SalesByProduct[];
+  salesByProduct: SaleByProduct[];
 }
 
 export function SalesByProductChart({

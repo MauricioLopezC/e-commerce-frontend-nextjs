@@ -1,21 +1,13 @@
-import {
-  calculateDiscounts,
-  getCart,
-  getCartItems,
-} from '@/lib/actions/cart.actions';
-import { peso } from '@/lib/constants';
+import { calculateDiscounts2, getCart } from '@/lib/actions/cart.actions';
 import { Card, CardContent } from '@/components/ui/card';
 import TotalList from '@/components/cart-page/total-list';
 import CheckOutFormv2 from '@/components/checkout/CheckOutFormv2';
 
 async function CheckOutPage() {
-  const { cartData, error } = await getCart();
+  const { data: cartData } = await getCart();
   if (!cartData) return null;
-  const { cartItems } = await getCartItems();
-  if (!cartItems) return null;
-  //TODO: get user email for autofill
 
-  const { calcDiscountsData } = await calculateDiscounts();
+  const { data: calcDiscountsData } = await calculateDiscounts2();
   if (!calcDiscountsData) return null;
   return (
     <div className="min-h-screen p-4">

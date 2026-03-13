@@ -20,7 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { createCategory } from '@/lib/actions/category.actions';
+import { createCategory2 } from '@/lib/actions/category.actions';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
@@ -51,7 +51,7 @@ export function CreateCategoryDialog({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    const { category, error } = await createCategory(values);
+    const { data: category, error } = await createCategory2(values);
     if (category) {
       toast({
         description: (

@@ -8,7 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { deleteProductSku } from '@/lib/actions/product-skus.actions';
+import { deleteProductSku2 } from '@/lib/actions/product-skus.actions';
 import { Dispatch, SetStateAction } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { TrashIcon } from 'lucide-react';
@@ -44,7 +44,7 @@ function DeleteAlert({
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-              const res = await deleteProductSku(productId, productSkuId);
+              const res = await deleteProductSku2(productId, productSkuId);
               console.log(res);
               toast({
                 description: (

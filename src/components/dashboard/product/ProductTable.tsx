@@ -26,7 +26,6 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { CheckCircleIcon, MoreHorizontal } from 'lucide-react';
-import { Product } from '@/interfaces/products/product';
 import { useRouter } from 'next/navigation';
 import { peso } from '@/lib/constants';
 import { useState } from 'react';
@@ -43,6 +42,7 @@ import {
 import { deleteProduct } from '@/lib/actions/product.actions';
 import { useToast } from '@/hooks/use-toast';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { Product } from '@/interfaces/product';
 
 function ProductsTable({ products }: { products: Product[] }) {
   const router = useRouter();
@@ -55,7 +55,7 @@ function ProductsTable({ products }: { products: Product[] }) {
 
   async function handleConfirm() {
     if (confirmData) {
-      const { product: deletedProduct, error } = await deleteProduct(
+      const { data: deletedProduct, error } = await deleteProduct(
         confirmData.id,
       );
       console.log(deletedProduct, error);

@@ -31,7 +31,7 @@ import { z } from '@/lib/zod/es-zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { CalendarIcon, CheckCircleIcon } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -48,9 +48,13 @@ import {
 import MultipleSelector, {
   Option,
 } from '@/components/shadcn-expansions/multiselect';
-import { Product } from '@/interfaces/products/product';
-import { Category } from '@/interfaces/products/categories';
+import { Category, Product } from '@/interfaces/product';
 import { searchByName } from '@/lib/actions/search.actions';
+import {
+  components,
+  CreateDiscountDtoApplicableTo,
+  CreateDiscountDtoDiscountType,
+} from '@/lib/api/generated/schema.d';
 
 const categoryOptionSchema = z.object({
   label: z.string(),
@@ -68,14 +72,14 @@ const formSchema = z
   .object({
     name: z.string().min(1).max(100),
     description: z.string().min(1).max(200),
-    discountType: z.nativeEnum(DiscountType),
+    discountType: z.nativeEnum(CreateDiscountDtoDiscountType),
     value: z.coerce
       .number()
       .positive()
       .step(0.01, 'Solo se admiten 2 decimales'),
     startDate: z.date({ coerce: true }),
     endDate: z.date({ coerce: true }),
-    applicableTo: z.nativeEnum(ApplicableTo),
+    applicableTo: z.nativeEnum(CreateDiscountDtoApplicableTo),
     products: z.array(productOptionSchema),
     categories: z.array(categoryOptionSchema),
     orderThreshold: z.coerce
@@ -98,7 +102,7 @@ const formSchema = z
   .refine(
     (schema) => {
       if (
-        schema.discountType === DiscountType.PERCENTAGE &&
+        schema.discountType === CreateDiscountDtoDiscountType.PERCENTAGE &&
         schema.value >= 100
       )
         return false;
@@ -130,11 +134,11 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
     defaultValues: {
       name: '',
       description: '',
-      discountType: DiscountType.PERCENTAGE,
+      discountType: CreateDiscountDtoDiscountType.PERCENTAGE,
       value: 0,
       startDate: now,
       endDate: now,
-      applicableTo: ApplicableTo.GENERAL,
+      applicableTo: CreateDiscountDtoApplicableTo.GENERAL,
       products: [],
       categories: [],
       orderThreshold: 0,
@@ -156,22 +160,30 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
   }));
 
   async function onSubmit(value: z.infer<typeof formSchema>) {
-    console.log(value);
     const productsIds = value.products.map((item) => Number(item.value));
     const categoryIds = value.categories.map((item) => Number(item.value));
-    const createDiscountData = {
-      ...value,
+
+    const createDiscountData: components['schemas']['CreateDiscountDto'] = {
+      name: value.name,
+      description: value.description,
+      discountType: value.discountType,
+      value: value.value,
+      startDate: value.startDate.toISOString(),
+      endDate: value.endDate.toISOString(),
+      applicableTo: value.applicableTo,
+      orderThreshold: value.orderThreshold,
+      maxUses: value.maxUses ?? 0,
+      isActive: value.isActive,
       products: productsIds,
       categories: categoryIds,
     };
 
-    const { discount, error } = await createDiscount(createDiscountData);
+    const { data: discount, error } = await createDiscount(createDiscountData);
     if (discount) {
       setCreatedDiscountId(discount.id);
       setDialogOpen(true);
     }
     if (error) {
-      console.log(error);
       toast({
         title: 'Error al crear el descuento',
       });
@@ -366,7 +378,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
               )}
             />
 
-            {applicableTo === ApplicableTo.PRODUCT && (
+            {applicableTo === CreateDiscountDtoApplicableTo.PRODUCT && (
               <FormField
                 control={form.control}
                 name="products"
@@ -390,14 +402,17 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
                         }
                         onSearch={async (value) => {
                           setIsTriggered(true);
-                          const { products, error } = await searchByName(value);
-                          if (error || !products) {
+                          const { data: productsData, error } =
+                            await searchByName(value);
+                          if (error || !productsData) {
                             return [];
                           }
-                          const options: Option[] = products.map((product) => ({
-                            label: product.name,
-                            value: product.id.toString(),
-                          }));
+                          const options: Option[] = productsData.products.map(
+                            (product) => ({
+                              label: product.name,
+                              value: product.id.toString(),
+                            }),
+                          );
                           return options;
                         }}
                       />
@@ -409,7 +424,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
             )}
 
             {/* TODO: implement onSearch categories */}
-            {applicableTo === ApplicableTo.CATEGORY && (
+            {applicableTo === CreateDiscountDtoApplicableTo.CATEGORY && (
               <FormField
                 control={form.control}
                 name="categories"

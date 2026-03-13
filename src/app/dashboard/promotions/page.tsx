@@ -15,7 +15,7 @@ async function PromotionsPage({ searchParams }: DiscountsPageProps) {
   const pageSize = parseQueryNumber(query.limit, 10);
   const currentPage = parseQueryNumber(query.page, 1);
 
-  const { discountsData } = await getAllDiscounts({
+  const { data: discountsData } = await getAllDiscounts({
     ...query,
     page: currentPage,
     limit: pageSize,

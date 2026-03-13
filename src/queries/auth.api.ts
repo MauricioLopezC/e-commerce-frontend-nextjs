@@ -1,4 +1,4 @@
-import { BACKEND_URL } from './constants';
+import { BACKEND_URL } from '../lib/api/constants';
 
 /**
  * if request is made from a server component the request

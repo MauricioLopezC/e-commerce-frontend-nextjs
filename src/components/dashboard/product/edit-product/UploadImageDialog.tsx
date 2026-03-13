@@ -33,12 +33,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 
 const MAX_FILE_SIZE = 5000000;
-const ACCEPTED_IMAGE_TYPES = [
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/webp',
-];
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg'];
 
 const formSchema = z.object({
   productSkuId: z.coerce.number().int().positive(),
@@ -79,7 +74,9 @@ export default function UploadImageDialog({
     imageData.append('productId', productId.toString());
     imageData.append('file', values.image);
     imageData.append('productSkuId', values.productSkuId.toString());
-    const { imageData: createdImageData } = await uploadImage(imageData);
+    const { data: createdImageData, error } = await uploadImage(imageData);
+    console.log('ERRR+>', error);
+
     if (!createdImageData) {
       toast({
         variant: 'destructive',

@@ -1,15 +1,7 @@
-export interface TotalSalesByMonth {
-  month: Date;
-  total_sales: string;
-}
+import { components } from '@/lib/api/generated/schema';
 
-export interface SalesByCategory {
-  id: number;
-  categoryName: string;
-  total: number;
-}
+export type TotalSalesByMonth = components['schemas']['TotalSalesByMonth'];
 
-export interface SalesByProduct {
-  name: string;
-  total: number;
-}
+export type SaleByCategory = components['schemas']['SaleByCategory'];
+
+export type SaleByProduct = components['schemas']['SaleByProduct'];

@@ -2,7 +2,6 @@
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { Minus, Plus, X } from 'lucide-react';
-import { CartItem } from '@/interfaces/cart-item/cart';
 import { Badge } from '../ui/badge';
 import { KittenImageSrc, peso } from '@/lib/constants';
 import { CldImage } from 'next-cloudinary';
@@ -12,16 +11,20 @@ import {
   deleteCartItem,
   updateCartItemQuantity,
 } from '@/lib/actions/cart.actions';
+import { components } from '@/lib/api/generated/schema';
 
-function CartItemCard({ cartItem }: { cartItem: CartItem }) {
+function CartItemCard({
+  cartItem,
+}: {
+  cartItem: components['schemas']['CartItemResponseDto'];
+}) {
   const [quantity, setQuantity] = useState(cartItem.quantity);
   const { toast } = useToast();
 
   async function onUpdateQuantity(newQuantity: number) {
-    const { cartItem: updatedCartItem, error } = await updateCartItemQuantity(
+    const { data: updatedCartItem, error } = await updateCartItemQuantity(
       newQuantity,
       cartItem.id,
-      cartItem.cartId,
     );
     if (error) {
       if (error.statusCode === 409) {
@@ -33,7 +36,7 @@ function CartItemCard({ cartItem }: { cartItem: CartItem }) {
       }
       toast({
         variant: 'destructive',
-        title: 'Error al actulizar',
+        title: 'Error al actualizar',
         description: 'Intente nuevamente más tarde',
       });
       return;
@@ -41,33 +44,26 @@ function CartItemCard({ cartItem }: { cartItem: CartItem }) {
 
     toast({
       variant: 'default',
-      title: 'Actulizado correctamente',
-      description: `Ahora tiene una catidad de ${updatedCartItem?.quantity}`,
+      title: 'Actualizado correctamente',
+      description: `Ahora tiene una cantidad de ${updatedCartItem?.quantity}`,
     });
     setQuantity(newQuantity);
     return;
   }
 
   async function onDeleteButton() {
-    const { cartItem: deletedCartItem, error } = await deleteCartItem(
-      cartItem.cartId,
-      cartItem.id,
-    );
+    const { error } = await deleteCartItem(cartItem.id);
     if (error) {
-      console.log(error);
       toast({
         variant: 'destructive',
         title: 'Error al eliminar el producto del carrito',
       });
       return;
     }
-    if (deletedCartItem) {
-      toast({
-        variant: 'default',
-        title: 'eliminado correctamente',
-      });
-      return;
-    }
+    toast({
+      variant: 'default',
+      title: 'Eliminado correctamente',
+    });
   }
 
   return (

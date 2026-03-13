@@ -1,7 +1,7 @@
 'use client';
-import { Image } from '@/interfaces/products/image';
 import { CldImage } from 'next-cloudinary';
 import { useState } from 'react';
+import {Image} from "@/interfaces/images";
 
 interface CarouselProps {
   images: Image[];

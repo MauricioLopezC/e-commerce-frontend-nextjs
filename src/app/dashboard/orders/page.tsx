@@ -15,7 +15,7 @@ async function OrdersPageDashboard({
   const pageSize = Number(query.limit ?? 10);
   const currentPage = Number(query.page ?? 1);
 
-  const { ordersData } = await getAllOrders({
+  const { data: ordersData } = await getAllOrders({
     ...query,
     page: currentPage,
     limit: pageSize,

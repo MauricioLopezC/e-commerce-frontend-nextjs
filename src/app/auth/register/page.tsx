@@ -15,11 +15,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
-import { register } from '@/lib/actions/auth.actions';
 import { useToast } from '@/hooks/use-toast';
 import { AlertCircle } from 'lucide-react';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { register } from '@/lib/actions/auth.actions';
 
 const formSchema = z.object({
   firstName: z.string().min(2).max(100),
@@ -49,7 +49,7 @@ function RegisterPage() {
     const email = values.email;
     const password = values.password;
 
-    const { user, error } = await register(
+    const { data: user, error } = await register(
       firstName,
       lastName,
       email,

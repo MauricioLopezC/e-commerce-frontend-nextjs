@@ -45,9 +45,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Category } from '@/interfaces/products/categories';
 import { CreateCategoryDialog } from './CreateCategoryDialog';
-import { Sex } from '@/interfaces/products/product';
+import { Category, Sex } from '@/interfaces/product';
+import { CreateProductDtoSex } from '@/lib/api/generated/schema';
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -110,8 +110,9 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     const { variations, ...rest } = values;
-    const { product, error } = await createProduct({
+    const { data: product, error } = await createProduct({
       ...rest,
+      sex: rest.sex as unknown as CreateProductDtoSex,
       categories: [rest.categoryId],
     });
     console.log(product, error);
@@ -130,15 +131,12 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
     console.log(product);
 
     for (let variation of variations) {
-      const { createdProductSku, error: productSkuError } =
-        await createProductSku(
-          {
-            size: variation.size,
-            color: variation.color,
-            quantity: variation.stock,
-          },
-          productId,
-        );
+      const { data: createdProductSku, error: productSkuError } =
+        await createProductSku(productId, {
+          size: variation.size,
+          color: variation.color,
+          quantity: variation.stock,
+        });
       console.log(createdProductSku, productSkuError);
 
       if (!createdProductSku) {
@@ -156,7 +154,7 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
       imageData.append('productId', productId.toString());
       imageData.append('productSkuId', createdProductSku.id.toString());
       console.log(imageData);
-      const { imageData: createdImageData, error: imageError } =
+      const { data: createdImageData, error: imageError } =
         await uploadImage(imageData);
       console.log(createdImageData?.url, imageError);
       if (!createdImageData) {

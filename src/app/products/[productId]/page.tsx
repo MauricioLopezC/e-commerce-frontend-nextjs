@@ -14,20 +14,20 @@ import {
 import Link from 'next/link';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import ProductCard from '@/components/ProductCard';
-import { Product } from '@/interfaces/products/product';
+import { Product } from '@/interfaces/product';
 import ProductPageBreadCrumbs from '@/components/product-page/ProductPageBreadCrumbs';
 import { getAllProductsSkus } from '@/lib/actions/product-skus.actions';
+import NotFoundPage from '@/components/common/NotFoundPage';
 
 async function ProductPage({ params }: { params: { productId: string } }) {
-  //NOTE: params.productId could be NaN, nullish coalescing operator only works
-  //with undefined and null and || operator with falsy and truthy
-
   let productId = Number(params.productId) || 1;
-  const { product } = await getProduct(productId);
-  const { productSkus } = await getAllProductsSkus(productId);
+  const { data: product, error } = await getProduct(productId);
+
+  if (error?.statusCode === 404) return NotFoundPage();
+  const { data: productSkus } = await getAllProductsSkus(productId);
   if (!product || !productSkus) return null;
 
-  const { productsData } = await getAllProducts({
+  const { data: productsData } = await getAllProducts({
     limit: 5,
   });
   if (!productsData) return null;

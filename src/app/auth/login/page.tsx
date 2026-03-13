@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { logIn } from '@/lib/actions/auth.actions';
+import { login } from '@/lib/actions/auth.actions';
 import { z } from '@/lib/zod/es-zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -52,8 +52,8 @@ function LoginPage() {
     const email = values.email;
     const password = values.password;
 
-    const { access_token, error } = await logIn(email, password);
-    if (access_token) {
+    const { data, error } = await login(email, password);
+    if (data) {
       setIsOpen(true);
       return;
     }

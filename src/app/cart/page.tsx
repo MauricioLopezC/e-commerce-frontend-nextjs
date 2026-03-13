@@ -3,7 +3,7 @@ import TotalList from '@/components/cart-page/total-list';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
-  calculateDiscounts,
+  calculateDiscounts2,
   getCart,
   getCartItems,
 } from '@/lib/actions/cart.actions';
@@ -12,16 +12,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import CartItemCard from '@/components/cart-page/cart-itemv2';
 
 async function CartPage() {
-  const { cartData } = await getCart();
-  console.log('CARTDATA', cartData);
+  const { data: cartData } = await getCart();
   if (!cartData) return null;
-  const { cartItems } = await getCartItems();
-  console.log('ITEMS', cartItems);
+  const { data: cartItems } = await getCartItems();
   if (!cartItems) return null;
 
-  const { calcDiscountsData } = await calculateDiscounts();
+  const { data: calcDiscountsData } = await calculateDiscounts2();
   if (!calcDiscountsData) return null;
-  console.log(calcDiscountsData);
 
   return (
     <main className="max-w-6xl mx-auto p-6 min-h-screen">

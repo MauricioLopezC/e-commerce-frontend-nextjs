@@ -1,9 +1,10 @@
 import UserOrdersCard from '@/components/user-orders/UserOrdersCard';
-import { getUserOrders } from '@/lib/actions/order.actions';
+import { getMyOrders } from '@/lib/actions/order.actions';
 
 async function OrdersPage() {
-  const { ordersData } = await getUserOrders();
-  if (!ordersData) return null;
+  const { data, error } = await getMyOrders();
+  console.log(data, error);
+  if (!data) return null;
 
   return (
     <main className="container mx-auto py-8 px-4">
@@ -13,7 +14,7 @@ async function OrdersPage() {
         </div>
 
         <div className="space-y-6">
-          {ordersData.orders.map((order) => (
+          {data.orders.map((order) => (
             <UserOrdersCard order={order} key={order.id} />
           ))}
         </div>

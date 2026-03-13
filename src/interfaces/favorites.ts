@@ -1,10 +1,3 @@
-import { Product } from './products/product';
+import { components } from '@/lib/api/generated/schema';
 
-export interface Favorite {
-  id: number;
-  productId: number;
-  userId: number;
-  createdAt: Date;
-  updatedAt: Date;
-  product: Product;
-}
+export type Favorite = components['schemas']['FavoriteResponseDto'];

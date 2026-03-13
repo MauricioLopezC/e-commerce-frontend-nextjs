@@ -9,8 +9,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { ProductSku } from '@/interfaces/products/product';
-import { updateProductSku } from '@/lib/actions/product-skus.actions';
+import { ProductSku } from '@/interfaces/product';
+import { updateProductSku2 } from '@/lib/actions/product-skus.actions';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { z } from '@/lib/zod/es-zod';
 import { useForm } from 'react-hook-form';
@@ -69,10 +69,10 @@ function EditDialog({
     console.log(values);
     const productId = productSku.productId;
     const productSkuId = productSku.id;
-    const { productSku: updatedProductSku } = await updateProductSku(
-      values,
+    const { data: updatedProductSku } = await updateProductSku2(
       productId,
       productSkuId,
+      values,
     );
     if (updatedProductSku) {
       toast({
@@ -87,14 +87,14 @@ function EditDialog({
           </div>
         ),
       });
-    } else {
-      toast({
-        variant: 'destructive',
-        title: '¡Vaya! Algo salió mal.',
-        description:
-          'Hubo un problema al crear el producto, intento nuevamente mas tarde',
-      });
+      return;
     }
+    toast({
+      variant: 'destructive',
+      title: '¡Vaya! Algo salió mal.',
+      description:
+        'Hubo un problema al crear el producto, intento nuevamente mas tarde',
+    });
   }
 
   return (

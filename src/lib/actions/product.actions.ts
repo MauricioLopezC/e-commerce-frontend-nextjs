@@ -1,211 +1,95 @@
 'use server';
-import { Product } from '@/interfaces/products/product';
-import { BACKEND_URL } from '@/queries/constants';
 import { revalidateTag } from 'next/cache';
-import { cookies } from 'next/headers';
-import { ErrorResponse } from '@/interfaces/responses';
-
-interface GetProductsOptions {
-  limit?: number;
-  page?: number;
-  category?: string;
-  name?: string;
-  sex?: string;
-  orderBy?: string;
-}
-
-interface ProductsData {
-  products: Product[];
-  metadata: { _count: number };
-}
-
-interface AllProductsResponse {
-  productsData?: ProductsData;
-  error?: ErrorResponse;
-}
-
-interface OneProductResponse {
-  product?: Product;
-  error?: ErrorResponse;
-}
-
-interface CreateProductDto {
-  name: string;
-  sex: string;
-  price: number;
-  description: string;
-  categories: number[];
-}
-
-interface UpdateProductDto {
-  name: string;
-  sex: string;
-  price: number;
-  description: string;
-}
+import { api } from '../api/client';
+import { components, paths } from '../api/generated/schema';
 
 export async function getAllProducts(
-  options: GetProductsOptions,
-): Promise<AllProductsResponse> {
-  const queryParams = new URLSearchParams();
-  let key: keyof GetProductsOptions;
-  for (key in options) {
-    const value = options[key];
-    if (value) {
-      queryParams.set(key, value.toString());
-    }
-  }
-
-  const res = await fetch(`${BACKEND_URL}/products?${queryParams.toString()}`, {
-    method: 'GET',
+  options: paths['/products']['get']['parameters']['query'],
+) {
+  const { data, error } = await api.GET('/products', {
+    params: {
+      query: options,
+    },
     next: {
       tags: ['products'],
     },
   });
-
-  if (res.ok) {
-    const productsData = await res.json();
-    return {
-      productsData,
-    };
-  }
-
-  const error = await res.json();
-  return {
-    error,
-  };
+  return { data, error };
 }
 
-export async function getProduct(
-  productId: number,
-): Promise<OneProductResponse> {
-  const res = await fetch(`${BACKEND_URL}/products/${productId}`, {
-    method: 'GET',
+export async function getProduct(id: number) {
+  const { data, error } = await api.GET('/products/{id}', {
+    params: { path: { id: id } },
     next: {
       tags: ['product'],
     },
   });
-  if (res.ok) {
-    const product = await res.json();
-    return {
-      product,
-    };
-  }
 
-  const error = await res.json();
-  return {
-    error,
-  };
+  return { data, error };
 }
 
 export async function createProduct(
-  createProductDto: CreateProductDto,
-): Promise<OneProductResponse> {
-  const token = cookies().get('access-token')?.value;
-
-  const res = await fetch(`${BACKEND_URL}/products`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: `access-token=${token}`,
-    },
-    body: JSON.stringify(createProductDto),
+  body: components['schemas']['CreateProductDto'],
+) {
+  const { data, error, response } = await api.POST('/products', {
+    body,
   });
-  revalidateTag('products');
-  if (res.ok) {
-    const product = await res.json();
-    return {
-      product,
-    };
+
+  if (response.ok) {
+    revalidateTag('products');
   }
 
-  const error = await res.json();
-  return {
-    error,
-  };
+  return { data, error };
 }
 
 export async function updateProduct(
-  productId: number,
-  data: UpdateProductDto,
-): Promise<OneProductResponse> {
-  const token = cookies().get('access-token')?.value ?? '';
-  const res = await fetch(`${BACKEND_URL}/products/${productId}`, {
-    method: 'PATCH',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: `access-token=${token}`,
+  id: number,
+  body: components['schemas']['UpdateProductDto'],
+) {
+  const { data, error, response } = await api.PATCH('/products/{id}', {
+    params: {
+      path: { id },
     },
-    body: JSON.stringify(data),
+    body,
   });
 
-  revalidateTag('product');
-  revalidateTag('products');
-  if (res.ok) {
-    const product = await res.json();
-    return {
-      product,
-    };
-  }
-
-  const error = await res.json();
-  return {
-    error,
-  };
-}
-
-export async function deleteProduct(id: number): Promise<OneProductResponse> {
-  const token = cookies().get('access-token')?.value ?? '';
-
-  const res = await fetch(`${BACKEND_URL}/products/${id}`, {
-    method: 'DELETE',
-    credentials: 'include',
-    headers: {
-      Cookie: `access-token=${token}`,
-    },
-  });
-
-  if (res.ok) {
+  if (response.ok) {
+    revalidateTag('product');
     revalidateTag('products');
-    const product = await res.json();
-    return {
-      product,
-    };
   }
 
-  const error = await res.json();
-  return {
-    error,
-  };
+  return { data, error };
 }
 
-export async function replaceProductCategories(
+export async function deleteProduct(id: number) {
+  const { data, error, response } = await api.DELETE('/products/{id}', {
+    params: {
+      path: { id },
+    },
+  });
+
+  if (response.ok) {
+    revalidateTag('products');
+  }
+
+  return { data, error };
+}
+
+export async function replaceProductCategories2(
   productId: number,
   categoryIds: number[],
-): Promise<OneProductResponse> {
-  const token = cookies().get('access-token')?.value ?? '';
-  const res = await fetch(`${BACKEND_URL}/products/${productId}/categories`, {
-    method: 'PUT',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: `access-token=${token}`,
+) {
+  const { data, error, response } = await api.PUT('/products/{id}/categories', {
+    params: {
+      path: { id: productId },
     },
-    body: JSON.stringify({ categoryIds }),
+    body: { categoryIds },
   });
-  revalidateTag('product');
-  revalidateTag('products');
-  if (res.ok) {
-    const product = await res.json();
-    return {
-      product,
-    };
+
+  if (response.ok) {
+    revalidateTag('product');
+    revalidateTag('products');
   }
 
-  const error = await res.json();
-  return {
-    error,
-  };
+  return { data, error };
 }

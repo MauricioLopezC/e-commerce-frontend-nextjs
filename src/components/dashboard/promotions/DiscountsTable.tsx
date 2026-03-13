@@ -26,8 +26,7 @@ import {
 import { Discount } from '@/interfaces/discounts';
 import { peso } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import Link from 'next/link';
+import { MoreHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import {
   AlertDialog,
@@ -62,7 +61,7 @@ function DiscountsTable({ discounts }: { discounts: Discount[] }) {
   async function handleConfirm() {
     if (confirmData) {
       //server action
-      const { discount, error } = await deleteDiscount(confirmData.id);
+      const { data: discount, error } = await deleteDiscount(confirmData.id);
       console.log(discount, error);
       if (discount) {
         toast({

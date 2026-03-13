@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import MultipleSelector, { Option } from '@/components/ui/multiselect';
-import { Product } from '@/interfaces/products/product';
+import { Product } from '@/interfaces/product';
 import { connectProducts } from '@/lib/actions/discounts.actions';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
@@ -10,6 +10,7 @@ interface AddProductDialogProps {
   discountProducts: Product[];
 }
 
+//TODO: DEPRECATED
 export default function AddProductDialog({
   products,
   discountProducts,

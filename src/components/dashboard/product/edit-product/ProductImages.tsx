@@ -6,8 +6,7 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
-import { Image } from '@/interfaces/products/image';
-import { Product, ProductSku } from '@/interfaces/products/product';
+import { Product, ProductSku } from '@/interfaces/product';
 import { CldImage } from 'next-cloudinary';
 
 import {
@@ -33,9 +32,12 @@ import { deleteImage } from '@/lib/actions/image.actions';
 import { KittenImageSrc } from '@/lib/constants';
 import UploadImageDialog from './UploadImageDialog';
 import { useToast } from '@/hooks/use-toast';
+import { Image } from '@/interfaces/images';
 
 //TODO: edit product sku images, not implmented in backend yet
-//error messages too
+//error messages too,
+
+//TODO: Implement loading buttons in uplead and delete images
 function ProductImages({
   product,
   productSkus,

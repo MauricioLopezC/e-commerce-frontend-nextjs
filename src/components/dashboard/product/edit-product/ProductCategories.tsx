@@ -7,15 +7,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Category } from '@/interfaces/products/categories';
 import { Label } from '@/components/ui/label';
 import MultipleSelector, { Option } from '@/components/ui/multiselect';
 import { PlusCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 import { CreateCategoryDialog } from '../create/CreateCategoryDialog';
-import { replaceProductCategories } from '@/lib/actions/product.actions';
+import { replaceProductCategories2 } from '@/lib/actions/product.actions';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { Category } from '@/interfaces/product';
 
 interface ProductCategoriesFormProps {
   categories: Category[];
@@ -41,9 +41,11 @@ function ProductCategoriesForm({
   const { toast } = useToast();
 
   async function onSubmit() {
-    console.log(value);
     const categoryIds = value.map((value) => Number(value.value));
-    const { product } = await replaceProductCategories(productId, categoryIds);
+    const { data: product } = await replaceProductCategories2(
+      productId,
+      categoryIds,
+    );
     if (product) {
       toast({
         description: (

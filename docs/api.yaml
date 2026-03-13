@@ -526,14 +526,12 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateImageDto'
       responses:
-        '200':
+        '201':
           description: ''
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ImageResponseDto'
-        '201':
-          description: ''
         '500':
           description: Internal server error
           content:
@@ -553,7 +551,7 @@ paths:
       operationId: ImagesController_batchCreateAndUpload
       parameters: []
       responses:
-        '200':
+        '201':
           description: ''
           content:
             application/json:
@@ -561,8 +559,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ImageResponseDto'
-        '201':
-          description: ''
         '500':
           description: Internal server error
           content:
@@ -1350,7 +1346,7 @@ paths:
             maxLength: 100
             type: string
         - name: limit
-          required: true
+          required: false
           in: query
           schema:
             minimum: 1
@@ -1358,7 +1354,7 @@ paths:
             default: 10
             type: number
         - name: page
-          required: true
+          required: false
           in: query
           schema:
             minimum: 1
@@ -1397,7 +1393,7 @@ paths:
             maxLength: 100
             type: string
         - name: limit
-          required: true
+          required: false
           in: query
           schema:
             minimum: 1
@@ -1405,7 +1401,7 @@ paths:
             default: 10
             type: number
         - name: page
-          required: true
+          required: false
           in: query
           schema:
             minimum: 1

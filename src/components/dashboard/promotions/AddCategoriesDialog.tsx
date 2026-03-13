@@ -1,15 +1,16 @@
 import { Button } from '@/components/ui/button';
 import MultipleSelector, { Option } from '@/components/ui/multiselect';
-import { Category } from '@/interfaces/products/categories';
 import { connectCategories } from '@/lib/actions/discounts.actions';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
+import { Category } from '@/interfaces/product';
 
 interface AddProductDialogProps {
   categories: Category[];
   discountCategories: Category[];
 }
 
+//TODO: DEPRECATED
 export default function AddCateogiresDialog({
   categories,
   discountCategories,

@@ -1,57 +1,26 @@
 'use server';
-import { Category } from '@/interfaces/products/categories';
-import { ErrorResponse } from '@/interfaces/responses';
-import { BACKEND_URL } from '@/queries/constants';
 import { revalidateTag } from 'next/cache';
-import { cookies } from 'next/headers';
+import { api } from '../api/client';
+import { components } from '../api/generated/schema';
 
-interface AllCategoriesResponse {
-  categories?: Category[];
-  error?: ErrorResponse;
-}
-
-interface OneCategoryResponse {
-  category?: Category;
-  error?: ErrorResponse;
-}
-
-export async function getAllCategories(): Promise<AllCategoriesResponse> {
-  const res = await fetch(`${BACKEND_URL}/categories`, {
-    method: 'GET',
+export async function getAllCategories() {
+  const { data, error } = await api.GET('/categories', {
     next: {
       tags: ['categories'],
     },
   });
-  if (res.ok) {
-    const categories = await res.json();
-    return { categories };
-  }
-  const error = await res.json();
-  return { error };
+  return { data, error };
 }
 
-interface CreateCategoryDto {
-  name: string;
-  description: string;
-}
+type CreateCategoryDto = components['schemas']['CreateCategoryDto'];
 
-export async function createCategory(
-  data: CreateCategoryDto,
-): Promise<OneCategoryResponse> {
-  const token = cookies().get('access-token')?.value;
-  const res = await fetch(`${BACKEND_URL}/categories`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: `access-token=${token}`,
-    },
-    body: JSON.stringify(data),
+export async function createCategory2(createCategoryDto: CreateCategoryDto) {
+  const { data, error, response } = await api.POST('/categories', {
+    body: createCategoryDto,
   });
-  revalidateTag('categories');
-  if (res.ok) {
-    const category = await res.json();
-    return { category };
+
+  if (response.ok) {
+    revalidateTag('categories');
   }
-  const error = await res.json();
-  return { error };
+  return { data, error };
 }

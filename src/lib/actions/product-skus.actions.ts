@@ -1,161 +1,98 @@
 'use server';
-import { cookies } from 'next/headers';
-import { BACKEND_URL } from '@/queries/constants';
-import { revalidatePath } from 'next/cache';
-import { ProductSku } from '@/interfaces/products/product';
-import { ErrorResponse } from '@/interfaces/responses';
+import { revalidateTag } from 'next/cache';
+import { components } from '../api/generated/schema';
+import { api } from '../api/client';
 
-interface CreateProductSkuDto {
-  quantity: number;
-  size: string;
-  color: string;
-}
-
-interface ProductSkuResponse {
-  productSku?: ProductSku;
-  error?: any;
-}
-
-interface AllProductSkusResponse {
-  productSkus?: ProductSku[];
-  error?: any;
-}
+type CreateProductSkuDto2 = components['schemas']['CreateProductSkusDto'];
 
 export async function createProductSku(
-  createProductSkuDto: CreateProductSkuDto,
   productId: number,
+  body: CreateProductSkuDto2,
 ) {
-  const token = cookies().get('access-token')?.value ?? '';
-  const res = await fetch(`${BACKEND_URL}/products/${productId}/product-skus`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: `access-token=${token}`,
+  const { data, error, response } = await api.POST(
+    '/products/{productId}/product-skus',
+    {
+      params: {
+        path: { productId },
+      },
+      body,
     },
-    body: JSON.stringify(createProductSkuDto),
-  });
-  revalidatePath(`/dashboard/products/edit/${productId}`);
-  if (res.ok) {
-    const data = await res.json();
-    return {
-      createdProductSku: data,
-    };
-  }
+  );
 
-  const error = await res.json();
-  return {
-    error,
-  };
-}
-
-interface BatchPayload {
-  count: number;
-}
-
-interface CreateBatchProductSkusResponse {
-  data?: BatchPayload;
-  error?: ErrorResponse;
+  if (response.ok) revalidateTag('productSkus');
+  return { data, error };
 }
 
 export async function createBatchProductSkus(
   productId: number,
-  createProductSkusDto: CreateProductSkuDto[],
-): Promise<CreateBatchProductSkusResponse> {
-  const token = cookies().get('access-token')?.value;
-  const res = await fetch(
-    `${BACKEND_URL}/products/${productId}/product-skus/batch`,
+  body: components['schemas']['CreateBatchProductSkusDto'],
+) {
+  const { data, error, response } = await api.POST(
+    '/products/{productId}/product-skus/batch',
     {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        Cookie: `access-token=${token}`,
+      params: {
+        path: { productId },
       },
-      body: JSON.stringify({ productSkus: createProductSkusDto }),
+      body,
     },
   );
-  if (res.ok) {
-    revalidatePath(`/dashboard/products/edit/${productId}`);
-    const data: BatchPayload = await res.json();
-    return { data };
-  }
 
-  const error = await res.json();
-  return { error };
+  if (response.ok) revalidateTag('productSkus');
+  return { data, error };
 }
 
-export async function getAllProductsSkus(
-  productId: number,
-): Promise<AllProductSkusResponse> {
-  const token = cookies().get('access-token')?.value;
-  const res = await fetch(`${BACKEND_URL}/products/${productId}/product-skus`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      Cookie: `access-token=${token}`,
+export async function getAllProductsSkus(productId: number) {
+  const { data, error } = await api.GET('/products/{productId}/product-skus', {
+    params: {
+      path: { productId },
     },
     next: {
       tags: ['productSkus'],
     },
   });
-  if (res.ok) {
-    const productSkus = await res.json();
-    return { productSkus };
-  }
 
-  const error = await res.json();
-  return { error };
+  return { data, error };
 }
 
-export async function updateProductSku(
-  productSkuDto: CreateProductSkuDto,
+export async function updateProductSku2(
   productId: number,
   productSkuId: number,
-): Promise<ProductSkuResponse> {
-  const token = cookies().get('access-token')?.value;
-  const res = await fetch(
-    `${BACKEND_URL}/products/${productId}/product-skus/${productSkuId}`,
+  body: components['schemas']['UpdateProductSkusDto'],
+) {
+  const { data, error, response } = await api.PATCH(
+    '/products/{productId}/product-skus/{id}',
     {
-      method: 'PATCH',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        Cookie: `access-token=${token}`,
+      params: {
+        path: {
+          productId,
+          id: productSkuId,
+        },
       },
-      body: JSON.stringify(productSkuDto),
+      body,
     },
   );
+  if (response.ok) revalidateTag('productSkus');
 
-  revalidatePath(`/dashboard/products/edit/${productId}`);
-
-  if (res.ok) {
-    const productSku = await res.json();
-    return { productSku };
-  }
-  const error = await res.json();
-  return { error };
+  return { data, error };
 }
 
-export async function deleteProductSku(
+export async function deleteProductSku2(
   productId: number,
   productSkuId: number,
 ) {
-  console.log('IDS ==>', productId, productSkuId);
-  const token = cookies().get('access-token')?.value ?? '';
-  const res = await fetch(
-    `${BACKEND_URL}/products/${productId}/product-skus/${productSkuId}`,
+  const { data, error, response } = await api.DELETE(
+    '/products/{productId}/product-skus/{id}',
     {
-      method: 'DELETE',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        Cookie: `access-token=${token}`,
+      params: {
+        path: {
+          productId,
+          id: productSkuId,
+        },
       },
     },
   );
 
-  if (!res.ok) return { error: true, message: 'ERROR' };
-  revalidatePath(`/dashboard/products/edit/${productId}`);
-  return res.json();
+  if (response.ok) revalidateTag('productSkus');
+
+  return { data, error };
 }

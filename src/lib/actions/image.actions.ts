@@ -1,67 +1,42 @@
 'use server';
-import { cookies } from 'next/headers';
-import { BACKEND_URL } from '@/queries/constants';
 import { revalidateTag } from 'next/cache';
-import { ErrorResponse } from '@/interfaces/responses';
+import { api } from '../api/client';
 
-interface ImageData {
-  url: string;
-}
-interface UploadImageResponse {
-  imageData?: ImageData;
-  error?: ErrorResponse;
-}
-
-export async function uploadImage(
-  formData: FormData,
-): Promise<UploadImageResponse> {
+export async function uploadImage(formData: FormData) {
   console.log(formData);
-  if (
-    !formData.has('file') ||
-    !formData.has('productId') ||
-    !formData.has('productSkuId')
-  ) {
-    return {
-      error: {
-        statusCode: 400,
-        message: 'Error: some formData properties are missing',
-      },
-    };
-  }
+  const file = formData.get('file') as File;
+  const productId = Number(formData.get('productId'));
+  const productSkuId = Number(formData.get('productSkuId'));
 
-  const token = cookies().get('access-token')?.value;
-  const res = await fetch(`${BACKEND_URL}/images`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      Cookie: `access-token=${token}`,
+  const { data, error, response } = await api.POST('/images', {
+    body: {
+      productId: productId,
+      productSkuId: productSkuId,
     },
-    body: formData,
+    bodySerializer: (body) => {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('productId', body.productId.toString());
+      fd.append('productSkuId', body.productSkuId.toString());
+      return fd;
+    },
   });
-  if (res.ok) {
+  if (response.ok) {
     revalidateTag('product');
-    const imageData = await res.json();
-    return { imageData };
   }
-  const error = await res.json();
-  return { error };
+  return { data, error };
 }
 
 export async function deleteImage(imageId: number) {
-  const token = cookies().get('access-token')?.value;
-  const res = await fetch(`${BACKEND_URL}/images/${imageId}`, {
-    method: 'DELETE',
-    credentials: 'include',
-    headers: {
-      Cookie: `access-token=${token}`,
+  const { data, error, response } = await api.DELETE('/images/{id}', {
+    params: {
+      path: { id: imageId },
     },
   });
 
-  if (res.ok) {
-    const data = await res.json();
-    return { data };
+  if (response.ok) {
+    revalidateTag('product');
   }
 
-  const error = res.json();
-  return { error };
+  return { data, error };
 }
