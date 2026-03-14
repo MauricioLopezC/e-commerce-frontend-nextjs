@@ -46,7 +46,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
     } else {
       setSelectedPSku(null);
     }
-  }, [size, color]);
+  }, [size, color, productSkus]);
 
   useEffect(() => {
     const checkFavorite = async () => {
@@ -64,7 +64,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       return;
     };
     checkFavorite();
-  }, []);
+  }, [productId]);
 
   async function onFavoriteClick() {
     const isFavoriteValue = !isFavorite;

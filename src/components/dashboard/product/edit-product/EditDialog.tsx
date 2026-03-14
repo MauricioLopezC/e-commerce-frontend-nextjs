@@ -63,7 +63,7 @@ function EditDialog({
       size: productSku.size,
       color: productSku.color,
     });
-  }, [productSku]);
+  }, [productSku, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);

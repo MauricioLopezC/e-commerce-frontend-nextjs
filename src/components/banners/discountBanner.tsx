@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Discount } from '@/interfaces/discounts';
 import { ChevronRight, TicketPercent, X } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 interface TimeLeft {
   days: number;
@@ -18,10 +18,6 @@ export default function DiscountBanner({
 }: {
   discounts: Discount[];
 }) {
-  if (discounts.length === 0) {
-    return null;
-  }
-
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
@@ -31,8 +27,12 @@ export default function DiscountBanner({
     seconds: 0,
     isExpired: false,
   });
+
   const discount = discounts[currentIndex];
-  const saleEndDate = new Date(discount.endDate);
+  const saleEndDate = useMemo(
+    () => new Date(discount?.endDate),
+    [discount?.endDate],
+  );
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -66,13 +66,15 @@ export default function DiscountBanner({
       });
     };
 
-    // Calculate immediately and then every second
     calculateTimeLeft();
     const timer = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(timer);
-  }, [currentIndex]);
-  //HACK: consider remove dependency array
+  }, [currentIndex, saleEndDate]);
+
+  if (discounts.length === 0 || !discount) {
+    return null;
+  }
 
   if (!isVisible || timeLeft.isExpired) return null;
 

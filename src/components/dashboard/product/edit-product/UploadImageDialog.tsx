@@ -107,11 +107,7 @@ export default function UploadImageDialog({
           <span className="sr-only">Upload</span>
         </button>
       </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-[425px]"
-        aria-description="upload image"
-        aria-describedby="upload"
-      >
+      <DialogContent className="sm:max-w-[425px]" aria-describedby="upload">
         <DialogHeader>
           <DialogTitle>Subir Imagen</DialogTitle>
           <DialogDescription></DialogDescription>

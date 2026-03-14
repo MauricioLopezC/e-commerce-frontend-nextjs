@@ -34,7 +34,11 @@ async function SearchPage({
       {productsData.products.length === 0 && (
         <div className="w-fit mx-auto mt-10 mb-5 h-screen">
           <div className="flex flex-col space-y-3 items-center">
-            <img className="h-8 w-8" src="emoji-neutral-526-svgrepo-com.svg" />
+            <img
+              className="h-8 w-8"
+              src="emoji-neutral-526-svgrepo-com.svg"
+              alt=""
+            />
             <h1 className="font-bold text-lg">No hay resultados</h1>
           </div>
         </div>

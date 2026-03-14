@@ -3,7 +3,6 @@ import { ChevronDownIcon } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -12,18 +11,25 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 function OrdersOrderByMenu() {
   const [orderBy, setOrderBy] = useState<string>('-createdAt');
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  const handleOrderByChange = useCallback(
+    (newOrderBy: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('orderBy', newOrderBy);
+      router.push(`/dashboard/orders?${params.toString()}`);
+    },
+    [router, searchParams],
+  );
+
   useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('orderBy', orderBy);
-    router.push(`/dashboard/orders?${params.toString()}`);
-  }, [orderBy]);
+    handleOrderByChange(orderBy);
+  }, [orderBy, handleOrderByChange]);
 
   return (
     <DropdownMenu>
