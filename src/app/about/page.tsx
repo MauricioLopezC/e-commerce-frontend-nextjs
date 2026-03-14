@@ -17,7 +17,7 @@ function AboutPage() {
           />
         </div>
         <div className="md:col-start-1 md:self-center">
-          <p>Bienvenido a APRIL productos de todo precio.</p>
+          <p>Bienvenido a MARTINA ML productos de todo precio.</p>
           <p>
             Vendemos ropa para todas las edades, Hombres Mujeres y niños.
             Precios acesibles y de buena calidad, tambien tenemos jugetes,

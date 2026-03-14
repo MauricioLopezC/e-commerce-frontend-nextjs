@@ -11,7 +11,7 @@ import { addCartItem } from '@/lib/actions/cart.actions';
 import {
   addFavorite,
   deleteFavorite,
-  getFavorites2,
+  getFavorites,
 } from '@/lib/actions/favorites.actions';
 import { checkSession } from '@/lib/actions/navbar.actions';
 import { Favorite } from '@/interfaces/favorites';
@@ -52,8 +52,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
     const checkFavorite = async () => {
       const session = await checkSession();
       if (session) {
-        //TODO: use findOne
-        const { data: favoritesData } = await getFavorites2({ productId });
+        const { data: favoritesData } = await getFavorites({ productId });
         console.log(favoritesData);
         const favoriteFound = favoritesData?.favorites[0];
         if (favoriteFound) {

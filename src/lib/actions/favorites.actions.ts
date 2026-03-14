@@ -5,7 +5,7 @@ import { paths } from '../api/generated/schema';
 
 type QueryParams = paths['/me/favorites']['get']['parameters']['query'];
 
-export async function getFavorites2(params: QueryParams) {
+export async function getFavorites(params: QueryParams) {
   const { data, error } = await api.GET('/me/favorites', {
     params: {
       query: params,

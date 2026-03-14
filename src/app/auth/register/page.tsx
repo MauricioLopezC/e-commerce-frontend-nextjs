@@ -76,7 +76,7 @@ function RegisterPage() {
     <section className="mb-16">
       <div className="container mx-auto bg-gray-50 max-w-lg shadow rounded-lg mt-8 pb-8 px-8">
         <div className="flex flex-col items-center">
-          <h1 className="font-bold text-xl mt-4">APRIL STORE</h1>
+          <h1 className="font-bold text-xl mt-4">MARTINA ML STORE</h1>
           <h2 className="font-bold text-lg">Ingrese a su cuenta</h2>
           {errorMessage !== '' && (
             <Alert variant="destructive" className="my-2">
