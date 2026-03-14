@@ -4,6 +4,7 @@ import { PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 import { getAllProducts } from '@/lib/actions/product.actions';
 import { PaginationWithLinks } from '@/components/ui/paginations-with-links';
+import { parseQueryNumber } from '@/lib/parse-query';
 
 interface ProductsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -11,8 +12,8 @@ interface ProductsPageProps {
 
 async function ProductDashboard({ searchParams }: ProductsPageProps) {
   const filters = await searchParams;
-  const pageSize = Number(filters.limit ?? 10);
-  const currentPage = Number(filters.page ?? 1);
+  const pageSize = parseQueryNumber(filters.limit, 10);
+  const currentPage = parseQueryNumber(filters.page, 1);
 
   const { data: productsData, error } = await getAllProducts(filters);
   console.log(productsData, error);

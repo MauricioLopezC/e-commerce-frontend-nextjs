@@ -19,6 +19,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { OrderByMenu } from '@/components/product-catalog-page/FiltersAndSorting';
+import { parseQueryNumber } from '@/lib/parse-query';
 
 export const metadata = {
   title: 'Products page',
@@ -30,8 +31,8 @@ interface ProductsPageProps {
 
 async function ProductsPage({ searchParams }: ProductsPageProps) {
   const filters = await searchParams;
-  const pageSize = Number(filters.limit ?? 9);
-  const currentPage = Number(filters.page ?? 1);
+  const pageSize = parseQueryNumber(filters.limit, 10);
+  const currentPage = parseQueryNumber(filters.page, 1);
 
   const { data: productsData, error } = await getAllProducts({
     ...filters,

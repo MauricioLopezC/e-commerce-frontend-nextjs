@@ -1,6 +1,7 @@
 import UsersTable from '@/components/dashboard/users/UsersTable';
 import { PaginationWithLinks } from '@/components/ui/paginations-with-links';
 import { getUsers } from '@/lib/actions/user.actions';
+import { parseQueryNumber } from '@/lib/parse-query';
 
 async function UsersPage({
   searchParams,
@@ -8,8 +9,8 @@ async function UsersPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const filters = await searchParams;
-  const pageSize = Number(filters.limit ?? 9);
-  const currentPage = Number(filters.page ?? 1);
+  const pageSize = parseQueryNumber(filters.limit, 10);
+  const currentPage = parseQueryNumber(filters.page, 1);
 
   const { data: usersData } = await getUsers({
     page: currentPage,

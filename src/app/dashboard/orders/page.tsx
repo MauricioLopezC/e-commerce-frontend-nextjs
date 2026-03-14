@@ -5,6 +5,7 @@ import OrdersOrderByMenu from '@/components/dashboard/orders/OrdersOrderBy';
 import { PaginationWithLinks } from '@/components/ui/paginations-with-links';
 import { getAllOrders } from '@/lib/actions/order.actions';
 import SerchEmails from '@/components/dashboard/orders/SearchEmails';
+import { parseQueryNumber } from '@/lib/parse-query';
 
 async function OrdersPageDashboard({
   searchParams,
@@ -12,8 +13,8 @@ async function OrdersPageDashboard({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const query = await searchParams;
-  const pageSize = Number(query.limit ?? 10);
-  const currentPage = Number(query.page ?? 1);
+  const pageSize = parseQueryNumber(query.limit, 10);
+  const currentPage = parseQueryNumber(query.page, 1);
 
   const { data: ordersData } = await getAllOrders({
     ...query,

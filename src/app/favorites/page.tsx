@@ -13,6 +13,7 @@ import {
 } from '@headlessui/react';
 import { HeartOff } from 'lucide-react';
 import { PaginationWithLinks } from '@/components/ui/paginations-with-links';
+import { parseQueryNumber } from '@/lib/parse-query';
 
 export const metadata = {
   title: 'Favorites page',
@@ -22,8 +23,8 @@ async function FavoritesPage(
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>,
 ) {
   const filters = await searchParams;
-  const pageSize = Number(filters.limit ?? 9);
-  const currentPage = Number(filters.page ?? 1);
+  const pageSize = parseQueryNumber(filters.limit, 10);
+  const currentPage = parseQueryNumber(filters.page, 1);
 
   const { data: favoritesData } = await getFavorites2({
     page: currentPage,
