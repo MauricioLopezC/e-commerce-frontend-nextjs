@@ -35,7 +35,16 @@ async function CartPage() {
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
               PRODUCTOS
             </h2>
-            {/* TODO: empty cart section  */}
+            {cartItems.length === 0 && (
+              <div className="flex flex-col justify-center items-center min-h-[400px]">
+                <h1 className="font-bold text-lg text-gray-600">
+                  Tu carrito está vacío
+                </h1>
+                <Link href="/" className="mt-4 text-blue-600 hover:underline">
+                  Ver productos
+                </Link>
+              </div>
+            )}
             {cartItems.map((cartItem) => (
               <CartItemCard cartItem={cartItem} key={cartItem.id} />
             ))}
