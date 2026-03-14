@@ -4,7 +4,7 @@ function Footer() {
   return (
     <footer className="w-full bg-[#333232] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 content-center text-white px-8 py-16  gap-y-6 ">
       <div className="hidden lg:inline max-w-44">
-        <h1 className="font-bold">April</h1>
+        <h1 className="font-bold">MartinaML</h1>
         <p className=" text-xs lg:inline">
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestias
           neque ea rerum sunt id distinctio, deleniti ut incidunt ipsa quasi,
