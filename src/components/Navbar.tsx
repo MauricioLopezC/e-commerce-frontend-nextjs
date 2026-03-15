@@ -20,6 +20,7 @@ import Link from 'next/link';
 import SearchDialog from './dialogs/SearchDialog';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
 
 const navigation = [
   { name: 'Todo', href: '/products?limit=9', current: false },
@@ -35,6 +36,7 @@ function classNames(...classes: string[]) {
 function NavBar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const { isAuthenticated, isAdmin, logout } = useAuth();
+  const { cartCount } = useCart();
 
   return (
     <Disclosure as="nav" className="sticky top-0 z-50 bg-white border-b">
@@ -80,23 +82,28 @@ function NavBar() {
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <Link href={'/favorites'}>
-                  <HeartIcon className="h-6 w-6 mx-2" />
+                  <HeartIcon className="h-6 w-6 mx-2 rounded-full p-0.5 hover:bg-gray-100 hover:shadow-md transition-all duration-200" />
                 </Link>
-                <Link href={'/cart'}>
-                  <ShoppingBagIcon className="h-6 w-6 mx-2" />
+                <Link href={'/cart'} className="relative">
+                  <ShoppingBagIcon className="h-6 w-6 mx-2 rounded-full p-0.5 hover:bg-gray-100 hover:shadow-md transition-all duration-200" />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                      {cartCount > 9 ? '9+' : cartCount}
+                    </span>
+                  )}
                 </Link>
                 <button
                   onClick={() => {
                     setSearchOpen(true);
                   }}
                 >
-                  <MagnifyingGlassIcon className="h-6 w-6 mx-2" />
+                  <MagnifyingGlassIcon className="h-6 w-6 mx-2 rounded-full p-0.5 hover:bg-gray-100 hover:shadow-md transition-all duration-200" />
                 </button>
                 <SearchDialog isOpen={searchOpen} setIsOpen={setSearchOpen} />
 
                 <Menu>
                   <MenuButton>
-                    <UserIcon className="h-6 w-6 rounded-full" />
+                    <UserIcon className="h-6 w-6 rounded-full p-0.5 hover:bg-gray-100 hover:shadow-md transition-all duration-200" />
                   </MenuButton>
                   <MenuItems
                     transition

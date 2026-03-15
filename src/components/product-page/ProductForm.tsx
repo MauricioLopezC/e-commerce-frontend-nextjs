@@ -17,6 +17,7 @@ import { checkSession } from '@/lib/actions/navbar.actions';
 import { Favorite } from '@/interfaces/favorites';
 import CantidadSelectV2 from './SelectV2';
 import { Button } from '../ui/button';
+import { useCart } from '@/contexts/CartContext';
 
 interface ProductOptionsProps {
   productId: number;
@@ -33,6 +34,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [favorite, setFavorite] = useState<Favorite | null>();
   const order = ['xs', 's', 'm', 'l', 'xl', 'xxl', 'xxxl'];
+  const { refreshCartCount } = useCart();
 
   const [selectedPSku, setSelectedPSku] = useState<ProductSku | null>(
     productSkus[0],
@@ -145,6 +147,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       return;
     }
     console.log({ quantity, size, color });
+    await refreshCartCount();
     toast({
       description: (
         <div>

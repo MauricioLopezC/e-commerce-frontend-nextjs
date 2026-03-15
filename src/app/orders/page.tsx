@@ -3,9 +3,10 @@ import { getMyOrders } from '@/lib/actions/order.actions';
 
 async function OrdersPage() {
   const { data, error } = await getMyOrders();
-  console.log(data, error);
+  console.log(error);
   if (!data) return null;
 
+  //TODO: empty section
   return (
     <main className="container mx-auto py-8 px-4">
       <div className="max-w-4xl mx-auto">
