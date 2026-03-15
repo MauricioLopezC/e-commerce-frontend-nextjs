@@ -2,6 +2,7 @@ import UsersTable from '@/components/dashboard/users/UsersTable';
 import { PaginationWithLinks } from '@/components/ui/paginations-with-links';
 import { getUsers } from '@/lib/actions/user.actions';
 import { parseQueryNumber } from '@/lib/parse-query';
+import { BreadcrumbUpdater } from '@/components/dashboard/BreadcrumbUpdater';
 
 async function UsersPage({
   searchParams,
@@ -20,16 +21,24 @@ async function UsersPage({
   if (!usersData) return null;
 
   return (
-    <section className="container mx-auto px-4 mt-4 mb-16">
-      <UsersTable users={usersData.users} />
-      <div className="mt-4 mb-16">
-        <PaginationWithLinks
-          page={currentPage}
-          pageSize={pageSize}
-          totalCount={usersData.metadata._count}
-        />
-      </div>
-    </section>
+    <>
+      <BreadcrumbUpdater
+        items={[
+          { name: 'Dashboard', href: '/dashboard' },
+          { name: 'Usuarios', href: '/dashboard/users' },
+        ]}
+      />
+      <section className="container mx-auto px-4 mt-4 mb-16">
+        <UsersTable users={usersData.users} />
+        <div className="mt-4 mb-16">
+          <PaginationWithLinks
+            page={currentPage}
+            pageSize={pageSize}
+            totalCount={usersData.metadata._count}
+          />
+        </div>
+      </section>
+    </>
   );
 }
 

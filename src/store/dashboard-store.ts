@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 interface BreadCrumbsState {
   pages: { name: string; href: string }[] | null;
+  updatePages: (newPages: { name: string; href: string }[]) => void;
 }
 
 export const useBreadCrumbsStore = create<BreadCrumbsState>()((set) => ({

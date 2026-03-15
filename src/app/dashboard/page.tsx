@@ -19,6 +19,7 @@ import {
 import SalesByCategoryChart from '@/components/dashboard/mainpage/SalesByCategoryChart';
 import { SalesByProductChart } from '@/components/dashboard/mainpage/SalesByProductChart';
 import { SalesByCategoryChartPieDonut } from '@/components/dashboard/mainpage/SalesByCategoryDonutChart';
+import { BreadcrumbUpdater } from '@/components/dashboard/BreadcrumbUpdater';
 
 async function DashBoard() {
   const { data: productsData } = await getAllProducts({
@@ -46,6 +47,7 @@ async function DashBoard() {
 
   return (
     <>
+      <BreadcrumbUpdater items={[{ name: 'Dashboard', href: '/dashboard' }]} />
       <main className="flex flex-1 flex-col gap-4 p-4  md:p-8">
         <div
           id="small-cards"

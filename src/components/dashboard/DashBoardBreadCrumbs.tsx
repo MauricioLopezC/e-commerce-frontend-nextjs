@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,19 +18,21 @@ function DashBoardBreadCrumbs() {
   return (
     <Breadcrumb className="ml-8 lg:ml-16">
       <BreadcrumbList>
-        {pages.map((page, idx) => (
-          <>
-            <BreadcrumbItem>
-              <BreadcrumbLink href={page.href}>{page.name}</BreadcrumbLink>
-            </BreadcrumbItem>
-            {idx !== pages.length - 1 && <BreadcrumbSeparator />}
-            {idx === pages.length - 1 && (
+        {pages.map((page, idx) => {
+          const isLast = idx === pages.length - 1;
+          return (
+            <React.Fragment key={page.href || idx}>
               <BreadcrumbItem>
-                <BreadcrumbPage>{page.name}</BreadcrumbPage>
+                {isLast ? (
+                  <BreadcrumbPage>{page.name}</BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink href={page.href}>{page.name}</BreadcrumbLink>
+                )}
               </BreadcrumbItem>
-            )}
-          </>
-        ))}
+              {!isLast && <BreadcrumbSeparator />}
+            </React.Fragment>
+          );
+        })}
       </BreadcrumbList>
     </Breadcrumb>
   );

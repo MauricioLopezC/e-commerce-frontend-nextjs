@@ -6,6 +6,7 @@ import { getAllCategories } from '@/lib/actions/category.actions';
 import { getOneDiscount } from '@/lib/actions/discounts.actions';
 import { getAllProducts } from '@/lib/actions/product.actions';
 import Link from 'next/link';
+import { BreadcrumbUpdater } from '@/components/dashboard/BreadcrumbUpdater';
 async function EditDiscountPage({
   params,
 }: {
@@ -23,29 +24,41 @@ async function EditDiscountPage({
   if (!productsData) return null;
 
   return (
-    <main className="container mx-auto mt-4 mb-16">
-      <div className="max-w-[59rem] space-y-2 mx-auto">
-        <div className="gap-2 mb-2">
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/dashboard/promotions">Cancelar</Link>
-          </Button>
+    <>
+      <BreadcrumbUpdater
+        items={[
+          { name: 'Dashboard', href: '/dashboard' },
+          { name: 'Promociones', href: '/dashboard/promotions' },
+          {
+            name: 'Editar Descuento',
+            href: `/dashboard/promotions/discounts/edit/${discountId}`,
+          },
+        ]}
+      />
+      <main className="container mx-auto mt-4 mb-16">
+        <div className="max-w-[59rem] space-y-2 mx-auto">
+          <div className="gap-2 mb-2">
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/dashboard/promotions">Cancelar</Link>
+            </Button>
+          </div>
+          <div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Descuento</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <EditDiscountForm
+                  discount={discount}
+                  products={productsData.products}
+                  categories={categories}
+                />
+              </CardContent>
+            </Card>
+          </div>
         </div>
-        <div>
-          <Card>
-            <CardHeader>
-              <CardTitle>Descuento</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <EditDiscountForm
-                discount={discount}
-                products={productsData.products}
-                categories={categories}
-              />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
 
