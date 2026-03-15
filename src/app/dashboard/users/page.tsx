@@ -16,11 +16,12 @@ async function UsersPage({
     page: currentPage,
     limit: pageSize,
   });
+
   if (!usersData) return null;
 
   return (
     <section className="container mx-auto px-4 mt-4 mb-16">
-      <UsersTable usersData={usersData} />
+      <UsersTable users={usersData.users} />
       <div className="mt-4 mb-16">
         <PaginationWithLinks
           page={currentPage}

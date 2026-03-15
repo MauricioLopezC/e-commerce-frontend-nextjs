@@ -31,12 +31,7 @@ import {
   UserRoundX,
 } from 'lucide-react';
 import { peso } from '@/lib/constants';
-import {
-  banUser,
-  deleteUser,
-  unBanUser,
-  UsersData,
-} from '@/lib/actions/user.actions';
+import { banUser, deleteUser, unBanUser } from '@/lib/actions/user.actions';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { User } from '@/interfaces/users';
@@ -51,6 +46,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { components } from '@/lib/api/generated/schema';
 
 interface ConfirmState {
   action: 'delete' | 'block' | 'unblock';
@@ -58,7 +54,11 @@ interface ConfirmState {
   onConfirm: () => void;
 }
 
-function UsersTable({ usersData }: { usersData: UsersData }) {
+interface UsersTableProps {
+  users: components['schemas']['UserResponseDto'][];
+}
+
+function UsersTable({ users }: UsersTableProps) {
   const [confirmData, setConfirmData] = useState<ConfirmState | null>(null);
   const { toast } = useToast();
 
@@ -95,7 +95,7 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {usersData.users?.map((user, idx) => (
+            {users.map((user, idx) => (
               <TableRow key={idx}>
                 <TableCell className="font-medium flex space-x-2">
                   <p>{`${user.firstName} ${user.lastName}`}</p>
@@ -115,7 +115,6 @@ function UsersTable({ usersData }: { usersData: UsersData }) {
                   )}
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {/*//OPTIMIZE:  fetch data from rest api to /orders?userId=x */}
                   {user.totalOrders}
                 </TableCell>
                 <TableCell className="hidden md:table-cell">

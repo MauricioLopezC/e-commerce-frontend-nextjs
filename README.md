@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# E-Commerce Demo - Tienda de Ropa
+
+> **AVISO IMPORTANTE**: Este es un proyecto de **DEMOSTRACIÓN** (NO es un proyecto real de producción). Es un trabajo académico/personal para habilidades de desarrollo frontend.
+
+## Características Principales
+
+### Autenticación y Usuario
+
+- Login y registro de usuarios
+- Sesión con cookies JWT
+- Perfil de usuario con historial de pedidos
+
+### Catálogo de Productos
+
+- Listado de productos con paginación
+- Filtros y ordenamiento
+- Página de detalle de producto
+- Galería de imágenes
+
+### Carrito de Compras
+
+- Agregar/eliminar productos
+- Selección de variantes (talla, color)
+- Cálculo de totales
+
+### Checkout y Órdenes
+
+- Proceso de compra
+- Integración con proveedor de pagos (modo prueba/sandbox)
+- Historial de pedidos
+- Estados de orden
+
+### Dashboard Admin
+
+- Panel de administración
+- Estadísticas
+- Gestión de productos, categorías, descuentos
+
+### Búsqueda
+
+- Búsqueda de productos
+- Filtros combinados
+
+## Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **UI**: React + Tailwind CSS + shadcn/ui
+- **Estado**: Zustand
+- **Formularios**: React Hook Form + Zod
+- **API Client**: openapi-fetch
+- **Imágenes**: Next Cloudinary
+
+## Requisitos
+
+- Node.js 18+
+- Backend API corriendo (configurable via `BACKEND_URL`)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# Instalar dependencias
+npm install
+
+# Variables de entorno
+cp .env.example .env
+# Editar .env con tu BACKEND_URL
+
+# Desarrollo
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Pagos
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+La integración de pagos está configurada en **modo prueba/sandbox**. No se procesan pagos reales.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Propósito
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Este proyecto fue creado con fines **educativos** y de **portafolio**. No es una tienda real y no procesa pagos.
