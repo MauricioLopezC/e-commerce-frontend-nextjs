@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { login } from '@/lib/actions/auth.actions';
+import { useAuth } from '@/contexts/AuthContext';
 import { z } from '@/lib/zod/es-zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -39,6 +40,7 @@ function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect: string | null = searchParams.get('redirect');
+  const { refreshAuth } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,6 +56,7 @@ function LoginPage() {
 
     const { data, error } = await login(email, password);
     if (data) {
+      await refreshAuth();
       setIsOpen(true);
       return;
     }

@@ -19,7 +19,7 @@ import {
 import Link from 'next/link';
 import SearchDialog from './dialogs/SearchDialog';
 import { useState } from 'react';
-import { checkSession, isAdminAction } from '@/lib/actions/navbar.actions';
+import { useAuth } from '@/contexts/AuthContext';
 
 const navigation = [
   { name: 'Todo', href: '/products?limit=9', current: false },
@@ -34,8 +34,7 @@ function classNames(...classes: string[]) {
 
 function NavBar() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { isAuthenticated, isAdmin, logout } = useAuth();
 
   return (
     <Disclosure as="nav" className="sticky top-0 z-50 bg-white border-b">
@@ -96,15 +95,7 @@ function NavBar() {
                 <SearchDialog isOpen={searchOpen} setIsOpen={setSearchOpen} />
 
                 <Menu>
-                  <MenuButton
-                    onClick={async () => {
-                      //server action here
-                      const session = await checkSession();
-                      setIsAuthenticated(session);
-                      const admin = await isAdminAction();
-                      setIsAdmin(admin);
-                    }}
-                  >
+                  <MenuButton>
                     <UserIcon className="h-6 w-6 rounded-full" />
                   </MenuButton>
                   <MenuItems
@@ -152,6 +143,14 @@ function NavBar() {
                             </Link>
                           </MenuItem>
                         )}
+                        <MenuItem>
+                          <button
+                            onClick={logout}
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                          >
+                            Cerrar Sesión
+                          </button>
+                        </MenuItem>
                       </>
                     )}
                     <MenuItem>
