@@ -2,6 +2,7 @@ import createClient, { Middleware } from 'openapi-fetch';
 import { paths } from './generated/schema';
 import { cookies } from 'next/headers';
 import { BACKEND_URL } from '@/lib/api/constants';
+import { redirect } from 'next/navigation';
 
 export const api = createClient<paths>({
   baseUrl: BACKEND_URL,
@@ -14,6 +15,15 @@ const myMiddleware: Middleware = {
 
     request.headers.set('cookie', `access-token=${token}`);
     return request;
+  },
+  async onResponse({ response }) {
+    if (response.status === 429) {
+      const retryAfterHeader = response.headers.get('Retry-After');
+      const retryAfter = retryAfterHeader ? parseInt(retryAfterHeader, 10) : 60;
+      redirect(`/rate-limit?retryAfter=${retryAfter}`);
+    }
+
+    return response;
   },
 };
 

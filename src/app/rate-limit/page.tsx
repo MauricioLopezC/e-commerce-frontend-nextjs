@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   Card,
   CardContent,
@@ -10,24 +11,23 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-export default function GlobalError({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+export default function RateLimitPage() {
+  const searchParams = useSearchParams();
+  const initialSeconds = parseInt(searchParams.get('retryAfter') || '60', 10);
+  const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
+
   useEffect(() => {
-    console.error('Global error:', error);
-  }, [error]);
+    if (secondsLeft <= 0) return;
 
-  const handleReset = () => {
-    reset();
-    window.location.reload();
-  };
+    const timer = setInterval(() => {
+      setSecondsLeft((prev) => prev - 1);
+    }, 1000);
 
-  const handleGoHome = () => {
-    window.location.href = '/';
+    return () => clearInterval(timer);
+  }, [secondsLeft]);
+
+  const handleRetry = () => {
+    window.history.back();
   };
 
   return (
@@ -35,7 +35,7 @@ export default function GlobalError({
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
-            Ups! Algo salió mal
+            Demasiadas solicitudes
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center space-y-4">
@@ -69,14 +69,16 @@ export default function GlobalError({
             </g>
           </svg>
           <p className="text-center text-muted-foreground">
-            Ha ocurrido un error inesperado. Por favor, intenta nuevamente más
-            tarde.
+            Has superado el límite de solicitudes. Por favor, espera{' '}
+            <span className="font-bold text-foreground">{secondsLeft}</span>{' '}
+            segundos e intenta nuevamente.
           </p>
         </CardContent>
-        <CardFooter className="flex justify-center gap-4">
-          <Button onClick={handleReset}>Intentar nuevamente</Button>
-          <Button onClick={handleGoHome} variant="outline">
-            Volver al inicio
+        <CardFooter className="flex justify-center">
+          <Button onClick={handleRetry} disabled={secondsLeft > 0}>
+            {secondsLeft > 0
+              ? `Reintentar en ${secondsLeft}s`
+              : 'Reintentar ahora'}
           </Button>
         </CardFooter>
       </Card>
