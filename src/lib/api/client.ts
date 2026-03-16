@@ -10,10 +10,10 @@ export const api = createClient<paths>({
 
 const myMiddleware: Middleware = {
   async onRequest({ request }) {
-    // set cookie
+    //get token from cookie
     const token: string = cookies().get('access-token')?.value ?? '';
 
-    request.headers.set('cookie', `access-token=${token}`);
+    request.headers.set('Authorization', `Bearer ${token}`);
     return request;
   },
   async onResponse({ response }) {

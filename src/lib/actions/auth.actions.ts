@@ -16,7 +16,11 @@ export async function login(email: string, password: string) {
 
   if (data) {
     const cookieStore = cookies();
-    cookieStore.set('access-token', data.access_token);
+    cookieStore.set('access-token', data.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    });
     revalidatePath('/', 'layout');
   }
   return { data, error };
