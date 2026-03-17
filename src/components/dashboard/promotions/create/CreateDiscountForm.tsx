@@ -54,7 +54,7 @@ import {
   components,
   CreateDiscountDtoApplicableTo,
   CreateDiscountDtoDiscountType,
-} from '@/lib/api/generated/schema.d';
+} from '@/lib/api/generated/schema';
 
 const categoryOptionSchema = z.object({
   label: z.string(),

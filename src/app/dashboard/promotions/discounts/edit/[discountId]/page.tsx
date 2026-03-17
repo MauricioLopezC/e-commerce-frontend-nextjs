@@ -7,11 +7,12 @@ import { getOneDiscount } from '@/lib/actions/discounts.actions';
 import { getAllProducts } from '@/lib/actions/product.actions';
 import Link from 'next/link';
 import { BreadcrumbUpdater } from '@/components/dashboard/BreadcrumbUpdater';
-async function EditDiscountPage({
-  params,
-}: {
-  params: { discountId: string };
-}) {
+async function EditDiscountPage(
+  props: {
+    params: Promise<{ discountId: string }>;
+  }
+) {
+  const params = await props.params;
   const discountId = Number(params.discountId);
   if (!discountId) return NotFoundPage();
 

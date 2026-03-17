@@ -19,7 +19,8 @@ import ProductPageBreadCrumbs from '@/components/product-page/ProductPageBreadCr
 import { getAllProductsSkus } from '@/lib/actions/product-skus.actions';
 import NotFoundPage from '@/components/common/NotFoundPage';
 
-async function ProductPage({ params }: { params: { productId: string } }) {
+async function ProductPage(props: { params: Promise<{ productId: string }> }) {
+  const params = await props.params;
   let productId = Number(params.productId) || 1;
   const { data: product, error } = await getProduct(productId);
 

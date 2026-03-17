@@ -1,7 +1,7 @@
 import {
   components,
   ProductResponseDtoSex as Sex,
-} from '@/lib/api/generated/schema.d';
+} from '@/lib/api/generated/schema';
 
 export { Sex };
 

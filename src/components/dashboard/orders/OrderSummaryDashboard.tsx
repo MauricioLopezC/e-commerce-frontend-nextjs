@@ -29,7 +29,7 @@ import { useOrdersStore } from '@/store/order-page-store';
 import { peso } from '@/lib/constants';
 import { updateOrderStatus2 } from '@/lib/actions/order.actions';
 import { useToast } from '@/hooks/use-toast';
-import { UpdateOrderDtoStatus } from '@/lib/api/generated/schema.d';
+import { UpdateOrderDtoStatus } from '@/lib/api/generated/schema';
 
 export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
   const { toast } = useToast();

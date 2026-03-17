@@ -10,7 +10,8 @@ import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { BreadcrumbUpdater } from '@/components/dashboard/BreadcrumbUpdater';
 
-async function EditProductPage({ params }: { params: { productId: string } }) {
+async function EditProductPage(props: { params: Promise<{ productId: string }> }) {
+  const params = await props.params;
   const productId = Number(params.productId);
 
   if (!productId) return null;
