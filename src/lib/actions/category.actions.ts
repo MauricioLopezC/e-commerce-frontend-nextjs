@@ -1,5 +1,5 @@
 'use server';
-import { revalidateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 import { api } from '../api/client';
 import { components } from '../api/generated/schema';
 
@@ -20,7 +20,7 @@ export async function createCategory2(createCategoryDto: CreateCategoryDto) {
   });
 
   if (response.ok) {
-    revalidateTag('categories');
+    updateTag('categories');
   }
   return { data, error };
 }

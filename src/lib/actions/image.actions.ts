@@ -1,5 +1,5 @@
 'use server';
-import { revalidateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 import { api } from '../api/client';
 
 export async function uploadImage(formData: FormData) {
@@ -22,7 +22,7 @@ export async function uploadImage(formData: FormData) {
     },
   });
   if (response.ok) {
-    revalidateTag('product');
+    updateTag('product');
   }
   return { data, error };
 }
@@ -35,7 +35,7 @@ export async function deleteImage(imageId: number) {
   });
 
   if (response.ok) {
-    revalidateTag('product');
+    updateTag('product');
   }
 
   return { data, error };

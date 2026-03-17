@@ -1,5 +1,5 @@
 'use server';
-import { revalidateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 import { api } from '../api/client';
 import { components } from '../api/generated/schema';
 
@@ -27,7 +27,7 @@ export async function addCartItem(
   });
 
   if (response.ok) {
-    revalidateTag('cart-items');
+    updateTag('cart-items');
   }
 
   return { data, error };
@@ -56,9 +56,9 @@ export async function updateCartItemQuantity(
   });
 
   if (response.ok) {
-    revalidateTag('discount-amount');
-    revalidateTag('cart-items');
-    revalidateTag('cart');
+    updateTag('discount-amount');
+    updateTag('cart-items');
+    updateTag('cart');
   }
   return { data, error };
 }
@@ -72,9 +72,9 @@ export async function deleteCartItem(id: number) {
     },
   });
   if (response.ok) {
-    revalidateTag('discount-amount');
-    revalidateTag('cart-items');
-    revalidateTag('cart');
+    updateTag('discount-amount');
+    updateTag('cart-items');
+    updateTag('cart');
   }
   return { data, error };
 }

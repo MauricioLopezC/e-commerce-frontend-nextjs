@@ -11,7 +11,8 @@ export const api = createClient<paths>({
 const myMiddleware: Middleware = {
   async onRequest({ request }) {
     //get token from cookie
-    const token: string = cookies().get('access-token')?.value ?? '';
+    const cookieStore = await cookies();
+    const token: string = cookieStore.get('access-token')?.value ?? '';
 
     request.headers.set('Authorization', `Bearer ${token}`);
     return request;

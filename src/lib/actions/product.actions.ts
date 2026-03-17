@@ -1,5 +1,5 @@
 'use server';
-import { revalidateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 import { api } from '../api/client';
 import { components, paths } from '../api/generated/schema';
 
@@ -36,7 +36,7 @@ export async function createProduct(
   });
 
   if (response.ok) {
-    revalidateTag('products');
+    updateTag('products');
   }
 
   return { data, error };
@@ -54,8 +54,8 @@ export async function updateProduct(
   });
 
   if (response.ok) {
-    revalidateTag('product');
-    revalidateTag('products');
+    updateTag('product');
+    updateTag('products');
   }
 
   return { data, error };
@@ -69,7 +69,7 @@ export async function deleteProduct(id: number) {
   });
 
   if (response.ok) {
-    revalidateTag('products');
+    updateTag('products');
   }
 
   return { data, error };
@@ -87,8 +87,8 @@ export async function replaceProductCategories2(
   });
 
   if (response.ok) {
-    revalidateTag('product');
-    revalidateTag('products');
+    updateTag('product');
+    updateTag('products');
   }
 
   return { data, error };

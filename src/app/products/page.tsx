@@ -20,8 +20,9 @@ import {
 } from '@/components/ui/breadcrumb';
 import { OrderByMenu } from '@/components/product-catalog-page/FiltersAndSorting';
 import { parseQueryNumber } from '@/lib/parse-query';
+import { Metadata } from 'next';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Products page',
 };
 

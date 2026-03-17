@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 import { api } from '../api/client';
 
 export async function logOut() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   cookieStore.delete('access-token');
   revalidatePath('/profile');
 }
@@ -15,7 +15,7 @@ export async function login(email: string, password: string) {
   });
 
   if (data) {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     cookieStore.set('access-token', data.access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

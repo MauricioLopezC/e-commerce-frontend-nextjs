@@ -6,7 +6,8 @@ const publicRoutes = ['/', '/products', '/search', '/about'];
 const authRoutes = ['/auth/login', '/auth/register'];
 
 export default async function middleware(req: NextRequest) {
-  const token = cookies().get('access-token')?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get('access-token')?.value;
   const { nextUrl } = req;
   const userSession = getPayload(token ?? '');
   const path = req.nextUrl.pathname;

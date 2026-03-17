@@ -1,5 +1,5 @@
 'use server';
-import { revalidateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 import { components } from '../api/generated/schema';
 import { api } from '../api/client';
 
@@ -19,7 +19,7 @@ export async function createProductSku(
     },
   );
 
-  if (response.ok) revalidateTag('productSkus');
+  if (response.ok) updateTag('productSkus');
   return { data, error };
 }
 
@@ -37,7 +37,7 @@ export async function createBatchProductSkus(
     },
   );
 
-  if (response.ok) revalidateTag('productSkus');
+  if (response.ok) updateTag('productSkus');
   return { data, error };
 }
 
@@ -71,7 +71,7 @@ export async function updateProductSku2(
       body,
     },
   );
-  if (response.ok) revalidateTag('productSkus');
+  if (response.ok) updateTag('productSkus');
 
   return { data, error };
 }
@@ -92,7 +92,7 @@ export async function deleteProductSku2(
     },
   );
 
-  if (response.ok) revalidateTag('productSkus');
+  if (response.ok) updateTag('productSkus');
 
   return { data, error };
 }

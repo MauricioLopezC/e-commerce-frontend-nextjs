@@ -10,7 +10,7 @@ PROJECT_ROOT="$SCRIPT_DIR/.."
 
 API_URL="http://localhost:3000/api-yaml"
 SPEC_FILE="$PROJECT_ROOT/docs/api.yaml"
-TYPES_FILE="$PROJECT_ROOT/src/lib/api/generated/schema.d.ts"
+TYPES_FILE="$PROJECT_ROOT/src/lib/api/generated/schema.ts"
 
 echo "⬇️ Descargando OpenAPI spec..."
 curl -f -Ss $API_URL -o $SPEC_FILE

@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 import { api } from '../api/client';
 import { components, paths } from '../api/generated/schema';
 
@@ -11,7 +11,7 @@ export async function createDiscount(body: CreateDiscountDto) {
     body,
   });
   if (response.ok) {
-    revalidateTag('discounts');
+    updateTag('discounts');
   }
 
   return { data, error };
@@ -23,6 +23,9 @@ export async function getAllDiscounts(options: QueryParams) {
   const { data, error } = await api.GET('/promotions/discounts', {
     params: {
       query: options,
+    },
+    next: {
+      tags: ['discounts'],
     },
   });
   return { data, error };
@@ -52,8 +55,8 @@ export async function updateDiscount(
   );
 
   if (response.ok) {
-    revalidateTag('discounts');
-    revalidateTag('discount-amount');
+    updateTag('discounts');
+    updateTag('discount-amount');
   }
 
   return { data, error };
@@ -70,7 +73,7 @@ export async function deleteDiscount(id: number) {
   );
 
   if (response.ok) {
-    revalidateTag('discounts');
+    updateTag('discounts');
   }
 
   return { data, error };

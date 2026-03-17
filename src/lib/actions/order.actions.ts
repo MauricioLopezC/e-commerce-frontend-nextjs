@@ -1,5 +1,5 @@
 'use server';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { components, paths } from '../api/generated/schema';
 import { api } from '../api/client';
 
@@ -25,7 +25,7 @@ export async function createOrder2(body: CreateOrderDto2) {
     body,
   });
   if (response.ok) {
-    revalidateTag('orders');
+    updateTag('orders');
     revalidatePath('/products/[productId]', 'page');
     revalidatePath('dashboard/products');
   }
@@ -50,7 +50,7 @@ export async function updateOrderStatus2(
     body,
   });
   if (response.ok) {
-    revalidateTag('orders');
+    updateTag('orders');
   }
   return { data, error };
 }
