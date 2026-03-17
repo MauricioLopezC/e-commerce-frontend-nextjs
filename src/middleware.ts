@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { getPayload } from './lib/jwt-decode';
 
 const publicRoutes = ['/', '/products', '/search', '/about'];
-const authRoutes = ['/auth/login', 'auth/register'];
+const authRoutes = ['/auth/login', '/auth/register'];
 
 export default async function middleware(req: NextRequest) {
   const token = cookies().get('access-token')?.value;
