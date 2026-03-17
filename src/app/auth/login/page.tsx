@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { login } from '@/lib/actions/auth.actions';
 import { useAuth } from '@/contexts/AuthContext';
@@ -34,7 +34,7 @@ const formSchema = z.object({
   password: z.string().min(2).max(100),
 });
 
-function LoginPage() {
+function LoginForm() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -155,6 +155,14 @@ function LoginPage() {
         </DialogContent>
       </Dialog>
     </section>
+  );
+}
+
+function LoginPage() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }
 

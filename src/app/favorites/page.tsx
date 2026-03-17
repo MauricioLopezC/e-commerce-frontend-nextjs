@@ -19,9 +19,11 @@ export const metadata = {
   title: 'Favorites page',
 };
 
-async function FavoritesPage(
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>,
-) {
+async function FavoritesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const filters = await searchParams;
   const pageSize = parseQueryNumber(filters.limit, 10);
   const currentPage = parseQueryNumber(filters.page, 1);

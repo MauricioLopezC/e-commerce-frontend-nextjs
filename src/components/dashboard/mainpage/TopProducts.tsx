@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Product } from '@/interfaces/products/product';
+import { Product } from '@/interfaces/product';
 import { peso } from '@/lib/constants';
 
 function TopProductsTable({ products }: { products: Product[] }) {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
   Card,
@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-export default function RateLimitPage() {
+function RateLimitContent() {
   const searchParams = useSearchParams();
   const initialSeconds = parseInt(searchParams.get('retryAfter') || '60', 10);
   const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
@@ -83,5 +83,13 @@ export default function RateLimitPage() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+export default function RateLimitPage() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <RateLimitContent />
+    </Suspense>
   );
 }
