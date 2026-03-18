@@ -67,14 +67,12 @@ export default function UploadImageDialog({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     setIsLoading(true);
     const imageData = new FormData();
     imageData.append('productId', productId.toString());
     imageData.append('file', values.image);
     imageData.append('productSkuId', values.productSkuId.toString());
     const { data: createdImageData, error } = await uploadImage(imageData);
-    console.log('ERRR+>', error);
 
     if (!createdImageData) {
       toast.error('¡Vaya! Algo salió mal.', {

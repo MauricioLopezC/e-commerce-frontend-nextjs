@@ -3,7 +3,6 @@ import { updateTag } from 'next/cache';
 import { api } from '../api/client';
 
 export async function uploadImage(formData: FormData) {
-  console.log(formData);
   const file = formData.get('file') as File;
   const productId = Number(formData.get('productId'));
   const productSkuId = Number(formData.get('productSkuId'));

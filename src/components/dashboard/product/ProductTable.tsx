@@ -57,7 +57,6 @@ function ProductsTable({ products }: { products: Product[] }) {
       const { data: deletedProduct, error } = await deleteProduct(
         confirmData.id,
       );
-      console.log(deletedProduct, error);
       if (error) {
         toast.error('Error al eliminar');
       }

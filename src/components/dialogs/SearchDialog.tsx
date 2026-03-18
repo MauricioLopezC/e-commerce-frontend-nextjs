@@ -35,8 +35,6 @@ function SearchDialog({ isOpen, setIsOpen }: SearchProps) {
                   className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-black"
                   onChange={(e) => {
                     e.preventDefault();
-                    console.log(e.target.value);
-                    //updateSearchWord(e.target.value)
                     setSearchWord(e.target.value);
                   }}
                 />

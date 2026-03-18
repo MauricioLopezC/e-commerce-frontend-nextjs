@@ -3,7 +3,6 @@ import { getMyOrders } from '@/lib/actions/order.actions';
 
 async function OrdersPage() {
   const { data, error } = await getMyOrders();
-  console.log(error);
   if (!data) return null;
 
   //TODO: empty section

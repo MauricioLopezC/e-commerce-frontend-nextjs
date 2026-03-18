@@ -150,7 +150,6 @@ function UsersTable({ users }: UsersTableProps) {
                                     toast.success('Usuario bloqueado!');
                                     return;
                                   }
-                                  console.log(error);
                                   toast.error('Error! intenta nuevamente');
                                 },
                               });
@@ -172,7 +171,6 @@ function UsersTable({ users }: UsersTableProps) {
                                     toast.success('Usuario desbloqueado!');
                                     return;
                                   }
-                                  console.log(error);
                                   toast.error('Error! intenta nuevamente');
                                 },
                               });
@@ -194,7 +192,6 @@ function UsersTable({ users }: UsersTableProps) {
                                   toast.success('Usuario eliminado');
                                   return;
                                 }
-                                console.log(error);
                                 toast.error('Error! intenta nuevamente');
                               },
                             });

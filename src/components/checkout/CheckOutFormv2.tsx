@@ -77,7 +77,6 @@ function CheckOutFormv2() {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log(data);
 
     const shipping = {
       country: data.country,

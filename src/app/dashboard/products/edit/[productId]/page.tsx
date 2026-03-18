@@ -10,14 +10,15 @@ import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { BreadcrumbUpdater } from '@/components/dashboard/BreadcrumbUpdater';
 
-async function EditProductPage(props: { params: Promise<{ productId: string }> }) {
+async function EditProductPage(props: {
+  params: Promise<{ productId: string }>;
+}) {
   const params = await props.params;
   const productId = Number(params.productId);
 
   if (!productId) return null;
 
   const { data: product } = await getProduct(productId);
-  console.log('SKUS ==>', product?.productSkus);
   const { data: productSkus } = await getAllProductsSkus(productId);
   if (!product || !productSkus) return null;
   const { data: categories } = await getAllCategories();

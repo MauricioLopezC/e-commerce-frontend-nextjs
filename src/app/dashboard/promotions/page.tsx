@@ -22,7 +22,6 @@ async function PromotionsPage({ searchParams }: DiscountsPageProps) {
     limit: pageSize,
   });
   if (!discountsData) return null;
-  console.log(discountsData);
 
   return (
     <>

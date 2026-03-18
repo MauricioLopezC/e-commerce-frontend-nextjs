@@ -48,7 +48,6 @@ export function CreateCategoryDialog({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     const { data: category, error } = await createCategory2(values);
     if (category) {
       toast.success('Categoría creada');

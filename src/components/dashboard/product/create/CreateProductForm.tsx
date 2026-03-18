@@ -114,7 +114,6 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
       sex: rest.sex as unknown as CreateProductDtoSex,
       categories: [rest.categoryId],
     });
-    console.log(product, error);
 
     if (!product) {
       toast.error('¡Vaya! Algo salió mal.', {
@@ -125,7 +124,6 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
       return;
     }
     const productId = product.id;
-    console.log(product);
 
     for (let variation of variations) {
       const { data: createdProductSku, error: productSkuError } =
@@ -134,7 +132,6 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
           color: variation.color,
           quantity: variation.stock,
         });
-      console.log(createdProductSku, productSkuError);
 
       if (!createdProductSku) {
         toast.error('¡Vaya! Algo salió mal.', {
@@ -148,10 +145,8 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
       imageData.append('file', variation.image);
       imageData.append('productId', productId.toString());
       imageData.append('productSkuId', createdProductSku.id.toString());
-      console.log(imageData);
       const { data: createdImageData, error: imageError } =
         await uploadImage(imageData);
-      console.log(createdImageData?.url, imageError);
       if (!createdImageData) {
         toast.error('¡Vaya! Algo salió mal.', {
           description:
@@ -405,9 +400,6 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
                             variant="outline"
                             size="icon"
                             onClick={() => {
-                              console.log(
-                                `borrando la variacion con index ${idx}`,
-                              );
                               remove(idx);
                             }}
                           >

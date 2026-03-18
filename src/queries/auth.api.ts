@@ -6,7 +6,6 @@ import { BACKEND_URL } from '../lib/api/constants';
  * @param {string} cookie - the value of access-token cookie
  */
 export async function getProfile(cookie: string) {
-  console.log(cookie);
   const res = await fetch(`${BACKEND_URL}/auth/profile`, {
     method: 'GET',
     credentials: 'include',

@@ -64,7 +64,6 @@ function EditDialog({
   }, [productSku, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     const productId = productSku.productId;
     const productSkuId = productSku.id;
     const { data: updatedProductSku } = await updateProductSku2(

@@ -43,8 +43,7 @@ function DeleteAlert({
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-              const res = await deleteProductSku2(productId, productSkuId);
-              console.log(res);
+              await deleteProductSku2(productId, productSkuId);
               toast.success('Variante eliminada');
             }}
           >

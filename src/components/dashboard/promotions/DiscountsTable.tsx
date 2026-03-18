@@ -61,7 +61,6 @@ function DiscountsTable({ discounts }: { discounts: Discount[] }) {
     if (confirmData) {
       //server action
       const { data: discount, error } = await deleteDiscount(confirmData.id);
-      console.log(discount, error);
       if (discount) {
         toast.success('Descuento eliminado');
         return;

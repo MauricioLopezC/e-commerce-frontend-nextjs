@@ -88,7 +88,6 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
                   const { data, error } = await updateOrderStatus2(order.id, {
                     status: UpdateOrderDtoStatus.COMPLETED,
                   });
-                  console.log(data, error);
                   if (data) {
                     toast.success(`Estado actualizado a ${data.status}`);
                   }
@@ -109,7 +108,6 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
                   const { data } = await updateOrderStatus2(order.id, {
                     status: UpdateOrderDtoStatus.IN_PROGRESS,
                   });
-                  console.log(data);
                   if (data) {
                     toast.success(`Estado actualizado a ${data.status}`);
                   }

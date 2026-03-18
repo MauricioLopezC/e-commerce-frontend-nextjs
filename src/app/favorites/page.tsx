@@ -32,7 +32,6 @@ async function FavoritesPage({
     page: currentPage,
     limit: pageSize,
   });
-  console.log(favoritesData);
   if (!favoritesData) return null;
 
   return (

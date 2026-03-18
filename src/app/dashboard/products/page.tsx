@@ -17,7 +17,6 @@ async function ProductDashboard({ searchParams }: ProductsPageProps) {
   const currentPage = parseQueryNumber(filters.page, 1);
 
   const { data: productsData, error } = await getAllProducts(filters);
-  console.log(productsData, error);
   if (!productsData) return null;
 
   return (

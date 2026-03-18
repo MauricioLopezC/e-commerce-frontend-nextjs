@@ -109,8 +109,6 @@ interface EditFormProps {
 }
 
 function EditDiscountForm({ discount, products, categories }: EditFormProps) {
-  // console.log("Discount =>", discount)
-
   const productsDefaultValue = discount.products.map((product) => ({
     label: product.name,
     value: product.id.toString(),
@@ -171,7 +169,6 @@ function EditDiscountForm({ discount, products, categories }: EditFormProps) {
       categories: categoryIds,
     };
 
-    console.log(updateDiscountData);
     const { data: updatedDiscount, error } = await updateDiscount(
       discount.id,
       updateDiscountData,
@@ -180,7 +177,6 @@ function EditDiscountForm({ discount, products, categories }: EditFormProps) {
       toast.success('Descuento actualizado');
     }
     if (error) {
-      console.log(error);
       toast.error('Error al actualizar');
     }
   }
