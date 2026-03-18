@@ -61,7 +61,6 @@ function RegisterPage() {
 
     if (error && error.statusCode === 409)
       setErrorMessage('El usuario ya existe!');
-    console.log(values);
   }
 
   return (
@@ -141,7 +140,7 @@ function RegisterPage() {
                 href="/auth/login"
                 className="font-medium text-sky-600 hover:text-blue-400"
               >
-                Log in
+                Iniciar sesión
               </Link>
             </p>
           </form>

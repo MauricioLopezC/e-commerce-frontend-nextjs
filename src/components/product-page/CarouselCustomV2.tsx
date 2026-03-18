@@ -1,7 +1,7 @@
 'use client';
 import { CldImage } from 'next-cloudinary';
 import { useState } from 'react';
-import {Image} from "@/interfaces/images";
+import { Image } from '@/interfaces/images';
 
 interface CarouselProps {
   images: Image[];
@@ -16,6 +16,7 @@ function Carousel({ images }: CarouselProps) {
         <CldImage
           src={mainImage}
           fill
+          sizes="(max-width: 768px) 100vw, 50vw"
           className="object-cover"
           alt={`product-image`}
           priority
@@ -33,6 +34,7 @@ function Carousel({ images }: CarouselProps) {
               src={image.imgSrc}
               className="object-cover"
               fill
+              sizes="(max-width: 768px) 25vw, 10vw"
               priority
               alt="Product image"
             />

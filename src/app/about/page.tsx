@@ -11,8 +11,9 @@ function AboutPage() {
           <Image
             src="/about-image2.jpg"
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover"
-            alt={`product-image`}
+            alt="Imagen sobre nosotros"
             priority
           />
         </div>
@@ -37,8 +38,9 @@ function AboutPage() {
           <Image
             src="/about-image1.jpg"
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover"
-            alt={`product-image`}
+            alt="Imagen de suscripción"
             priority
           />
         </div>
