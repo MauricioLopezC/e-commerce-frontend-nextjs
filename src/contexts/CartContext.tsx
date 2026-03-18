@@ -13,6 +13,7 @@ import { getCartItems } from '@/lib/actions/cart.actions';
 interface CartContextType {
   cartCount: number;
   refreshCartCount: () => Promise<void>;
+  resetCartCount: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -28,12 +29,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const resetCartCount = useCallback(() => {
+    setCartCount(0);
+  }, []);
+
   useEffect(() => {
     refreshCartCount();
   }, [refreshCartCount]);
 
   return (
-    <CartContext.Provider value={{ cartCount, refreshCartCount }}>
+    <CartContext.Provider
+      value={{ cartCount, refreshCartCount, resetCartCount }}
+    >
       {children}
     </CartContext.Provider>
   );

@@ -4,6 +4,7 @@ import { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { login } from '@/lib/actions/auth.actions';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
 import { z } from '@/lib/zod/es-zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -41,6 +42,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirect: string | null = searchParams.get('redirect');
   const { refreshAuth } = useAuth();
+  const { refreshCartCount } = useCart();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,6 +59,7 @@ function LoginForm() {
     const { data, error } = await login(email, password);
     if (data) {
       await refreshAuth();
+      await refreshCartCount();
       setIsOpen(true);
       return;
     }

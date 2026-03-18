@@ -12,6 +12,7 @@ import {
   updateCartItemQuantity,
 } from '@/lib/actions/cart.actions';
 import { components } from '@/lib/api/generated/schema';
+import { useCart } from '@/contexts/CartContext';
 
 function CartItemCard({
   cartItem,
@@ -20,6 +21,7 @@ function CartItemCard({
 }) {
   const [quantity, setQuantity] = useState(cartItem.quantity);
   const { toast } = useToast();
+  const { refreshCartCount } = useCart();
 
   async function onUpdateQuantity(newQuantity: number) {
     const { data: updatedCartItem, error } = await updateCartItemQuantity(
@@ -48,6 +50,7 @@ function CartItemCard({
       description: `Ahora tiene una cantidad de ${updatedCartItem?.quantity}`,
     });
     setQuantity(newQuantity);
+    await refreshCartCount();
     return;
   }
 
@@ -64,6 +67,7 @@ function CartItemCard({
       variant: 'default',
       title: 'Eliminado correctamente',
     });
+    await refreshCartCount();
   }
 
   return (
