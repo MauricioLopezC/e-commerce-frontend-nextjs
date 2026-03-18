@@ -27,7 +27,6 @@ export default function RootLayout({
             <NavBar />
             {children}
             <Footer />
-            {/* <Toaster /> */}
             <Toaster richColors />
           </CartProvider>
         </AuthProvider>
