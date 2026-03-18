@@ -1091,31 +1091,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Auth
-  /auth/profile:
-    get:
-      operationId: AuthController_getProfile
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponseDto'
-        4XX:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponseDto'
-      tags:
-        - Auth
   /me/cart:
     get:
       operationId: CartController_findCart
@@ -1393,49 +1368,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResponseDto'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponseDto'
-        4XX:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponseDto'
-      tags:
-        - Search
-  /search/products/test:
-    get:
-      operationId: SearchController_searchText
-      parameters:
-        - name: productName
-          required: true
-          in: query
-          schema:
-            maxLength: 100
-            type: string
-        - name: limit
-          required: false
-          in: query
-          schema:
-            minimum: 1
-            maximum: 20
-            default: 10
-            type: number
-        - name: page
-          required: false
-          in: query
-          schema:
-            minimum: 1
-            maximum: 100
-            default: 1
-            type: number
-      responses:
-        '200':
-          description: ''
         '500':
           description: Internal server error
           content:
@@ -2553,6 +2485,11 @@ info:
 tags: []
 servers: []
 components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
   schemas:
     ErrorResponseDto:
       type: object
