@@ -95,7 +95,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
     const isFavoriteValue = !isFavorite;
     setIsFavorite(!isFavorite);
     if (isFavoriteValue) {
-      const { data: favorite, error } = await addFavorite(productId);
+      const { data: favorite } = await addFavorite(productId);
       if (favorite) {
         setFavorite(favorite);
         toast({
@@ -141,11 +141,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       setIsOpenNS(true);
       return;
     }
-    const { data: cartItem, error } = await addCartItem(
-      productId,
-      selectedPSku.id,
-      quantity,
-    );
+    const { error } = await addCartItem(productId, selectedPSku.id, quantity);
     if (error && error.statusCode === 401) {
       setIsOpenNL(true);
       return;
