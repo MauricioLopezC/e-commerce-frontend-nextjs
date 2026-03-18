@@ -66,3 +66,8 @@ export async function unBanUser(userId: number) {
 
   return { data, error };
 }
+
+export async function getMyProfile() {
+  const { data, error } = await api.GET('/me');
+  return { data, error };
+}

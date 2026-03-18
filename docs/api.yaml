@@ -979,6 +979,31 @@ paths:
                 $ref: '#/components/schemas/ErrorResponseDto'
       tags:
         - Users
+  /me:
+    get:
+      operationId: MeController_getMyProfile
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        4XX:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+      tags:
+        - Me
   /auth/register:
     post:
       operationId: AuthController_register
