@@ -24,6 +24,12 @@ const myMiddleware: Middleware = {
       redirect(`/rate-limit?retryAfter=${retryAfter}`);
     }
 
+    if (response.status === 401) {
+      const cookieStore = await cookies();
+      cookieStore.delete('access-token');
+      redirect('/auth/login?error=session_expired');
+    }
+
     return response;
   },
 };
