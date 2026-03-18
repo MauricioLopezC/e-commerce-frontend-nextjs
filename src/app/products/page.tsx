@@ -1,13 +1,6 @@
-import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
-import {
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  Transition,
-} from '@headlessui/react';
 import ProductCard from '@/components/ProductCard';
 import { getAllProducts } from '@/lib/actions/product.actions';
+import { getAllCategories } from '@/lib/actions/category.actions';
 import { PaginationWithLinks } from '@/components/ui/paginations-with-links';
 import FeaturesList from '@/components/home/Features';
 import {
@@ -18,7 +11,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { OrderByMenu } from '@/components/product-catalog-page/FiltersAndSorting';
+import {
+  FiltersMenu,
+  OrderByMenu,
+} from '@/components/product-catalog-page/FiltersAndSorting';
 import { parseQueryNumber } from '@/lib/parse-query';
 import { Metadata } from 'next';
 
@@ -35,14 +31,14 @@ async function ProductsPage({ searchParams }: ProductsPageProps) {
   const pageSize = parseQueryNumber(filters.limit, 10);
   const currentPage = parseQueryNumber(filters.page, 1);
 
-  const { data: productsData, error } = await getAllProducts({
-    ...filters,
-    limit: pageSize,
-    page: currentPage,
-  });
-  console.log(productsData?.products, error);
-
-  if (!productsData) return null;
+  const [{ data: productsData }, { data: categories }] = await Promise.all([
+    getAllProducts({
+      ...filters,
+      limit: pageSize,
+      page: currentPage,
+    }),
+    getAllCategories(),
+  ]);
   return (
     <section className="mt-6 ">
       <Breadcrumb className="ml-8 lg:ml-16">
@@ -71,27 +67,35 @@ async function ProductsPage({ searchParams }: ProductsPageProps) {
       </h1>
       {/* products section */}
       <div className="w-fit mx-auto mt-10 mb-5">
-        <div className="flex justify-between mb-4">
-          <FiltersMenu />
+        <div className="flex gap-4 mb-4">
+          <FiltersMenu categories={categories ?? []} />
           <OrderByMenu />
         </div>
 
-        <div className=" grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-8 gap-x-8">
-          {productsData.products.map((product) => (
-            <ProductCard
-              id={product.id}
-              title={product.name}
-              price={product.price}
-              imgSrc={product.images[0]?.imgSrc}
-              key={product.id}
-            />
-          ))}
+        <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-8 gap-x-8">
+          {productsData?.products.length === 0 ? (
+            <div className="col-span-full flex justify-center items-center min-h-[300px]">
+              <p className="text-muted-foreground">
+                No hay productos disponibles
+              </p>
+            </div>
+          ) : (
+            productsData?.products.map((product) => (
+              <ProductCard
+                id={product.id}
+                title={product.name}
+                price={product.price}
+                imgSrc={product.images[0]?.imgSrc}
+                key={product.id}
+              />
+            ))
+          )}
         </div>
         <div className="mt-4">
           <PaginationWithLinks
             page={currentPage}
             pageSize={pageSize}
-            totalCount={productsData.metadata._count}
+            totalCount={productsData?.metadata._count ?? 0}
           />
         </div>
       </div>
@@ -99,49 +103,6 @@ async function ProductsPage({ searchParams }: ProductsPageProps) {
         <FeaturesList />
       </div>
     </section>
-  );
-}
-
-function FiltersMenu() {
-  return (
-    <div className="text-right">
-      <Menu>
-        <MenuButton className="flex items-center">
-          <AdjustmentsHorizontalIcon className="h-6 w-6 mx-2" />
-          Filters
-        </MenuButton>
-        <Transition
-          enter="transition ease-out duration-75"
-          enterFrom="opacity-0 scale-95"
-          enterTo="opacity-100 scale-100"
-          leave="transition ease-in duration-100"
-          leaveFrom="opacity-100 scale-100"
-          leaveTo="opacity-0 scale-95"
-        >
-          <MenuItems
-            anchor="bottom end"
-            className="w-52 rounded-xl border p-1 text-sm/6 bg-white"
-          >
-            <MenuItem>
-              <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-gray-100">
-                Color
-              </button>
-            </MenuItem>
-            <MenuItem>
-              <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-gray-100">
-                Size
-              </button>
-            </MenuItem>
-            <div className="my-1 h-px" />
-            <MenuItem>
-              <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-gray-100">
-                Price
-              </button>
-            </MenuItem>
-          </MenuItems>
-        </Transition>
-      </Menu>
-    </div>
   );
 }
 
