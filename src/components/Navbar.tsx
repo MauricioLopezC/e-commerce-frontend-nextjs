@@ -17,7 +17,6 @@ import {
   ShoppingBagIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import SearchDialog from './dialogs/SearchDialog';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -36,9 +35,8 @@ function classNames(...classes: string[]) {
 
 function NavBar() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const router = useRouter();
-  const { isAuthenticated, isAdmin, logout } = useAuth();
-  const { cartCount, resetCartCount } = useCart();
+  const { isAuthenticated, isAdmin } = useAuth();
+  const { cartCount } = useCart();
 
   return (
     <Disclosure as="nav" className="sticky top-0 z-50 bg-white border-b">
@@ -152,18 +150,6 @@ function NavBar() {
                             </Link>
                           </MenuItem>
                         )}
-                        <MenuItem>
-                          <button
-                            onClick={async () => {
-                              resetCartCount();
-                              await logout();
-                              router.push('/');
-                            }}
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
-                          >
-                            Cerrar Sesión
-                          </button>
-                        </MenuItem>
                       </>
                     )}
                     <MenuItem>

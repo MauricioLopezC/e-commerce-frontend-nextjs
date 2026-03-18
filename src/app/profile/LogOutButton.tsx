@@ -1,13 +1,17 @@
 'use client';
-import { logOut } from '@/lib/actions/auth.actions';
+import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
 
 function LogOutButton() {
+  const { logout } = useAuth();
+  const { resetCartCount } = useCart();
   return (
     <div className="flex justify-center items-center mt-6">
       <button
         className="px-6 py-2 bg-black text-white rounded-md"
         onClick={async () => {
-          await logOut();
+          resetCartCount();
+          await logout();
         }}
       >
         CERRAR SESION
