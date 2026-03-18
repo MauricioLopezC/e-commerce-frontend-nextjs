@@ -15,9 +15,3 @@ export function getPayload(token: string): UserPayload | null {
     return null;
   }
 }
-
-export function isTokenExpired(token: string) {
-  const arrayToken = token.split('.');
-  const tokenPayload = JSON.parse(atob(arrayToken[1]));
-  return Math.floor(new Date().getTime() / 1000) >= tokenPayload?.sub;
-}
