@@ -23,7 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { DialogDescription } from '@radix-ui/react-dialog';
 
 interface EditDialogProps {
@@ -44,8 +44,6 @@ function EditDialog({
   dialogOpen,
   setDialogOpen,
 }: EditDialogProps) {
-  const { toast } = useToast();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,23 +73,10 @@ function EditDialog({
       values,
     );
     if (updatedProductSku) {
-      toast({
-        description: (
-          <div>
-            <h2 className="font-semibold text-md">
-              <span>
-                <CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" />
-              </span>
-              Variante actualizada
-            </h2>
-          </div>
-        ),
-      });
+      toast.success('Variante actualizada');
       return;
     }
-    toast({
-      variant: 'destructive',
-      title: '¡Vaya! Algo salió mal.',
+    toast.error('¡Vaya! Algo salió mal.', {
       description:
         'Hubo un problema al crear el producto, intento nuevamente mas tarde',
     });

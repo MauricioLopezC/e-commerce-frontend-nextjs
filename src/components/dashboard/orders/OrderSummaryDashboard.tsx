@@ -28,11 +28,10 @@ import { Order } from '@/interfaces/orders';
 import { useOrdersStore } from '@/store/order-page-store';
 import { peso } from '@/lib/constants';
 import { updateOrderStatus2 } from '@/lib/actions/order.actions';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { UpdateOrderDtoStatus } from '@/lib/api/generated/schema';
 
 export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
-  const { toast } = useToast();
   const selectedOrderId = useOrdersStore((state) => state.orderId);
 
   const order = orders.find((order) => order.id === selectedOrderId);
@@ -91,18 +90,7 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
                   });
                   console.log(data, error);
                   if (data) {
-                    toast({
-                      description: (
-                        <div>
-                          <h2 className="font-semibold text-md">
-                            <span>
-                              <CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" />
-                            </span>
-                            Estado actualizado a {data.status}
-                          </h2>
-                        </div>
-                      ),
-                    });
+                    toast.success(`Estado actualizado a ${data.status}`);
                   }
                 }}
               >
@@ -123,18 +111,7 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
                   });
                   console.log(data);
                   if (data) {
-                    toast({
-                      description: (
-                        <div>
-                          <h2 className="font-semibold text-md">
-                            <span>
-                              <CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" />
-                            </span>
-                            Estado actualizado a {data.status}
-                          </h2>
-                        </div>
-                      ),
-                    });
+                    toast.success(`Estado actualizado a ${data.status}`);
                   }
                 }}
               >
@@ -155,18 +132,7 @@ export default function OrderSummaryDashboard({ orders }: { orders: Order[] }) {
                   });
 
                   if (data) {
-                    toast({
-                      description: (
-                        <div>
-                          <h2 className="font-semibold text-md">
-                            <span>
-                              <CircleCheckBig className="h-5 w-5 mr-2 text-green-500 inline" />
-                            </span>
-                            Estado actualizado a {data.status}
-                          </h2>
-                        </div>
-                      ),
-                    });
+                    toast.success(`Estado actualizado a ${data.status}`);
                   }
                 }}
               >

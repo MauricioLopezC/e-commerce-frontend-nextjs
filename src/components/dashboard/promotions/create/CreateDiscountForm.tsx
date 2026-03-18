@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { ApplicableTo, DiscountType } from '@/interfaces/discounts';
 import { createDiscount } from '@/lib/actions/discounts.actions';
 import { cn } from '@/lib/utils';
@@ -126,7 +126,6 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
     null,
   );
   const [isTriggered, setIsTriggered] = useState(false);
-  const { toast } = useToast();
 
   const now = new Date();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -184,9 +183,7 @@ function CreateDiscountForm({ products, categories }: CreateDiscountFormProps) {
       setDialogOpen(true);
     }
     if (error) {
-      toast({
-        title: 'Error al crear el descuento',
-      });
+      toast.error('Error al crear el descuento');
     }
   }
 

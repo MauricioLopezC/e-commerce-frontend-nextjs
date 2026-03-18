@@ -40,14 +40,13 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useState } from 'react';
 import { deleteDiscount } from '@/lib/actions/discounts.actions';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 function DiscountsTable({ discounts }: { discounts: Discount[] }) {
   const [confirmData, setConfirmData] = useState<Discount | null>(null);
   const router = useRouter();
-  const { toast } = useToast();
 
   function openConfirm(discount: Discount) {
     setConfirmData(discount);
@@ -64,33 +63,11 @@ function DiscountsTable({ discounts }: { discounts: Discount[] }) {
       const { data: discount, error } = await deleteDiscount(confirmData.id);
       console.log(discount, error);
       if (discount) {
-        toast({
-          description: (
-            <div>
-              <h2 className="font-semibold text-md">
-                <span>
-                  <CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" />
-                </span>
-                Descuento eliminado
-              </h2>
-            </div>
-          ),
-        });
+        toast.success('Descuento eliminado');
         return;
       }
 
-      toast({
-        description: (
-          <div>
-            <h2 className="font-semibold text-md">
-              <span>
-                <XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline" />
-              </span>
-              Error al eliminar
-            </h2>
-          </div>
-        ),
-      });
+      toast.error('Error al eliminar');
     }
 
     closeConfirm();

@@ -30,7 +30,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg'];
@@ -57,7 +57,6 @@ export default function UploadImageDialog({
   productId: number;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -78,18 +77,14 @@ export default function UploadImageDialog({
     console.log('ERRR+>', error);
 
     if (!createdImageData) {
-      toast({
-        variant: 'destructive',
-        title: '¡Vaya! Algo salió mal.',
+      toast.error('¡Vaya! Algo salió mal.', {
         description:
           'Hubo un problema al subir la imagen, intente nuevamente mas tarde',
       });
       setIsLoading(false);
       return;
     }
-    toast({
-      variant: 'default',
-      title: 'Imagen subida correctamente',
+    toast.success('Imagen subida correctamente', {
       description: 'Ahora puede ver la nueva imagen del producto',
     });
     setIsLoading(false);

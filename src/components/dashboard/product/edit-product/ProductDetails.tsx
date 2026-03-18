@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { Category, Product, Sex } from '@/interfaces/product';
 import { updateProduct } from '@/lib/actions/product.actions';
 import { CheckCircleIcon } from 'lucide-react';
@@ -50,7 +50,6 @@ function ProductDetails({
   categories: Category[];
 }) {
   const [isChanged, setIsChanged] = useState(false);
-  const { toast } = useToast();
   const [descIsOpen, setDescIsOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -70,22 +69,9 @@ function ProductDetails({
       sex: values.sex as unknown as UpdateProductDtoSex,
     });
     if (updatedProduct) {
-      toast({
-        description: (
-          <div>
-            <h2 className="font-semibold text-md">
-              <span>
-                <CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" />
-              </span>
-              Producto actualizado
-            </h2>
-          </div>
-        ),
-      });
+      toast.success('Producto actualizado');
     } else {
-      toast({
-        variant: 'destructive',
-        title: '¡Vaya! Algo salió mal.',
+      toast.error('¡Vaya! Algo salió mal.', {
         description:
           'Hubo un problema al crear el producto, intente nuevamente mas tarde',
       });

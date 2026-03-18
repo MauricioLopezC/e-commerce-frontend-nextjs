@@ -31,7 +31,7 @@ import {
 import { deleteImage } from '@/lib/actions/image.actions';
 import { KittenImageSrc } from '@/lib/constants';
 import UploadImageDialog from './UploadImageDialog';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { Image } from '@/interfaces/images';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
@@ -45,7 +45,6 @@ function ImageDialog({
   skus: number[];
   size?: 'small' | 'main';
 }) {
-  const { toast } = useToast();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const dimensions =
@@ -125,10 +124,7 @@ function ImageDialog({
                   try {
                     const { data } = await deleteImage(image.id);
                     if (data) {
-                      toast({
-                        variant: 'default',
-                        title: 'Imagen eliminada correctamente',
-                      });
+                      toast.success('Imagen eliminada correctamente');
                     }
                   } finally {
                     setIsDeleting(false);

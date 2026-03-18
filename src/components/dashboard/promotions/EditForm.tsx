@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { updateDiscount } from '@/lib/actions/discounts.actions';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/solid';
 
 import MultipleSelector, {
@@ -110,7 +110,6 @@ interface EditFormProps {
 
 function EditDiscountForm({ discount, products, categories }: EditFormProps) {
   // console.log("Discount =>", discount)
-  const { toast } = useToast();
 
   const productsDefaultValue = discount.products.map((product) => ({
     label: product.name,
@@ -178,33 +177,11 @@ function EditDiscountForm({ discount, products, categories }: EditFormProps) {
       updateDiscountData,
     );
     if (updatedDiscount) {
-      toast({
-        description: (
-          <div>
-            <h2 className="font-semibold text-md">
-              <span>
-                <CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" />
-              </span>
-              Descuento actualizado
-            </h2>
-          </div>
-        ),
-      });
+      toast.success('Descuento actualizado');
     }
     if (error) {
       console.log(error);
-      toast({
-        description: (
-          <div>
-            <h2 className="font-semibold text-md">
-              <span>
-                <XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline" />
-              </span>
-              Error al actualizar
-            </h2>
-          </div>
-        ),
-      });
+      toast.error('Error al actualizar');
     }
   }
 

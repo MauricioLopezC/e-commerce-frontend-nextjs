@@ -40,14 +40,13 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { deleteProduct } from '@/lib/actions/product.actions';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Product } from '@/interfaces/product';
 
 function ProductsTable({ products }: { products: Product[] }) {
   const router = useRouter();
   const [confirmData, setConfirmData] = useState<Product | null>(null);
-  const { toast } = useToast();
 
   function closeConfirm() {
     setConfirmData(null);
@@ -60,32 +59,10 @@ function ProductsTable({ products }: { products: Product[] }) {
       );
       console.log(deletedProduct, error);
       if (error) {
-        toast({
-          description: (
-            <div>
-              <h2 className="font-semibold text-md">
-                <span>
-                  <XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline" />
-                </span>
-                Error al eliminar
-              </h2>
-            </div>
-          ),
-        });
+        toast.error('Error al eliminar');
       }
 
-      toast({
-        description: (
-          <div>
-            <h2 className="font-semibold text-md">
-              <span>
-                <CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" />
-              </span>
-              Producto eliminado
-            </h2>
-          </div>
-        ),
-      });
+      toast.success('Producto eliminado');
     }
 
     closeConfirm();

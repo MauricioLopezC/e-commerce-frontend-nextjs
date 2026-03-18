@@ -45,7 +45,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { components } from '@/lib/api/generated/schema';
 
 interface ConfirmState {
@@ -60,7 +60,6 @@ interface UsersTableProps {
 
 function UsersTable({ users }: UsersTableProps) {
   const [confirmData, setConfirmData] = useState<ConfirmState | null>(null);
-  const { toast } = useToast();
 
   //close dialog
   const closeConfirm = () => {
@@ -148,33 +147,11 @@ function UsersTable({ users }: UsersTableProps) {
                                   const { data: bannedUser, error } =
                                     await banUser(user.id);
                                   if (bannedUser) {
-                                    toast({
-                                      description: (
-                                        <div>
-                                          <h2 className="font-semibold text-md">
-                                            <span>
-                                              <UserRoundX className="h-6 w-6 mr-2 text-red-500 inline" />
-                                            </span>
-                                            Usuario bloqueado!
-                                          </h2>
-                                        </div>
-                                      ),
-                                    });
+                                    toast.success('Usuario bloqueado!');
                                     return;
                                   }
                                   console.log(error);
-                                  toast({
-                                    description: (
-                                      <div>
-                                        <h2 className="font-semibold text-md">
-                                          <span>
-                                            <CheckCircleIcon className="h-6 w-6 mr-2 text-red-500 inline" />
-                                          </span>
-                                          Error! intenta nuevamente
-                                        </h2>
-                                      </div>
-                                    ),
-                                  });
+                                  toast.error('Error! intenta nuevamente');
                                 },
                               });
                             }}
@@ -192,33 +169,11 @@ function UsersTable({ users }: UsersTableProps) {
                                   const { data: unbannedUser, error } =
                                     await unBanUser(user.id);
                                   if (unbannedUser) {
-                                    toast({
-                                      description: (
-                                        <div>
-                                          <h2 className="font-semibold text-md">
-                                            <span>
-                                              <UserCheckIcon className="h-6 w-6 mr-2 text-green-500 inline" />
-                                            </span>
-                                            Usuario desbloqueado!
-                                          </h2>
-                                        </div>
-                                      ),
-                                    });
+                                    toast.success('Usuario desbloqueado!');
                                     return;
                                   }
                                   console.log(error);
-                                  toast({
-                                    description: (
-                                      <div>
-                                        <h2 className="font-semibold text-md">
-                                          <span>
-                                            <CheckCircleIcon className="h-6 w-6 mr-2 text-red-500 inline" />
-                                          </span>
-                                          Error! intenta nuevamente
-                                        </h2>
-                                      </div>
-                                    ),
-                                  });
+                                  toast.error('Error! intenta nuevamente');
                                 },
                               });
                             }}
@@ -236,33 +191,11 @@ function UsersTable({ users }: UsersTableProps) {
                                 const { data: deletedUser, error } =
                                   await deleteUser(user.id);
                                 if (deletedUser) {
-                                  toast({
-                                    description: (
-                                      <div>
-                                        <h2 className="font-semibold text-md">
-                                          <span>
-                                            <CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" />
-                                          </span>
-                                          Usuario eliminado
-                                        </h2>
-                                      </div>
-                                    ),
-                                  });
+                                  toast.success('Usuario eliminado');
                                   return;
                                 }
                                 console.log(error);
-                                toast({
-                                  description: (
-                                    <div>
-                                      <h2 className="font-semibold text-md">
-                                        <span>
-                                          <CheckCircleIcon className="h-6 w-6 mr-2 text-red-500 inline" />
-                                        </span>
-                                        Error! intenta nuevamente
-                                      </h2>
-                                    </div>
-                                  ),
-                                });
+                                toast.error('Error! intenta nuevamente');
                               },
                             });
                           }}

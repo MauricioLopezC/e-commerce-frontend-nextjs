@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { deleteProductSku2 } from '@/lib/actions/product-skus.actions';
 import { Dispatch, SetStateAction } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { TrashIcon } from 'lucide-react';
 
 interface DeleteAlertProps {
@@ -26,7 +26,6 @@ function DeleteAlert({
   dialogOpen,
   setDialogOpen,
 }: DeleteAlertProps) {
-  const { toast } = useToast();
   return (
     <AlertDialog
       defaultOpen={false}
@@ -46,18 +45,7 @@ function DeleteAlert({
             onClick={async () => {
               const res = await deleteProductSku2(productId, productSkuId);
               console.log(res);
-              toast({
-                description: (
-                  <div>
-                    <h2 className="font-semibold text-md">
-                      <span>
-                        <TrashIcon className="h-4 w-4 mr-2 text-red-500 inline" />
-                      </span>
-                      Variante elimindada
-                    </h2>
-                  </div>
-                ),
-              });
+              toast.success('Variante eliminada');
             }}
           >
             Eliminar

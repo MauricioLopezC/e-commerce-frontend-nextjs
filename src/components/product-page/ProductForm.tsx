@@ -5,7 +5,7 @@ import { ProductSku } from '@/interfaces/product';
 import { RadioGroup, RadioGroupItem } from '@/components/origin-ui/radio-group';
 import { NoStockAlertDialog } from './NoStockAlert';
 import { NotLoggedInAlertDialog } from './NotLoggedInAltert';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { addCartItem } from '@/lib/actions/cart.actions';
 import {
@@ -30,7 +30,6 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
   const [color, setColor] = useState<string | undefined>(undefined);
   const [isOpenNS, setIsOpenNS] = useState(false);
   const [isOpenNL, setIsOpenNL] = useState(false);
-  const { toast } = useToast();
   const [isFavorite, setIsFavorite] = useState(false);
   const [favorite, setFavorite] = useState<Favorite | null>();
   const order = ['xs', 's', 'm', 'l', 'xl', 'xxl', 'xxxl'];
@@ -98,18 +97,7 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       const { data: favorite } = await addFavorite(productId);
       if (favorite) {
         setFavorite(favorite);
-        toast({
-          description: (
-            <div>
-              <h2 className="font-semibold text-md">
-                <span>
-                  <CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" />
-                </span>
-                Producto agregado a favoritos
-              </h2>
-            </div>
-          ),
-        });
+        toast.success('Producto agregado a favoritos');
       } else {
         setIsFavorite(false);
         setIsOpenNL(true);
@@ -119,21 +107,10 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       const { data: deletedFavorite } = await deleteFavorite(favorite.id);
       if (deletedFavorite) {
         setFavorite(null);
-        toast({
-          description: (
-            <div>
-              <h2 className="font-semibold text-md">
-                <span>
-                  <TrashIcon className="h-6 w-6 mr-2 text-red-500 inline" />
-                </span>
-                Producto eliminado de favoritos
-              </h2>
-            </div>
-          ),
-        });
+        toast.success('Producto eliminado de favoritos');
       }
     }
-  }, [isFavorite, favorite, productId, toast]);
+  }, [isFavorite, favorite, productId]);
 
   const onAddToCartClick = useCallback(async () => {
     if (selectedPSku === null) return null;
@@ -148,35 +125,12 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
     }
 
     if (error && error.statusCode === 409) {
-      toast({
-        description: (
-          <div>
-            <h2 className="font-semibold text-md">
-              <span>
-                <XCircleIcon className="h-6 w-6 mr-2 text-white inline" />
-              </span>
-              El producto ya fue agregado al carrito
-            </h2>
-          </div>
-        ),
-        variant: 'destructive',
-      });
+      toast.error('El producto ya fue agregado al carrito');
       return;
     }
     await refreshCartCount();
-    toast({
-      description: (
-        <div>
-          <h2 className="font-semibold text-md">
-            <span>
-              <CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" />
-            </span>
-            Producto agregado correctamente
-          </h2>
-        </div>
-      ),
-    });
-  }, [selectedPSku, quantity, productId, toast, refreshCartCount]);
+    toast.success('Producto agregado correctamente');
+  }, [selectedPSku, quantity, productId, refreshCartCount]);
 
   return (
     <>

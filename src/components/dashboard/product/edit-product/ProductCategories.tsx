@@ -13,7 +13,7 @@ import { PlusCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 import { CreateCategoryDialog } from '../create/CreateCategoryDialog';
 import { replaceProductCategories2 } from '@/lib/actions/product.actions';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { Category } from '@/interfaces/product';
 
@@ -38,7 +38,6 @@ function ProductCategoriesForm({
     })),
   );
   const [createCategoryIsOpen, setCreateCategoryIsOpen] = useState(false);
-  const { toast } = useToast();
 
   async function onSubmit() {
     const categoryIds = value.map((value) => Number(value.value));
@@ -47,31 +46,9 @@ function ProductCategoriesForm({
       categoryIds,
     );
     if (product) {
-      toast({
-        description: (
-          <div>
-            <h2 className="font-semibold text-md">
-              <span>
-                <CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" />
-              </span>
-              Categorías guardadas
-            </h2>
-          </div>
-        ),
-      });
+      toast.success('Categorías guardadas');
     } else {
-      toast({
-        description: (
-          <div>
-            <h2 className="font-semibold text-md">
-              <span>
-                <XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline" />
-              </span>
-              Error! intente nuevamente
-            </h2>
-          </div>
-        ),
-      });
+      toast.error('Error! intente nuevamente');
     }
   }
 

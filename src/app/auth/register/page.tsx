@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { AlertCircle } from 'lucide-react';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -31,7 +31,6 @@ const formSchema = z.object({
 function RegisterPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
-  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,14 +55,7 @@ function RegisterPage() {
       password,
     );
     if (user) {
-      toast({
-        title: 'Registrado correctamente!',
-        description: (
-          <div className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <h2 className="text-white">{user.email}</h2>
-          </div>
-        ),
-      });
+      toast.success('Registrado correctamente!');
       router.push('/auth/login');
     }
 

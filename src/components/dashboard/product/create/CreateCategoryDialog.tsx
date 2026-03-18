@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { createCategory2 } from '@/lib/actions/category.actions';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
@@ -39,8 +39,6 @@ export function CreateCategoryDialog({
   isOpen,
   setIsOpen,
 }: CreateCategoryDialogProps) {
-  const { toast } = useToast();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,32 +51,10 @@ export function CreateCategoryDialog({
     console.log(values);
     const { data: category, error } = await createCategory2(values);
     if (category) {
-      toast({
-        description: (
-          <div>
-            <h2 className="font-semibold text-md">
-              <span>
-                <CheckCircleIcon className="h-6 w-6 mr-2 text-green-500 inline" />
-              </span>
-              Categoría creada
-            </h2>
-          </div>
-        ),
-      });
+      toast.success('Categoría creada');
     }
     if (error && error.statusCode === 409) {
-      toast({
-        description: (
-          <div>
-            <h2 className="font-semibold text-md">
-              <span>
-                <XMarkIcon className="h-6 w-6 mr-2 text-red-500 inline" />
-              </span>
-              Ya existe una categoría con ese nombre
-            </h2>
-          </div>
-        ),
-      });
+      toast.error('Ya existe una categoría con ese nombre');
     }
   }
 

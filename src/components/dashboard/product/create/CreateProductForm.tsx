@@ -36,7 +36,7 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import {
   Select,
   SelectContent,
@@ -87,7 +87,6 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
   const router = useRouter();
   const [productId, setProductId] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
   const [descIsOpen, setDescIsOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -118,9 +117,7 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
     console.log(product, error);
 
     if (!product) {
-      toast({
-        variant: 'destructive',
-        title: '¡Vaya! Algo salió mal.',
+      toast.error('¡Vaya! Algo salió mal.', {
         description:
           'Hubo un problema al crear el producto, intento nuevamente mas tarde',
       });
@@ -140,9 +137,7 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
       console.log(createdProductSku, productSkuError);
 
       if (!createdProductSku) {
-        toast({
-          variant: 'destructive',
-          title: '¡Vaya! Algo salió mal.',
+        toast.error('¡Vaya! Algo salió mal.', {
           description:
             'Hubo un problema al crear la variación, intente nuevamente mas tarde',
         });
@@ -158,9 +153,7 @@ function CreateProductForm({ categories }: { categories: Category[] }) {
         await uploadImage(imageData);
       console.log(createdImageData?.url, imageError);
       if (!createdImageData) {
-        toast({
-          variant: 'destructive',
-          title: '¡Vaya! Algo salió mal.',
+        toast.error('¡Vaya! Algo salió mal.', {
           description:
             'Hubo un problema al subir la imagen, intente nuevamente mas tarde',
         });

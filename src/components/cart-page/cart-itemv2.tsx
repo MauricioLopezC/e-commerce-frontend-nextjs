@@ -5,7 +5,7 @@ import { Minus, Plus, X } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { KittenImageSrc, peso } from '@/lib/constants';
 import { CldImage } from 'next-cloudinary';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { useState } from 'react';
 import {
   deleteCartItem,
@@ -20,7 +20,6 @@ function CartItemCard({
   cartItem: components['schemas']['CartItemResponseDto'];
 }) {
   const [quantity, setQuantity] = useState(cartItem.quantity);
-  const { toast } = useToast();
   const { refreshCartCount } = useCart();
 
   async function onUpdateQuantity(newQuantity: number) {
@@ -30,23 +29,16 @@ function CartItemCard({
     );
     if (error) {
       if (error.statusCode === 409) {
-        toast({
-          variant: 'destructive',
-          title: 'No hay suficiente stock',
-        });
+        toast.error('No hay suficiente stock');
         return;
       }
-      toast({
-        variant: 'destructive',
-        title: 'Error al actualizar',
+      toast.error('Error al actualizar', {
         description: 'Intente nuevamente más tarde',
       });
       return;
     }
 
-    toast({
-      variant: 'default',
-      title: 'Actualizado correctamente',
+    toast.success('Actualizado correctamente', {
       description: `Ahora tiene una cantidad de ${updatedCartItem?.quantity}`,
     });
     setQuantity(newQuantity);
@@ -57,16 +49,10 @@ function CartItemCard({
   async function onDeleteButton() {
     const { error } = await deleteCartItem(cartItem.id);
     if (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error al eliminar el producto del carrito',
-      });
+      toast.error('Error al eliminar el producto del carrito');
       return;
     }
-    toast({
-      variant: 'default',
-      title: 'Eliminado correctamente',
-    });
+    toast.success('Eliminado correctamente');
     await refreshCartCount();
   }
 
