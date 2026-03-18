@@ -1,6 +1,6 @@
 'use client';
 import { HeartIcon, TrashIcon } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { ProductSku } from '@/interfaces/product';
 import { RadioGroup, RadioGroupItem } from '@/components/origin-ui/radio-group';
 import { NoStockAlertDialog } from './NoStockAlert';
@@ -25,7 +25,7 @@ interface ProductOptionsProps {
 }
 
 function ProductForm({ productId, productSkus }: ProductOptionsProps) {
-  const [quantity, setQuanity] = useState(1);
+  const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState(productSkus[0].size);
   const [color, setColor] = useState<string | undefined>(undefined);
   const [isOpenNS, setIsOpenNS] = useState(false);
@@ -55,24 +55,47 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       const session = await checkSession();
       if (session) {
         const { data: favoritesData } = await getFavorites({ productId });
-        console.log(favoritesData);
         const favoriteFound = favoritesData?.favorites[0];
         if (favoriteFound) {
           setIsFavorite(true);
           setFavorite(favoriteFound);
         }
       }
-      return;
     };
     checkFavorite();
   }, [productId]);
 
-  async function onFavoriteClick() {
+  const uniqueSizes = useMemo(() => {
+    return productSkus
+      .filter(
+        (productSku, idx, self) =>
+          idx === self.findIndex((pSku) => pSku.size === productSku.size),
+      )
+      .sort((a, b) => {
+        const aNum = Number(a.size);
+        const bNum = Number(b.size);
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+          return aNum - bNum;
+        }
+        return (
+          order.indexOf(a.size.toLowerCase()) -
+          order.indexOf(b.size.toLowerCase())
+        );
+      });
+  }, [productSkus, order]);
+
+  const uniqueColors = useMemo(() => {
+    return productSkus.filter(
+      (productSku, idx, self) =>
+        idx === self.findIndex((pSku) => pSku.color === productSku.color),
+    );
+  }, [productSkus]);
+
+  const onFavoriteClick = useCallback(async () => {
     const isFavoriteValue = !isFavorite;
     setIsFavorite(!isFavorite);
     if (isFavoriteValue) {
       const { data: favorite, error } = await addFavorite(productId);
-      console.log(favorite, error);
       if (favorite) {
         setFavorite(favorite);
         toast({
@@ -110,11 +133,10 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
         });
       }
     }
-  }
+  }, [isFavorite, favorite, productId, toast]);
 
-  async function onAddToCartClick() {
+  const onAddToCartClick = useCallback(async () => {
     if (selectedPSku === null) return null;
-    console.log(color, size, selectedPSku);
     if (selectedPSku && quantity > selectedPSku.quantity) {
       setIsOpenNS(true);
       return;
@@ -124,7 +146,6 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       selectedPSku.id,
       quantity,
     );
-    console.log(cartItem, error);
     if (error && error.statusCode === 401) {
       setIsOpenNL(true);
       return;
@@ -146,7 +167,6 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
       });
       return;
     }
-    console.log({ quantity, size, color });
     await refreshCartCount();
     toast({
       description: (
@@ -160,13 +180,13 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
         </div>
       ),
     });
-  }
+  }, [selectedPSku, quantity, productId, toast, refreshCartCount]);
 
   return (
     <>
       <div className="flex flex-col gap-2 mt-2">
         <label className="text-sm font-medium">Cantidad</label>
-        <CantidadSelectV2 setValue={setQuanity} />
+        <CantidadSelectV2 setValue={setQuantity} />
       </div>
 
       <div id="details" className="flex flex-col  mt-4 space-y-4">
@@ -179,37 +199,21 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
             value={size}
             onValueChange={setSize}
           >
-            {/*HACK: find a way to avoid sorting two times the array, checking if array is only numeric or contains strings*/}
-            {productSkus
-              .filter(
-                (productSku, idx, self) =>
-                  idx ===
-                  self.findIndex((pSku) => pSku.size === productSku.size),
-              )
-              .sort((a, b) => {
-                return Number(a.size) - Number(b.size);
-              })
-              .sort((a, b) => {
-                return (
-                  order.indexOf(a.size.toLowerCase()) -
-                  order.indexOf(b.size.toLowerCase())
-                );
-              })
-              .map((productSku) => (
-                <label
-                  key={productSku.id}
-                  className="relative flex cursor-pointer flex-col items-center gap-3 rounded-lg border border-input px-2 py-3 text-center shadow-sm shadow-black/5 outline-offset-2 transition-colors has-[[data-disabled]]:cursor-not-allowed has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-accent has-[[data-disabled]]:opacity-50 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70"
-                >
-                  <RadioGroupItem
-                    id={productSku.id.toString()}
-                    value={productSku.size}
-                    className="sr-only after:absolute after:inset-0"
-                  />
-                  <p className="text-sm font-medium leading-none text-foreground">
-                    {productSku.size.toUpperCase()}
-                  </p>
-                </label>
-              ))}
+            {uniqueSizes.map((productSku) => (
+              <label
+                key={productSku.id}
+                className="relative flex cursor-pointer flex-col items-center gap-3 rounded-lg border border-input px-2 py-3 text-center shadow-sm shadow-black/5 outline-offset-2 transition-colors has-[[data-disabled]]:cursor-not-allowed has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-accent has-[[data-disabled]]:opacity-50 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70"
+              >
+                <RadioGroupItem
+                  id={productSku.id.toString()}
+                  value={productSku.size}
+                  className="sr-only after:absolute after:inset-0"
+                />
+                <p className="text-sm font-medium leading-none text-foreground">
+                  {productSku.size.toUpperCase()}
+                </p>
+              </label>
+            ))}
           </RadioGroup>
         </fieldset>
         <fieldset className="space-y-4">
@@ -221,35 +225,29 @@ function ProductForm({ productId, productSkus }: ProductOptionsProps) {
             value={color}
             onValueChange={setColor}
           >
-            {productSkus
-              .filter(
-                (productSku, idx, self) =>
-                  idx ===
-                  self.findIndex((pSku) => pSku.color === productSku.color),
-              )
-              .map((filteredPsku) => {
-                let isEnabled = productSkus.some(
-                  (originalPsku) =>
-                    originalPsku.size === size &&
-                    originalPsku.color === filteredPsku.color,
-                );
-                return (
-                  <label
-                    key={filteredPsku.id}
-                    className="relative flex cursor-pointer flex-col items-center gap-3 rounded-lg border border-input px-2 py-3 text-center shadow-sm shadow-black/5 outline-offset-2 transition-colors has-[[data-disabled]]:cursor-not-allowed has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-accent has-[[data-disabled]]:opacity-50 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70"
-                  >
-                    <RadioGroupItem
-                      id={filteredPsku.id.toString()}
-                      value={filteredPsku.color}
-                      className="sr-only after:absolute after:inset-0"
-                      disabled={!isEnabled}
-                    />
-                    <p className="text-sm font-medium leading-none text-foreground">
-                      {filteredPsku.color}
-                    </p>
-                  </label>
-                );
-              })}
+            {uniqueColors.map((filteredPsku) => {
+              let isEnabled = productSkus.some(
+                (originalPsku) =>
+                  originalPsku.size === size &&
+                  originalPsku.color === filteredPsku.color,
+              );
+              return (
+                <label
+                  key={filteredPsku.id}
+                  className="relative flex cursor-pointer flex-col items-center gap-3 rounded-lg border border-input px-2 py-3 text-center shadow-sm shadow-black/5 outline-offset-2 transition-colors has-[[data-disabled]]:cursor-not-allowed has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-accent has-[[data-disabled]]:opacity-50 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70"
+                >
+                  <RadioGroupItem
+                    id={filteredPsku.id.toString()}
+                    value={filteredPsku.color}
+                    className="sr-only after:absolute after:inset-0"
+                    disabled={!isEnabled}
+                  />
+                  <p className="text-sm font-medium leading-none text-foreground">
+                    {filteredPsku.color}
+                  </p>
+                </label>
+              );
+            })}
           </RadioGroup>
         </fieldset>
       </div>
