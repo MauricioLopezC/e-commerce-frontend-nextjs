@@ -9,27 +9,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { useEffect, useState, useCallback } from 'react';
+import { useState } from 'react';
 
 function OrdersOrderByMenu() {
-  const [orderBy, setOrderBy] = useState<string>('-createdAt');
   const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const handleOrderByChange = useCallback(
-    (newOrderBy: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set('orderBy', newOrderBy);
-      router.push(`/dashboard/orders?${params.toString()}`);
-    },
-    [router, searchParams],
+  const [orderBy, setOrderBy] = useState<string>(
+    () => searchParams.get('orderBy') || '-createdAt',
   );
-
-  useEffect(() => {
-    handleOrderByChange(orderBy);
-  }, [orderBy, handleOrderByChange]);
 
   return (
     <DropdownMenu>

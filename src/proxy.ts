@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { getPayload } from './lib/jwt-decode';
 
 const publicRoutes = ['/', '/products', '/search', '/about'];
 const authRoutes = ['/auth/login', '/auth/register'];
 
-export default async function middleware(req: NextRequest) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('access-token')?.value;
-  const { nextUrl } = req;
+export default async function proxy(request: NextRequest) {
+  const token = request.cookies.get('access-token')?.value;
+  const { nextUrl } = request;
   const userSession = getPayload(token ?? '');
-  const path = req.nextUrl.pathname;
+  const path = request.nextUrl.pathname;
 
   if (publicRoutes.includes(path) || path.startsWith('/products/')) {
     return NextResponse.next();
@@ -31,6 +29,8 @@ export default async function middleware(req: NextRequest) {
       new URL(`/auth/login?redirect=${path}`, nextUrl),
     );
   }
+
+  return NextResponse.next();
 }
 
 export const config = {

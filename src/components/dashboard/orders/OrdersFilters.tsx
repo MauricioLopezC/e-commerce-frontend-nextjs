@@ -10,29 +10,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ListFilter } from 'lucide-react';
-import { useEffect, useState, useCallback } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 function OrdersFilters() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const params = new URLSearchParams(searchParams.toString());
-  const [status, setStatus] = useState<string>(params.get('status') ?? 'ALL');
-
-  const handleStatusChange = useCallback(
-    (newStatus: string) => {
-      const newParams = new URLSearchParams(searchParams.toString());
-      newStatus === 'ALL'
-        ? newParams.delete('status')
-        : newParams.set('status', newStatus);
-      router.push(`/dashboard/orders?${newParams.toString()}`);
-    },
-    [router, searchParams],
+  const [status, setStatus] = useState<string>(
+    () => searchParams.get('status') || 'ALL',
   );
-
-  useEffect(() => {
-    handleStatusChange(status);
-  }, [status, handleStatusChange]);
 
   return (
     <DropdownMenu>
